@@ -1,0 +1,139 @@
+package com.tothferenc.templateFX
+
+import javafx.embed.swing.JFXPanel
+import javafx.scene.chart.PieChart
+import javafx.scene.control.Label
+import javafx.scene.layout.{ Pane, AnchorPane }
+import com.tothferenc.templateFX.Api._
+import com.tothferenc.templateFX.Attributes._
+
+import org.specs2.mutable.Specification
+
+import scala.collection.convert.wrapAsScala._
+
+class TemplateSpec extends Specification {
+  val _ = new JFXPanel()
+
+  private val hello: Spec[Label] = leaf[Label](text <~ "hello")
+
+  private def paneWith(specGroup: ChildrenSpecification) = parentL[AnchorPane]() {
+    specGroup
+  }
+
+  def child(i: Int, container: TFXParent) = container.getChildren.get(i)
+
+  val paneWithHello: Spec[AnchorPane] = parent[AnchorPane]() {
+    hello
+  }
+
+  val labelInTwoPanes = parent[AnchorPane]() {
+    parent[AnchorPane]() {
+      hello
+    }
+  }
+
+  val helloWorld: List[Spec[Label]] = List(
+    hello,
+    leaf[Label](text <~ "world")
+  )
+
+  val keyedHelloWorld = List(
+    1 -> leaf[Label](text <~ "hello"),
+    2 -> leaf[Label](text <~ "world")
+  )
+
+  implicit class ChangeMatchers(change: Change) {
+
+    def isMutation[T](attr: Attribute[_, _], value: T): Unit = {
+      change match {
+        case m: Mutate[_, _] =>
+          m.value === value
+          m.attribute === attr
+        case other =>
+          other should beAnInstanceOf[Mutate[_, _]]
+      }
+    }
+  }
+
+  "Templates" should {
+    "be parsed well" in {
+      paneWithHello.materialize().asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
+    }
+
+    "have their constraints applied to inheritors" in {
+      val container: TFXParent = parent[AnchorPane]() {
+        leaf[PieChart](com.tothferenc.templateFX.Attributes.title <~ "well")
+      }.materialize()
+      val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
+      chart.getTitle === "well"
+    }
+
+    "be reconciled as expected when a single mutation is needed" in {
+      val pane = paneWithHello.materialize()
+      val changes: List[Change] = List(
+        leaf[Label](text <~ "world")
+      ).changes(pane)
+      changes.length === 1
+      changes.headOption match {
+        case Some(Mutate(_, text, "world")) => 1 === 1
+        case _ => 1 === 2
+      }
+    }
+
+	  "be reconciled as expected when an element needs to be replaced with another type" in {
+		  val pane = paneWithHello.materialize()
+		  List(leaf[PieChart]()).reconcile(pane)
+		  pane.getChildren.get(0) should beAnInstanceOf[PieChart]
+	  }
+
+    "be reconciled as expected when an element needs to be inserted" in {
+      val pane = paneWithHello.materialize()
+      val newDef: Spec[Label] = leaf[Label](text <~ "world")
+      val newTemplate = helloWorld
+      val changes: Seq[Change] = newTemplate.changes(pane)
+      changes.length === 1
+      val insertNode: Insert[Label] = changes.head.asInstanceOf[Insert[Label]]
+      insertNode.container === pane
+      changes.foreach(_.execute())
+      pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
+      pane.getChildren.get(1).asInstanceOf[Label].getText === "world"
+    }
+
+    "be reconciled #2" in {
+      val pane = paneWithHello.materialize()
+      labelInTwoPanes.children.reconcile(pane)
+      pane.getChildren.get(0).asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
+    }
+
+    "be able to do a simple reconcilation with replacements by key" in {
+      val pane = paneWith(keyedHelloWorld).materialize()
+      val child0 = child(0, pane)
+      val child1 = child(1, pane)
+      keyedHelloWorld.reverse.changes(pane) === List(Move(pane, child1, 0), Move(pane, child0, 1))
+    }
+
+    "be able to do a simple reconcilation with an insertion and replacements by key" in {
+
+      val helloSpec = leaf[Label](text <~ "hello")
+      val helloDearWorld = List(
+        3 -> helloSpec,
+        2 -> leaf[Label](text <~ "dear"),
+        1 -> leaf[Label](text <~ "world")
+      )
+      val pane = paneWith(keyedHelloWorld).materialize()
+      val child0 = child(0, pane)
+      val child1 = child(1, pane)
+      val changes = helloDearWorld.changes(pane)
+      changes(0) === InsertWithKey(pane, helloSpec, 0, 3)
+      changes(1) === Move(pane, child1, 1)
+      changes(2) isMutation (text, "dear")
+      changes(4) isMutation (text, "world")
+      changes(3) === Move(pane, child0, 2)
+      changes.foreach(_.execute())
+      pane.getChildren.collect {
+        case l: Label => l.getText
+      } === List("hello", "dear", "world")
+    }
+  }
+
+}
