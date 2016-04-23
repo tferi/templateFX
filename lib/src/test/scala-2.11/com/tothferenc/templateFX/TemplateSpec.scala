@@ -72,7 +72,7 @@ class TemplateSpec extends Specification {
       val pane = paneWithHello.materialize()
       val changes: List[Change] = List(
         leaf[Label](text <~ "world")
-      ).changes(pane)
+      ).requiredChangesIn(pane)
       changes.length === 1
       changes.headOption match {
         case Some(Mutate(_, text, "world")) => 1 === 1
@@ -90,7 +90,7 @@ class TemplateSpec extends Specification {
       val pane = paneWithHello.materialize()
       val newDef: Spec[Label] = leaf[Label](text <~ "world")
       val newTemplate = helloWorld
-      val changes: Seq[Change] = newTemplate.changes(pane)
+      val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1
       val insertNode: Insert[Label] = changes.head.asInstanceOf[Insert[Label]]
       insertNode.container === pane
@@ -109,7 +109,7 @@ class TemplateSpec extends Specification {
       val pane = paneWith(keyedHelloWorld).materialize()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
-      keyedHelloWorld.reverse.changes(pane) === List(Move(pane, child1, 0), Move(pane, child0, 1))
+      keyedHelloWorld.reverse.requiredChangesIn(pane) === List(Move(pane, child1, 0), Move(pane, child0, 1))
     }
 
     "be able to do a simple reconcilation with an insertion and replacements by key" in {
@@ -123,7 +123,7 @@ class TemplateSpec extends Specification {
       val pane = paneWith(keyedHelloWorld).materialize()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
-      val changes = helloDearWorld.changes(pane)
+      val changes = helloDearWorld.requiredChangesIn(pane)
       changes(0) === InsertWithKey(pane, helloSpec, 0, 3)
       changes(1) === Move(pane, child1, 1)
       changes(2) isMutation (text, "dear")
@@ -133,6 +133,15 @@ class TemplateSpec extends Specification {
       pane.getChildren.collect {
         case l: Label => l.getText
       } === List("hello", "dear", "world")
+    }
+
+    "be able to remove sequence of elements" in {
+      val pane = paneWith(helloWorld).materialize()
+      val changes: List[Change] = List(hello).requiredChangesIn(pane)
+      changes === List(RemoveSeq(pane, 1, 2))
+      changes.foreach(_.execute())
+      pane.getChildren.size === 1
+      pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
     }
   }
 

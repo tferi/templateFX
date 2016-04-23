@@ -11,7 +11,7 @@ object Api {
   implicit def KeyedSpecs2SpecGroup[Key](specs: List[(Key, NodeSpec)]): ChildrenSpecification = IdentifiedSpecs(specs)
 
   implicit class ReconcilationSyntax(reconcilableGroup: ChildrenSpecification) {
-    def changes(container: Pane): List[Change] = reconcilableGroup.changes(container)
+    def changes(container: Pane): List[Change] = reconcilableGroup.requiredChangesIn(container)
     def reconcile(container: Pane): Unit = changes(container).foreach(_.execute())
   }
 

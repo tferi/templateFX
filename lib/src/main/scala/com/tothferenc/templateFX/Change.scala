@@ -19,8 +19,12 @@ sealed abstract class Change extends Product with Serializable {
   protected def exec(): Unit
 }
 
-final case class Remove(container: TFXParent, node: Node) extends Change {
+final case class RemoveNode(container: TFXParent, node: Node) extends Change {
   override protected def exec(): Unit = container.getChildren.remove(node)
+}
+
+final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive: Int) extends Change {
+  override protected def exec(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
 }
 
 final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {

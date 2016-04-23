@@ -19,7 +19,7 @@ abstract class Spec[FXType <: Node] {
     if (node.getClass == clazz) {
       node match {
         case container: TFXParent =>
-          constraints.flatMap(_.apply(container.asInstanceOf[FXType])).toList ::: children.changes(container)
+          constraints.flatMap(_.apply(container.asInstanceOf[FXType])).toList ::: children.requiredChangesIn(container)
         case leaf =>
           constraints.flatMap(_.apply(leaf.asInstanceOf[FXType])).toList
       }
