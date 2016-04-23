@@ -23,6 +23,10 @@ final case class RemoveNode(container: TFXParent, node: Node) extends Change {
   override protected def exec(): Unit = container.getChildren.remove(node)
 }
 
+final case class RemoveNodes(container: TFXParent, nodes: Seq[Node]) extends Change {
+  override protected def exec(): Unit = container.getChildren.removeAll(nodes: _*)
+}
+
 final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive: Int) extends Change {
   override protected def exec(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
 }

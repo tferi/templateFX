@@ -114,9 +114,8 @@ class TemplateSpec extends Specification {
 
     "be able to do a simple reconcilation with an insertion and replacements by key" in {
 
-      val helloSpec = leaf[Label](text <~ "hello")
       val helloDearWorld = List(
-        3 -> helloSpec,
+        3 -> hello,
         2 -> leaf[Label](text <~ "dear"),
         1 -> leaf[Label](text <~ "world")
       )
@@ -124,7 +123,7 @@ class TemplateSpec extends Specification {
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       val changes = helloDearWorld.requiredChangesIn(pane)
-      changes(0) === InsertWithKey(pane, helloSpec, 0, 3)
+      changes(0) === InsertWithKey(pane, hello, 0, 3)
       changes(1) === Move(pane, child1, 1)
       changes(2) isMutation (text, "dear")
       changes(4) isMutation (text, "world")
@@ -133,6 +132,28 @@ class TemplateSpec extends Specification {
       pane.getChildren.collect {
         case l: Label => l.getText
       } === List("hello", "dear", "world")
+    }
+
+    "be able to do a simple reconcilation with deletions by key" in {
+
+      val helloDearWorld = List(
+        1 -> hello,
+        2 -> leaf[Label](text <~ "dear"),
+        3 -> leaf[Label](text <~ "world")
+      )
+      val pane = paneWith(helloDearWorld).materialize()
+      val child0 = child(0, pane)
+      val child1 = child(1, pane)
+      val child2 = child(2, pane)
+      val changes = List(1 -> hello).requiredChangesIn(pane)
+      val change = changes(0).asInstanceOf[RemoveNodes]
+      change.nodes should contain(child1)
+      change.nodes should contain(child2)
+      change.nodes.length === 2
+      changes.foreach(_.execute())
+      pane.getChildren.collect {
+        case l: Label => l.getText
+      } === List("hello")
     }
 
     "be able to remove sequence of elements" in {

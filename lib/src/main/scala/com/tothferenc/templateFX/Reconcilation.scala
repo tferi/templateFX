@@ -48,7 +48,12 @@ final case class IdentifiedSpecs[Key](specsWithKeys: List[(Key, NodeSpec)]) exte
           case _ => None
         }
     }
-    val removals = existingNodesByKey.get(None).map(_.map(RemoveNode(container, _)).toList).getOrElse(Nil)
+    val specKeySet = specsWithKeys.map(_._1).toSet
+    val removals = for {
+      (key, nodes) <- existingNodesByKey if key.isEmpty || !specKeySet.contains(key.get)
+      node <- nodes
+    } yield node
+
     val mutationsMovesInsertions = specsWithKeys.zipWithIndex.flatMap {
       case ((key, spec), desiredPosition) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
@@ -57,7 +62,7 @@ final case class IdentifiedSpecs[Key](specsWithKeys: List[(Key, NodeSpec)]) exte
           List(InsertWithKey(container, spec, desiredPosition, key))
       }
     }
-    removals ::: mutationsMovesInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsMovesInsertions
   }
 
   override def materializeAll(): List[Node] = specsWithKeys.map {
