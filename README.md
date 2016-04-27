@@ -1,7 +1,7 @@
 templateFX
 ==========
 
-[![Build Status](https://travis-ci.org/tferi/templateFX.svg?branch=master)]
+[![Build Status](https://travis-ci.org/tferi/templateFX.svg?branch=master)](https://travis-ci.org/tferi/templateFX)
 
 Coming soon!
 
