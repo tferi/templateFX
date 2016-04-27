@@ -47,12 +47,30 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
   override protected def exec(): Unit = {
     val currentPosition = container.getChildren.indexOf(node)
     if (currentPosition != targetPosition) {
-	    container.getChildren.remove(node)
-	    container.getChildren.add(targetPosition, node)
+      container.getChildren.remove(node)
+      container.getChildren.add(targetPosition, node)
     }
   }
 }
 
-final case class Mutate[Item, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
-  override protected def exec(): Unit = attribute.set(item, value)
+final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
+  override protected def exec(): Unit = {
+    attribute.set(item, value)
+    if (!Util.getManagedAttributes(item).contains(attribute)) {
+      Util.setManagedAttributes(
+        item,
+        attribute +: Util.getManagedAttributes(item)
+      )
+    }
+  }
+}
+
+final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[Unsettable[Item]]) extends Change {
+  override protected def exec(): Unit = {
+    attributesToUnset.foreach(_.unset(item))
+    Util.setManagedAttributes(
+      item,
+      Util.getManagedAttributes(item).filterNot(attributesToUnset.contains)
+    )
+  }
 }

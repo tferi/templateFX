@@ -4,6 +4,8 @@ import java.lang.reflect.Constructor
 import javafx.scene.Node
 import javafx.scene.layout.Pane
 
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 import scala.reflect._
 
 class NoConstructorForParams(clazz: Class[_], params: Seq[Any])
@@ -17,12 +19,21 @@ abstract class Spec[FXType <: Node] {
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
-      node match {
-        case container: TFXParent =>
-          constraints.flatMap(_.apply(container.asInstanceOf[FXType])).toList ::: children.requiredChangesIn(container)
-        case leaf =>
-          constraints.flatMap(_.apply(leaf.asInstanceOf[FXType])).toList
+      val managedAttributes = Util.getUserData[List[Unsettable[Node]]](node, Attribute.key)
+      val attributesToUnset = managedAttributes.getOrElse(Nil).filterNot { checked =>
+        constraints.exists(_.attribute == checked)
       }
+      (if (attributesToUnset.isEmpty)
+        Nil
+      else
+        List(UnsetAttributes(node, attributesToUnset))) :::
+        constraints.flatMap(_.apply(node.asInstanceOf[FXType])).toList :::
+        (node match {
+          case container: TFXParent =>
+            children.requiredChangesIn(container)
+          case leaf =>
+            Nil
+        })
     } else {
       List(Replace(container, this, position))
     }
@@ -49,7 +60,14 @@ final case class Definition[FXType <: Node](
 
   def materialize(): FXType = {
     val instance = instantiate()
-    val changes: Seq[Change] = constraints.flatMap(_.apply(instance))
+    val userDataMap = new mutable.ListMap[String, Any]()
+    instance.setUserData(userDataMap)
+    val managedAttributes = new ListBuffer[Unsettable[_]]()
+    val changes: Seq[Change] = constraints.flatMap { constraint =>
+      managedAttributes += constraint.attribute
+      constraint.apply(instance)
+    }
+    userDataMap += Attribute.key -> managedAttributes.toList
     changes.foreach(_.execute())
     instance match {
       case container: TFXParent =>

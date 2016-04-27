@@ -1,8 +1,16 @@
 package com.tothferenc.templateFX
 
-abstract class Attribute[-FXType, AttrType] {
+object Attribute {
+  val key = "attributes"
+}
 
-  def readFrom(src: FXType): AttrType
+abstract class Unsettable[-FXType] {
+  def unset(target: FXType): Unit
+}
+
+abstract class Attribute[-FXType, AttrType] extends Unsettable[FXType] {
+
+  def read(src: FXType): AttrType
 
   def set(target: FXType, value: AttrType): Unit
 }

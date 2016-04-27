@@ -94,7 +94,7 @@ final case class SequentialSpecs(specs: List[NodeSpec]) extends ChildrenSpecific
         acc
 
     if (numChildrenOnSceneGraph > numChildrenSpecs)
-      RemoveSeq(container, numChildrenSpecs, numChildrenOnSceneGraph) ::  reconcile(0, Nil)
+      RemoveSeq(container, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
     else
       reconcile(0, Nil)
   }

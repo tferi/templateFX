@@ -10,6 +10,7 @@ import com.tothferenc.templateFX.Attributes._
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
+import scala.collection.mutable.ListBuffer
 
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
@@ -80,11 +81,11 @@ class TemplateSpec extends Specification {
       }
     }
 
-	  "be reconciled as expected when an element needs to be replaced with another type" in {
-		  val pane = paneWithHello.materialize()
-		  List(leaf[PieChart]()).reconcile(pane)
-		  pane.getChildren.get(0) should beAnInstanceOf[PieChart]
-	  }
+    "be reconciled as expected when an element needs to be replaced with another type" in {
+      val pane = paneWithHello.materialize()
+      List(leaf[PieChart]()).reconcile(pane)
+      pane.getChildren.get(0) should beAnInstanceOf[PieChart]
+    }
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.materialize()
@@ -163,6 +164,24 @@ class TemplateSpec extends Specification {
       changes.foreach(_.execute())
       pane.getChildren.size === 1
       pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
+    }
+
+    "manage attributes as expected" in {
+      val pane = paneWithHello.materialize()
+      def getLabel: Label = {
+        pane.getChildren.get(0).asInstanceOf[Label]
+      }
+      val label = getLabel
+      val attributes = Util.getUserData[List[Unsettable[_]]](label, Attribute.key).getOrElse(Nil).toList
+      attributes === List(text)
+      val changes = List(leaf[Label](styleClasses <~ List("nice"))).requiredChangesIn(pane)
+      changes.exists(_.isInstanceOf[UnsetAttributes[_]]) === true
+      changes.exists(_.isInstanceOf[Mutate[_, _]]) === true
+      changes.foreach(_.execute())
+      val newAttr = Util.getManagedAttributes(label)
+      newAttr.length === 1
+      newAttr.contains(styleClasses)
+
     }
   }
 
