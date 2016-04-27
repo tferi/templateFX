@@ -32,10 +32,10 @@ final case class PrependEH(reactor: Reactor, scene: Scene) extends EventHandler[
 
 object View {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    parentL[VBox]() {
+    branchL[VBox]() {
       items.map { case (k, s) => k -> leaf[Label](text <~ s) }
     },
-    parent[HBox]()(
+    branch[HBox]()(
       leaf[Label](text <~ "New item name:"),
       leaf[TextField](
         id <~ "textInput",
@@ -52,7 +52,7 @@ object View {
       text <~ "Append this item!",
       onActionButton <~ AppendEH(reactor, scene)
     ),
-    parent[HBox]()(
+    branch[HBox]()(
       leaf[Label](text <~ "New item position:"),
       leaf[TextField](
         id <~ "positionInput",

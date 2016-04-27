@@ -3,6 +3,7 @@ package com.tothferenc.templateFX
 import javafx.scene.Node
 import javafx.scene.layout.Pane
 
+import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 object Api {
@@ -19,13 +20,13 @@ object Api {
     def <~(value: Attr) = Binding(attribute, value)
   }
 
-  def parentC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpecification): Spec[FXType] =
+  def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpecification): Spec[FXType] =
     Definition[FXType](constraints, specGroup)(constructorParams)
 
-  def parent[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Spec[_ <: Node]*): Spec[FXType] =
+  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Spec[_ <: Node]*): Spec[FXType] =
     Definition[FXType](constraints, children.toList)()
 
-  def parentL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: ChildrenSpecification): Spec[FXType] =
+  def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: ChildrenSpecification): Spec[FXType] =
     Definition[FXType](constraints, specGroup)()
 
   def leafC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*): Spec[FXType] =

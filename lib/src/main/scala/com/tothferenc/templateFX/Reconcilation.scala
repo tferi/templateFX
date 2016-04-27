@@ -28,9 +28,7 @@ object IdentifiedSpecs {
     if (node.getUserData == null) {
       node.setUserData(new mutable.ListMap[String, Any]() += keySetting)
     } else {
-      node.getUserData match {
-        case mmap: mutable.Map[String, Any] => mmap += keySetting
-      }
+      node.getUserData.asInstanceOf[mutable.Map[String, Any]] += keySetting
     }
     node
   }
@@ -43,10 +41,7 @@ final case class IdentifiedSpecs[Key](specsWithKeys: List[(Key, NodeSpec)]) exte
     val existingNodesByKey = existingChildren.groupBy { node =>
       node.getUserData.asInstanceOf[mutable.Map[String, Any]]
         .get(IdentifiedSpecs.TFX_KEY)
-        .flatMap {
-          case k: Key => Some(k)
-          case _ => None
-        }
+        .map(_.asInstanceOf[Key])
     }
     val specKeySet = specsWithKeys.map(_._1).toSet
     val removals = for {

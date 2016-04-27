@@ -3,14 +3,20 @@ import sbt.Keys._
 val commonSettings = Seq(
 	version := "1.0",
 
-	scalaVersion := "2.11.8",
+	scalaVersion := "2.11.7",
 
 	libraryDependencies ++= Seq(
 		"ch.qos.logback" %  "logback-classic" % "1.1.7", // Needed by scala-logging
 		"com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
 		"org.specs2" %% "specs2-core" % "3.7.2" % "test"),
 
-	scalacOptions in Test ++= Seq("-Yrangepos")
+	scalacOptions in Test ++= Seq(
+		"-Yrangepos"
+	),
+
+	scalacOptions ++= Seq(
+		"-Xfatal-warnings"
+	)
 )
 
 val lib = (project in file("lib"))

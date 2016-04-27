@@ -57,16 +57,18 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
 
 final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
   override protected def exec(): Unit = {
+
     attribute.set(item, value)
+
     Util.getManagedAttributes(item) match {
-      case Some(attributes) =>
-        if (!attributes.contains(attribute)) {
-          attributes.prepend(attribute)
+      case Some(managedAttributes) =>
+        if (!managedAttributes.contains(attribute)) {
+          managedAttributes.prepend(attribute)
         }
       case _ =>
-        val attributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
-        attributes.prepend(attribute)
-        Util.setManagedAttributes(item, attributes)
+        val managedAttributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
+        managedAttributes.prepend(attribute)
+        Util.setManagedAttributes(item, managedAttributes)
     }
   }
 }
