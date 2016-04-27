@@ -19,14 +19,18 @@ abstract class Spec[FXType <: Node] {
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
-      val managedAttributes = Util.getUserData[List[Unsettable[Node]]](node, Attribute.key)
-      val attributesToUnset = managedAttributes.getOrElse(Nil).filterNot { checked =>
-        constraints.exists(_.attribute == checked)
-      }
-      (if (attributesToUnset.isEmpty)
-        Nil
-      else
-        List(UnsetAttributes(node, attributesToUnset))) :::
+      (Util.getUserData[ListBuffer[Unsettable[Node]]](node, Attribute.key) match {
+        case Some(attributes) =>
+          val toUnset: ListBuffer[Unsettable[Node]] = attributes.filterNot { checked =>
+            constraints.exists(_.attribute == checked)
+          }
+          if (toUnset.isEmpty)
+            Nil
+          else
+            List(UnsetAttributes(node, toUnset))
+        case _ =>
+          Nil
+      }) :::
         constraints.flatMap(_.apply(node.asInstanceOf[FXType])).toList :::
         (node match {
           case container: TFXParent =>
@@ -60,14 +64,9 @@ final case class Definition[FXType <: Node](
 
   def materialize(): FXType = {
     val instance = instantiate()
-    val userDataMap = new mutable.ListMap[String, Any]()
-    instance.setUserData(userDataMap)
-    val managedAttributes = new ListBuffer[Unsettable[_]]()
     val changes: Seq[Change] = constraints.flatMap { constraint =>
-      managedAttributes += constraint.attribute
       constraint.apply(instance)
     }
-    userDataMap += Attribute.key -> managedAttributes.toList
     changes.foreach(_.execute())
     instance match {
       case container: TFXParent =>

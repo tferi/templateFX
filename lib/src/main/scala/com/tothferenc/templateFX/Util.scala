@@ -3,6 +3,7 @@ package com.tothferenc.templateFX
 import javafx.scene.Node
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 object Util {
 
@@ -25,11 +26,11 @@ object Util {
     }
   }
 
-  def getManagedAttributes(node: Node): Seq[Unsettable[_]] = {
-    getUserData[List[Unsettable[_]]](node, Attribute.key).getOrElse(Nil)
+  def getManagedAttributes(node: Node): Option[ListBuffer[Unsettable[_]]] = {
+    getUserData[ListBuffer[Unsettable[_]]](node, Attribute.key)
   }
 
-  def setManagedAttributes(node: Node, attributes: Seq[Unsettable[_]]): Unit = {
+  def setManagedAttributes(node: Node, attributes: ListBuffer[Unsettable[_]]): Unit = {
     setUserData(node, Attribute.key, attributes)
   }
 }

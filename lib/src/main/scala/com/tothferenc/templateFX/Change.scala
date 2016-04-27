@@ -5,6 +5,8 @@ import javafx.scene.Node
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
+import scala.collection.mutable.ListBuffer
+
 object Change {
   val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
 }
@@ -56,21 +58,25 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
 final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
   override protected def exec(): Unit = {
     attribute.set(item, value)
-    if (!Util.getManagedAttributes(item).contains(attribute)) {
-      Util.setManagedAttributes(
-        item,
-        attribute +: Util.getManagedAttributes(item)
-      )
+    Util.getManagedAttributes(item) match {
+      case Some(attributes) =>
+        if (!attributes.contains(attribute)) {
+          attributes += attribute
+        }
+      case _ =>
+        val attributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
+        attributes += attribute
+        Util.setManagedAttributes(item, attributes)
     }
   }
 }
 
 final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[Unsettable[Item]]) extends Change {
   override protected def exec(): Unit = {
-    attributesToUnset.foreach(_.unset(item))
-    Util.setManagedAttributes(
-      item,
-      Util.getManagedAttributes(item).filterNot(attributesToUnset.contains)
-    )
+    val currentlySetAttributes = Util.getManagedAttributes(item)
+    attributesToUnset.foreach { attribute =>
+      attribute.unset(item)
+      currentlySetAttributes.foreach(attributes => attributes -= attribute)
+    }
   }
 }
