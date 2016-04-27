@@ -61,11 +61,11 @@ final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Ite
     Util.getManagedAttributes(item) match {
       case Some(attributes) =>
         if (!attributes.contains(attribute)) {
-          attributes += attribute
+          attributes.prepend(attribute)
         }
       case _ =>
         val attributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
-        attributes += attribute
+        attributes.prepend(attribute)
         Util.setManagedAttributes(item, attributes)
     }
   }
