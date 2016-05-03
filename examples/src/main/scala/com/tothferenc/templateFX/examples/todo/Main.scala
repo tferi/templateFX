@@ -10,6 +10,11 @@ import com.tothferenc.templateFX.Api._
 
 import scala.collection.mutable.ArrayBuffer
 
+
+abstract class Reactor {
+  def !(message: Any): Unit
+}
+
 class ComponentReactor(scene: Scene, root: Pane) extends Reactor with LazyLogging {
   def nextId = System.currentTimeMillis()
 

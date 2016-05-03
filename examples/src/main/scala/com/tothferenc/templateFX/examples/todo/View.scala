@@ -3,7 +3,7 @@ package com.tothferenc.templateFX.examples.todo
 import javafx.event.{ EventHandler, ActionEvent }
 import javafx.scene.Scene
 import javafx.scene.control.{ Button, TextField, Label }
-import javafx.scene.layout.{ VBox, HBox, StackPane }
+import javafx.scene.layout.{GridPane, VBox, HBox, StackPane}
 
 import com.tothferenc.templateFX.Attributes._
 import com.tothferenc.templateFX.Spec
@@ -32,8 +32,8 @@ final case class PrependEH(reactor: Reactor, scene: Scene) extends EventHandler[
 
 object View {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    branchL[VBox]() {
-      items.map { case (k, s) => k -> leaf[Label](text <~ s) }
+    branchL[GridPane]() {
+      items.zipWithIndex.map { case ((key, txt), index) => key -> leaf[Label](text <~ txt, Grid.row <~ index, Grid.column <~ 1 ) }
     },
     branch[HBox]()(
       leaf[Label](text <~ "New item name:"),

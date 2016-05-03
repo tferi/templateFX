@@ -7,11 +7,38 @@ import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control._
 import javafx.scene.input.{ KeyEvent, MouseEvent }
+import javafx.scene.layout.GridPane
 
 import scala.collection.convert.wrapAsScala._
 
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
+
+  object Grid {
+    case object column extends Attribute[Node, Int] {
+      override def read(src: Node): Int = {
+        val integer = GridPane.getColumnIndex(src)
+        if (integer == null) - 1
+        else integer.intValue()
+      }
+
+      override def set(target: Node, value: Int): Unit = GridPane.setColumnIndex(target, value)
+
+      override def unset(target: Node): Unit = GridPane.setColumnIndex(target, null)
+    }
+
+    case object row extends Attribute[Node, Int] {
+      override def read(src: Node): Int = {
+        val integer = GridPane.getRowIndex(src)
+        if (integer == null) - 1
+        else integer.intValue()
+      }
+
+      override def set(target: Node, value: Int): Unit = GridPane.setRowIndex(target, value)
+
+      override def unset(target: Node): Unit = GridPane.setRowIndex(target, null)
+    }
+  }
 
   case object text extends Attribute[Labeled, String] {
     override def read(src: Labeled): String = src.getText
