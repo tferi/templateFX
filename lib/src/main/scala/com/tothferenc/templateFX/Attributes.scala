@@ -7,7 +7,7 @@ import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control._
 import javafx.scene.input.{ KeyEvent, MouseEvent }
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.{ColumnConstraints, GridPane}
 
 import scala.collection.convert.wrapAsScala._
 
@@ -15,6 +15,15 @@ object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
   object Grid {
+
+    case object columnConstraints extends Attribute[GridPane, List[ColumnConstraints]] {
+      override def read(src: GridPane): List[ColumnConstraints] = src.getColumnConstraints.toList
+
+      override def unset(target: GridPane): Unit = target.getStyleClass.clear()
+
+      override def set(target: GridPane, value: List[ColumnConstraints]): Unit = target.getColumnConstraints.setAll(value: _*)
+    }
+
     case object column extends Attribute[Node, Int] {
       override def read(src: Node): Int = {
         val integer = GridPane.getColumnIndex(src)

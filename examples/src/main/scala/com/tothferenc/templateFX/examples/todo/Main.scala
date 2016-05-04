@@ -27,6 +27,8 @@ class ComponentReactor(scene: Scene, root: Pane) extends Reactor with LazyLoggin
         Model.items.prepend(nextId -> item)
       case Insert(item, position) if item.nonEmpty =>
         Model.items.insert(position, nextId -> item)
+      case Delete(position) =>
+        Model.items.remove(position)
       case _ =>
         ()
     }
