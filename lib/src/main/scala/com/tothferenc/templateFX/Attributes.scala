@@ -2,9 +2,7 @@ package com.tothferenc.templateFX
 
 import java.lang
 import com.tothferenc.templateFX.attribute.Attribute
-import com.tothferenc.templateFX.macros.Gen
 
-import java.util
 import javafx.css.Styleable
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Node
@@ -17,8 +15,6 @@ import scala.collection.convert.wrapAsScala._
 
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
-
-  val x = Gen.simple[Node, String]("Id")
 
   object Anchor {
 
@@ -82,21 +78,9 @@ object Attributes {
     }
   }
 
-  case object text extends Attribute[Labeled, String] {
-    override def read(src: Labeled): String = src.getText
+  val text = Attribute.simple[Labeled, String]("Text")
 
-    override def unset(target: Labeled): Unit = target.setText(null)
-
-    override def set(target: Labeled, value: String): Unit = target.setText(value)
-  }
-
-  case object title extends Attribute[Chart, String] {
-    override def read(src: Chart): String = src.getTitle
-
-    override def unset(target: Chart): Unit = target.setTitle(null)
-
-    override def set(target: Chart, value: String): Unit = target.setTitle(value)
-  }
+  val title = Attribute.simple[Chart, String]("Title")
 
   case object styleClasses extends Attribute[Styleable, List[String]] {
     override def read(src: Styleable): List[String] = src.getStyleClass.toList
@@ -138,13 +122,7 @@ object Attributes {
     override def set(target: TextInputControl, value: SuperHandler[KeyEvent]): Unit = target.setOnKeyPressed(value)
   }
 
-  case object id extends Attribute[Node, String] {
-    override def unset(target: Node): Unit = target.setId(null)
-
-    override def read(src: Node): String = src.getId
-
-    override def set(target: Node, value: String): Unit = target.setId(value)
-  }
+  val id = Attribute.simple[Node, String]("Id")
 
   case object onMouseClick extends Attribute[Node, EventHandler[_ >: MouseEvent]] {
     override def unset(target: Node): Unit = target.setOnMouseClicked(null)
@@ -153,4 +131,6 @@ object Attributes {
 
     override def set(target: Node, value: EventHandler[_ >: MouseEvent]): Unit = target.setOnMouseClicked(value)
   }
+
+  // TODO val onKeyPressed = Attribute.simple[TextInputControl, EventHandler[_ >: KeyEvent]]("OnKeyPressed")
 }

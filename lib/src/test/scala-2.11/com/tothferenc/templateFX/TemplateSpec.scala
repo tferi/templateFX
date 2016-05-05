@@ -6,7 +6,7 @@ import javafx.scene.control.Label
 import javafx.scene.layout.{ Pane, AnchorPane }
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.Attributes._
-import com.tothferenc.templateFX.attribute.{Attribute, Unsettable}
+import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
 
 import org.specs2.mutable.Specification
 

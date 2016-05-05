@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.{AnchorPane, VBox, Pane}
+import javafx.scene.layout.{ AnchorPane, VBox, Pane }
 import javafx.stage.Stage
 
 import com.typesafe.scalalogging.LazyLogging
