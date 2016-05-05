@@ -16,7 +16,8 @@ val commonSettings = Seq(
 	),
 
 	scalacOptions ++= Seq(
-		"-Xfatal-warnings"
+		"-Xfatal-warnings",
+		"-Ymacro-debug-lite"
 	),
 
 	addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)

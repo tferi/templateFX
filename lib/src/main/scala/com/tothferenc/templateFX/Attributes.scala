@@ -2,7 +2,7 @@ package com.tothferenc.templateFX
 
 import java.lang
 import com.tothferenc.templateFX.attribute.Attribute
-import com.tothferenc.templateFX.macros.Expander
+import com.tothferenc.templateFX.macros.Gen
 
 import java.util
 import javafx.css.Styleable
@@ -18,7 +18,7 @@ import scala.collection.convert.wrapAsScala._
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
-  val x = Expander.m[String, String]("")
+  val x = Gen.simple[Node, String]("Id")
 
   object Anchor {
 
