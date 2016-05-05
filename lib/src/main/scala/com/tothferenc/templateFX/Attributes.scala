@@ -18,37 +18,14 @@ object Attributes {
 
   object Anchor {
 
-    case object top extends Attribute[Node, lang.Double] {
-      override def read(src: Node): lang.Double = AnchorPane.getTopAnchor(src)
+    val top = Attribute.remote[AnchorPane, Node, lang.Double]("TopAnchor")
 
-      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setTopAnchor(target, value)
+    val bottom = Attribute.remote[AnchorPane, Node, lang.Double]("BottomAnchor")
 
-      override def unset(target: Node): Unit = AnchorPane.setTopAnchor(target, null)
-    }
+    val left = Attribute.remote[AnchorPane, Node, lang.Double]("LeftAnchor")
 
-    case object bottom extends Attribute[Node, lang.Double] {
-      override def read(src: Node): lang.Double = AnchorPane.getBottomAnchor(src)
+    val right = Attribute.remote[AnchorPane, Node, lang.Double]("RightAnchor")
 
-      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setBottomAnchor(target, value)
-
-      override def unset(target: Node): Unit = AnchorPane.setBottomAnchor(target, null)
-    }
-
-    case object left extends Attribute[Node, lang.Double] {
-      override def read(src: Node): lang.Double = AnchorPane.getLeftAnchor(src)
-
-      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setLeftAnchor(target, value)
-
-      override def unset(target: Node): Unit = AnchorPane.setLeftAnchor(target, null)
-    }
-
-    case object right extends Attribute[Node, lang.Double] {
-      override def read(src: Node): lang.Double = AnchorPane.getRightAnchor(src)
-
-      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setRightAnchor(target, value)
-
-      override def unset(target: Node): Unit = AnchorPane.setRightAnchor(target, null)
-    }
   }
 
   object Grid {
@@ -61,21 +38,9 @@ object Attributes {
       override def set(target: GridPane, value: List[ColumnConstraints]): Unit = target.getColumnConstraints.setAll(value: _*)
     }
 
-    case object column extends Attribute[Node, lang.Integer] {
-      override def read(src: Node): lang.Integer = GridPane.getColumnIndex(src)
+    val column = Attribute.remote[GridPane, Node, lang.Integer]("ColumnIndex")
 
-      override def set(target: Node, value: lang.Integer): Unit = GridPane.setColumnIndex(target, value)
-
-      override def unset(target: Node): Unit = GridPane.setColumnIndex(target, null)
-    }
-
-    case object row extends Attribute[Node, lang.Integer] {
-      override def read(src: Node): lang.Integer = GridPane.getRowIndex(src)
-
-      override def set(target: Node, value: lang.Integer): Unit = GridPane.setRowIndex(target, value)
-
-      override def unset(target: Node): Unit = GridPane.setRowIndex(target, null)
-    }
+    val row = Attribute.remote[GridPane, Node, lang.Integer]("RowIndex")
   }
 
   val text = Attribute.simple[Labeled, String]("Text")
@@ -90,37 +55,13 @@ object Attributes {
     override def set(target: Styleable, value: List[String]): Unit = target.getStyleClass.setAll(value: _*)
   }
 
-  case object inputText extends Attribute[TextInputControl, String] {
-    override def read(src: TextInputControl): String = src.getText
+  val inputText = Attribute.simple[TextInputControl, String]("Text")
 
-    override def unset(target: TextInputControl): Unit = target.setText(null)
+  val onActionText = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction")
 
-    override def set(target: TextInputControl, value: String): Unit = target.setText(value)
-  }
+  val onActionButton = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction")
 
-  case object onActionText extends Attribute[TextField, EventHandler[ActionEvent]] {
-    override def read(src: TextField): EventHandler[ActionEvent] = src.getOnAction
-
-    override def unset(target: TextField): Unit = target.setOnAction(null)
-
-    override def set(target: TextField, value: EventHandler[ActionEvent]): Unit = target.setOnAction(value)
-  }
-
-  case object onActionButton extends Attribute[ButtonBase, EventHandler[ActionEvent]] {
-    override def read(src: ButtonBase): EventHandler[ActionEvent] = src.getOnAction
-
-    override def unset(target: ButtonBase): Unit = target.setOnAction(null)
-
-    override def set(target: ButtonBase, value: EventHandler[ActionEvent]): Unit = target.setOnAction(value)
-  }
-
-  case object onKeyPressed extends Attribute[TextInputControl, SuperHandler[KeyEvent]] {
-    override def read(src: TextInputControl): SuperHandler[KeyEvent] = src.getOnKeyPressed
-
-    override def unset(target: TextInputControl): Unit = target.setOnKeyPressed(null)
-
-    override def set(target: TextInputControl, value: SuperHandler[KeyEvent]): Unit = target.setOnKeyPressed(value)
-  }
+  val onKeyPressed = Attribute.simple[TextInputControl, SuperHandler[KeyEvent]]("OnKeyPressed")
 
   val id = Attribute.simple[Node, String]("Id")
 
@@ -132,12 +73,5 @@ object Attributes {
 
   val accessibleRole = Attribute.simple[Node, AccessibleRole]("AccessibleRole")
 
-  case object onMouseClick extends Attribute[Node, EventHandler[_ >: MouseEvent]] {
-    override def unset(target: Node): Unit = target.setOnMouseClicked(null)
-
-    override def read(src: Node): EventHandler[_ >: MouseEvent] = src.getOnMouseClicked
-
-    override def set(target: Node, value: EventHandler[_ >: MouseEvent]): Unit = target.setOnMouseClicked(value)
-  }
-
+  val onMouseClick = Attribute.simple[Node, EventHandler[_ >: MouseEvent]]("OnMouseClicked")
 }
