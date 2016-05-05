@@ -5,7 +5,7 @@ import com.tothferenc.templateFX.attribute.Attribute
 
 import javafx.css.Styleable
 import javafx.event.{ ActionEvent, EventHandler }
-import javafx.scene.{ AccessibleRole, Node }
+import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control._
 import javafx.scene.input.{ KeyEvent, MouseEvent }
@@ -71,7 +71,7 @@ object Attributes {
 
   val accessibleText = Attribute.simple[Node, String]("AccessibleText")
 
-  val accessibleRole = Attribute.simple[Node, AccessibleRole]("AccessibleRole")
+//  val accessibleRole = Attribute.simple[Node, AccessibleRole]("AccessibleRole")
 
   val onMouseClick = Attribute.simple[Node, EventHandler[_ >: MouseEvent]]("OnMouseClicked")
 }
