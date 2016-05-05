@@ -67,11 +67,5 @@ object Attributes {
 
   val style = Attribute.simple[Node, String]("Style")
 
-  val accessibleHelp = Attribute.simple[Node, String]("AccessibleHelp")
-
-  val accessibleText = Attribute.simple[Node, String]("AccessibleText")
-
-//  val accessibleRole = Attribute.simple[Node, AccessibleRole]("AccessibleRole")
-
   val onMouseClick = Attribute.simple[Node, EventHandler[_ >: MouseEvent]]("OnMouseClicked")
 }
