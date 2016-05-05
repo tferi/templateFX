@@ -2,14 +2,13 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.{ VBox, Pane }
+import javafx.scene.layout.{AnchorPane, VBox, Pane}
 import javafx.stage.Stage
 
 import com.typesafe.scalalogging.LazyLogging
 import com.tothferenc.templateFX.Api._
 
 import scala.collection.mutable.ArrayBuffer
-
 
 abstract class Reactor {
   def !(message: Any): Unit
@@ -26,9 +25,11 @@ class ComponentReactor(scene: Scene, root: Pane) extends Reactor with LazyLoggin
       case Prepend(item) if item.nonEmpty =>
         Model.items.prepend(nextId -> item)
       case Insert(item, position) if item.nonEmpty =>
-        Model.items.insert(position, nextId -> item)
-      case Delete(position) =>
-        Model.items.remove(position)
+        val actualPosition = if (position > Model.items.length) Model.items.length else position
+        Model.items.insert(actualPosition, nextId -> item)
+      case Delete(key) =>
+        val index = Model.items.indexWhere(_._1 == key)
+        if (index > -1) Model.items.remove(index)
       case _ =>
         ()
     }
@@ -46,7 +47,7 @@ class Main extends Application {
   override def start(primaryStage: Stage) {
     primaryStage.setTitle("Sup!")
 
-    val root = new VBox()
+    val root = new AnchorPane()
 
     val scene: Scene = new Scene(root, 600, 800)
     primaryStage.setScene(scene)

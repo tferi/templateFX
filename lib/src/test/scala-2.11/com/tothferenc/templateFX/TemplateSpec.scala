@@ -15,7 +15,7 @@ import scala.collection.mutable.ListBuffer
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
-  private val hello: Spec[Label] = leaf[Label](text <~ "hello")
+  private val hello: Spec[Label] = leaf[Label](text ~ "hello")
 
   private def paneWith(specGroup: ChildrenSpecification) = branchL[AnchorPane]() {
     specGroup
@@ -35,12 +35,12 @@ class TemplateSpec extends Specification {
 
   val helloWorld: List[Spec[Label]] = List(
     hello,
-    leaf[Label](text <~ "world")
+    leaf[Label](text ~ "world")
   )
 
   val keyedHelloWorld = List(
-    1 -> leaf[Label](text <~ "hello"),
-    2 -> leaf[Label](text <~ "world")
+    1 -> leaf[Label](text ~ "hello"),
+    2 -> leaf[Label](text ~ "world")
   )
 
   implicit class ChangeMatchers(change: Change) {
@@ -63,7 +63,7 @@ class TemplateSpec extends Specification {
 
     "have their constraints applied to inheritors" in {
       val container: TFXParent = branch[AnchorPane]() {
-        leaf[PieChart](com.tothferenc.templateFX.Attributes.title <~ "well")
+        leaf[PieChart](com.tothferenc.templateFX.Attributes.title ~ "well")
       }.materialize()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
       chart.getTitle === "well"
@@ -72,7 +72,7 @@ class TemplateSpec extends Specification {
     "be reconciled as expected when a single mutation is needed" in {
       val pane = paneWithHello.materialize()
       val changes: List[Change] = List(
-        leaf[Label](text <~ "world")
+        leaf[Label](text ~ "world")
       ).requiredChangesIn(pane)
       changes.length === 1
       changes.headOption match {
@@ -89,7 +89,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.materialize()
-      val newDef: Spec[Label] = leaf[Label](text <~ "world")
+      val newDef: Spec[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1
@@ -117,8 +117,8 @@ class TemplateSpec extends Specification {
 
       val helloDearWorld = List(
         3 -> hello,
-        2 -> leaf[Label](text <~ "dear"),
-        1 -> leaf[Label](text <~ "world")
+        2 -> leaf[Label](text ~ "dear"),
+        1 -> leaf[Label](text ~ "world")
       )
       val pane = paneWith(keyedHelloWorld).materialize()
       val child0 = child(0, pane)
@@ -139,8 +139,8 @@ class TemplateSpec extends Specification {
 
       val helloDearWorld = List(
         1 -> hello,
-        2 -> leaf[Label](text <~ "dear"),
-        3 -> leaf[Label](text <~ "world")
+        2 -> leaf[Label](text ~ "dear"),
+        3 -> leaf[Label](text ~ "world")
       )
       val pane = paneWith(helloDearWorld).materialize()
       val child0 = child(0, pane)
@@ -174,7 +174,7 @@ class TemplateSpec extends Specification {
       val label = getLabel
       val attributes = Util.getUserData[ListBuffer[Unsettable[_]]](label, Attribute.key).getOrElse(Nil).toList
       attributes === List(text)
-      val changes = List(leaf[Label](styleClasses <~ List("nice"))).requiredChangesIn(pane)
+      val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane)
       changes.exists(_.isInstanceOf[UnsetAttributes[_]]) === true
       changes.exists(_.isInstanceOf[Mutate[_, _]]) === true
       changes.foreach(_.execute())

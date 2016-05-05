@@ -31,47 +31,33 @@ final case class PrependEH(reactor: Reactor, scene: Scene) extends EventHandler[
     reactor ! Prepend(getText(scene, "#textInput"))
 }
 
-final case class DeleteEh(reactor: Reactor, scene: Scene, position: Int) extends EventHandler[ActionEvent] with TextReader {
+final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit =
-    reactor ! Delete(position)
+    reactor ! Delete(key)
 }
 
 object View {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    branchL[GridPane](columnConstraints <~ List(new ColumnConstraints(100,200,300), new ColumnConstraints(100,200,300))) {
-      items.zipWithIndex.flatMap { case ((key, txt), index) => List(
-        key -> leaf[Label](text <~ txt, Grid.row <~ index, Grid.column <~ 1 ),
-        key + "-button" -> leaf[Button](text <~ "Delete", Grid.row <~ index, Grid.column <~ 2, onActionButton <~ DeleteEh(reactor, scene, index) )
-      ) }
+    branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+      items.zipWithIndex.flatMap {
+        case ((key, txt), index) => List(
+          key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
+          key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
+        )
+      }
     },
-    branch[HBox]()(
-      leaf[Label](text <~ "New item name:"),
-      leaf[TextField](
-        id <~ "textInput",
-        onActionText <~ InsertEh(reactor, scene)
-      )
-    ),
-    leaf[Button](
-      id <~ "prependButton",
-      text <~ "Prepend this item!",
-      onActionButton <~ PrependEH(reactor, scene)
-    ),
-    leaf[Button](
-      id <~ "appendButton",
-      text <~ "Append this item!",
-      onActionButton <~ AppendEH(reactor, scene)
-    ),
-    branch[HBox]()(
-      leaf[Label](text <~ "New item position:"),
-      leaf[TextField](
-        id <~ "positionInput",
-        onActionText <~ AppendEH(reactor, scene)
-      )
-    ),
-    leaf[Button](
-      id <~ "insertButton",
-      text <~ "Insert this item!",
-      onActionButton <~ InsertEh(reactor, scene)
+    branch[VBox](Anchor.bottom ~ 0.0)(
+      branch[HBox]()(
+        leaf[Label](text ~ "New item name:"),
+        leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene))
+      ),
+      leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
+      leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene)),
+      branch[HBox]()(
+        leaf[Label](text ~ "New item position:"),
+        leaf[TextField](id ~ "positionInput", onActionText ~ AppendEH(reactor, scene))
+      ),
+      leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
     )
   )
 }

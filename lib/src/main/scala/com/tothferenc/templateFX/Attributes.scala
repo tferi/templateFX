@@ -1,18 +1,53 @@
 package com.tothferenc.templateFX
 
-import java.util
+import java.lang
 import javafx.css.Styleable
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control._
 import javafx.scene.input.{ KeyEvent, MouseEvent }
-import javafx.scene.layout.{ColumnConstraints, GridPane}
+import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
 
 import scala.collection.convert.wrapAsScala._
 
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
+
+  object Anchor {
+
+    case object top extends Attribute[Node, lang.Double] {
+      override def read(src: Node): lang.Double = AnchorPane.getTopAnchor(src)
+
+      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setTopAnchor(target, value)
+
+      override def unset(target: Node): Unit = AnchorPane.setTopAnchor(target, null)
+    }
+
+    case object bottom extends Attribute[Node, lang.Double] {
+      override def read(src: Node): lang.Double = AnchorPane.getBottomAnchor(src)
+
+      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setBottomAnchor(target, value)
+
+      override def unset(target: Node): Unit = AnchorPane.setBottomAnchor(target, null)
+    }
+
+    case object left extends Attribute[Node, lang.Double] {
+      override def read(src: Node): lang.Double = AnchorPane.getLeftAnchor(src)
+
+      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setLeftAnchor(target, value)
+
+      override def unset(target: Node): Unit = AnchorPane.setLeftAnchor(target, null)
+    }
+
+    case object right extends Attribute[Node, lang.Double] {
+      override def read(src: Node): lang.Double = AnchorPane.getRightAnchor(src)
+
+      override def set(target: Node, value: lang.Double): Unit = AnchorPane.setRightAnchor(target, value)
+
+      override def unset(target: Node): Unit = AnchorPane.setRightAnchor(target, null)
+    }
+  }
 
   object Grid {
 
@@ -24,26 +59,18 @@ object Attributes {
       override def set(target: GridPane, value: List[ColumnConstraints]): Unit = target.getColumnConstraints.setAll(value: _*)
     }
 
-    case object column extends Attribute[Node, Int] {
-      override def read(src: Node): Int = {
-        val integer = GridPane.getColumnIndex(src)
-        if (integer == null) - 1
-        else integer.intValue()
-      }
+    case object column extends Attribute[Node, lang.Integer] {
+      override def read(src: Node): lang.Integer = GridPane.getColumnIndex(src)
 
-      override def set(target: Node, value: Int): Unit = GridPane.setColumnIndex(target, value)
+      override def set(target: Node, value: lang.Integer): Unit = GridPane.setColumnIndex(target, value)
 
       override def unset(target: Node): Unit = GridPane.setColumnIndex(target, null)
     }
 
-    case object row extends Attribute[Node, Int] {
-      override def read(src: Node): Int = {
-        val integer = GridPane.getRowIndex(src)
-        if (integer == null) - 1
-        else integer.intValue()
-      }
+    case object row extends Attribute[Node, lang.Integer] {
+      override def read(src: Node): lang.Integer = GridPane.getRowIndex(src)
 
-      override def set(target: Node, value: Int): Unit = GridPane.setRowIndex(target, value)
+      override def set(target: Node, value: lang.Integer): Unit = GridPane.setRowIndex(target, value)
 
       override def unset(target: Node): Unit = GridPane.setRowIndex(target, null)
     }

@@ -17,7 +17,7 @@ object Api {
   }
 
   implicit class AttributeAssigner[FXType, Attr](attribute: Attribute[FXType, Attr]) {
-    def <~(value: Attr) = Binding(attribute, value)
+    def ~(value: Attr) = Binding(attribute, value)
   }
 
   def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpecification): Spec[FXType] =
