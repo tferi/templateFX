@@ -7,7 +7,7 @@ import scala.util.control.NonFatal
 object Attribute {
   val key = "attributes"
 
-  private case class MethodNotFoundException(tpe: String, method: String) extends Exception(s"Method $method was not found on $tpe")
+  private case class MethodNotFoundException(tpe: String, method: String, cause: Throwable) extends Exception(s"Method $method was not found on $tpe", cause)
 
   def simple[Attr, Value](getterSetterName: String): Attribute[Attr, Value] = macro simpleImpl[Attr, Value]
 
@@ -20,7 +20,7 @@ object Attribute {
       try {
         attrType.member(TermName(methodName)).asMethod
       } catch {
-        case NonFatal(t) => throw new MethodNotFoundException(attrType.toString, methodName)
+        case NonFatal(t) => throw new MethodNotFoundException(attrType.toString, methodName, t)
       }
     }
     val Literal(Constant(getset: String)) = getterSetterName.tree
