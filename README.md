@@ -6,8 +6,7 @@ templateFX
 Coming soon!
 
 Laundry list:
-  * Figure out how constrants should be set in the DSL for GridPane, Anchorpane, etc.
-  * Write macro for autogenerating attribute types based on their name and the class they're bound to.
-  * Possibly write macro for extracting attributes from any javafx class based on getters/setters.
-  * Cleanup tests.
-  * Set-once properties?
+  * Write macro for extracting attributes from any javafx class based on getters/setters.
+  * Extensive tests.
+  * Set-once properties.
+  * Another example application.
