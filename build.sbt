@@ -1,4 +1,5 @@
 import sbt.Keys._
+import sbt._
 
 val commonSettings = Seq(
 	version := "1.0",
@@ -16,10 +17,19 @@ val commonSettings = Seq(
 
 	scalacOptions ++= Seq(
 		"-Xfatal-warnings"
-	)
+	),
+
+	addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 )
 
+val macros = (project in file("macros"))
+  .settings(commonSettings)
+  .settings(
+	  libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
+  )
+
 val lib = (project in file("lib"))
+	.dependsOn(macros)
   .settings(commonSettings)
 
 val examples = (project in file("examples"))
@@ -27,8 +37,8 @@ val examples = (project in file("examples"))
 	.dependsOn(lib)
 
 val root = (project in file("."))
-  .dependsOn(lib, examples)
-	.aggregate(lib, examples)
+  .dependsOn(macros, lib, examples)
+	.aggregate(macros, lib, examples)
 	.settings(commonSettings)
 	.settings(Seq(
 		name := "templateFx"

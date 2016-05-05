@@ -2,6 +2,7 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
+import com.tothferenc.templateFX.attribute.{Attribute, Unsettable}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 

@@ -3,6 +3,8 @@ package com.tothferenc.templateFX
 import javafx.scene.Node
 import javafx.scene.layout.Pane
 
+import com.tothferenc.templateFX.attribute.Attribute
+
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 

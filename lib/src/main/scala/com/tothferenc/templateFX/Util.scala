@@ -2,6 +2,8 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
+import com.tothferenc.templateFX.attribute.{Attribute, Unsettable}
+
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 

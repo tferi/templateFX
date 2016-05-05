@@ -1,11 +1,7 @@
-package com.tothferenc.templateFX
+package com.tothferenc.templateFX.attribute
 
 object Attribute {
   val key = "attributes"
-}
-
-abstract class Unsettable[-FXType] {
-  def unset(target: FXType): Unit
 }
 
 abstract class Attribute[-FXType, AttrType] extends Unsettable[FXType] {

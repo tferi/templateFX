@@ -2,6 +2,8 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
+import com.tothferenc.templateFX.attribute.{Attribute, Unsettable}
+
 abstract class Constraint[-FXType] extends (FXType => Option[Change]) {
   def attribute: Unsettable[_]
 }
