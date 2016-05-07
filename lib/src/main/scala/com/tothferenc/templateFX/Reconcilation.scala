@@ -20,8 +20,38 @@ case object Ignore extends ChildrenSpecification {
   override def materializeAll(): List[Node] = Nil
 }
 
-object IdentifiedSpecs {
-  private val TFX_KEY = "tfx_key"
+final case class SpecsWithIds[Key](specs: Map[Key, NodeSpec]) extends ChildrenSpecification {
+  override def requiredChangesIn(container: TFXParent): List[Change] = {
+    val existingChildren: ObservableList[Node] = container.getChildren
+    val existingNodesByKey = existingChildren.groupBy { node =>
+      node.getUserData.asInstanceOf[mutable.Map[String, Any]]
+        .get(SpecsWithKeys.TFX_KEY)
+        .map(_.asInstanceOf[Key])
+    }
+    val specKeySet = specs.keySet
+    val removals = for {
+      (key, nodes) <- existingNodesByKey if key.isEmpty || !specKeySet.contains(key.get)
+      node <- nodes
+    } yield node
+
+    val mutationsInsertions: List[Change] = specs.toList.flatMap {
+      case (key, spec) => existingNodesByKey.get(Some(key)) match {
+        case Some(mutable.Buffer(node)) =>
+          spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
+        case _ =>
+          List(InsertWithKey(container, spec, 0, key))
+      }
+    }
+    (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsInsertions
+  }
+
+  override def materializeAll(): List[Node] = specs.map {
+    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.materialize())
+  }.toList
+}
+
+object SpecsWithKeys {
+  val TFX_KEY = "tfx_key"
 
   private[templateFX] def setKeyOnNode[Key](key: Key, node: Node): Node = {
     val keySetting: (String, Key) = TFX_KEY -> key
@@ -34,13 +64,13 @@ object IdentifiedSpecs {
   }
 }
 
-final case class IdentifiedSpecs[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpecification {
+final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpecification {
 
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
     val existingNodesByKey = existingChildren.groupBy { node =>
       node.getUserData.asInstanceOf[mutable.Map[String, Any]]
-        .get(IdentifiedSpecs.TFX_KEY)
+        .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
     }
     val specKeySet = specsWithKeys.map(_._1).toSet
@@ -61,11 +91,11 @@ final case class IdentifiedSpecs[Key](specsWithKeys: List[(Key, NodeSpec)]) exte
   }
 
   override def materializeAll(): List[Node] = specsWithKeys.map {
-    case (key, spec) => IdentifiedSpecs.setKeyOnNode(key, spec.materialize())
+    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.materialize())
   }
 }
 
-final case class SequentialSpecs(specs: List[NodeSpec]) extends ChildrenSpecification {
+final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpecification {
 
   override def materializeAll(): List[Node] = specs.map(_.materialize())
 

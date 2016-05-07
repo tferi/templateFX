@@ -10,8 +10,8 @@ import scala.reflect.ClassTag
 
 object Api {
 
-  implicit def SpecList2SpecGroup(specs: List[NodeSpec]): ChildrenSpecification = SequentialSpecs(specs)
-  implicit def KeyedSpecs2SpecGroup[Key](specs: List[(Key, NodeSpec)]): ChildrenSpecification = IdentifiedSpecs(specs)
+  implicit def SpecList2SpecGroup(specs: List[NodeSpec]): ChildrenSpecification = OrderedSpecs(specs)
+  implicit def KeyedSpecs2SpecGroup[Key](specs: List[(Key, NodeSpec)]): ChildrenSpecification = OrderedSpecsWithIds(specs)
 
   implicit class ReconcilationSyntax(reconcilableGroup: ChildrenSpecification) {
     def changes(container: Pane): List[Change] = reconcilableGroup.requiredChangesIn(container)

@@ -27,7 +27,7 @@ final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[F
 }
 
 final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Spec[FXType], position: Int, key: Key) extends Change {
-  override def execute(): Unit = container.getChildren.add(position, IdentifiedSpecs.setKeyOnNode(key, definition.materialize()))
+  override def execute(): Unit = container.getChildren.add(position, SpecsWithKeys.setKeyOnNode(key, definition.materialize()))
 }
 
 final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
