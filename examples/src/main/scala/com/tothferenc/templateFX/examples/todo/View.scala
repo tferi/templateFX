@@ -18,25 +18,25 @@ trait TextReader {
 
 final case class InsertEh(reactor: Reactor, scene: Scene) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit =
-    reactor ! Insert(getText(scene, "#textInput"), Try(getText(scene, "#positionInput").toInt).getOrElse(0))
+    reactor handle Insert(getText(scene, "#textInput"), Try(getText(scene, "#positionInput").toInt).getOrElse(0))
 }
 
 final case class AppendEH(reactor: Reactor, scene: Scene) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit =
-    reactor ! Append(getText(scene, "#textInput"))
+    reactor handle Append(getText(scene, "#textInput"))
 }
 
 final case class PrependEH(reactor: Reactor, scene: Scene) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit =
-    reactor ! Prepend(getText(scene, "#textInput"))
+    reactor handle Prepend(getText(scene, "#textInput"))
 }
 
 final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit =
-    reactor ! Delete(key)
+    reactor handle Delete(key)
 }
 
-object View {
+class AppView {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
     branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
       items.zipWithIndex.flatMap {
