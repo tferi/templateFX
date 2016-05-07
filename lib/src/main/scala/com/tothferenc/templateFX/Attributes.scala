@@ -12,6 +12,7 @@ import javafx.scene.input.{ KeyEvent, MouseEvent }
 import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
 
 import scala.collection.convert.wrapAsScala._
+import scala.collection.mutable
 
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
@@ -46,6 +47,14 @@ object Attributes {
   val text = Attribute.simple[Labeled, String]("Text")
 
   val title = Attribute.simple[Chart, String]("Title")
+
+  final case class user(key: String) extends Attribute[Node, Any] {
+    override def read(src: Node): Any = UserData.get[Any](src, key).orNull
+
+    override def set(target: Node, value: Any): Unit = UserData.set(target, key, value)
+
+    override def unset(target: Node): Unit = target.asInstanceOf[mutable.Map[String, Any]].remove(key)
+  }
 
   case object styleClasses extends Attribute[Styleable, List[String]] {
     override def read(src: Styleable): List[String] = src.getStyleClass.toList

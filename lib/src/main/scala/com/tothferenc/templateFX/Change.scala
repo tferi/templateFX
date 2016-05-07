@@ -61,7 +61,7 @@ final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Ite
 
     attribute.set(item, value)
 
-    Util.getManagedAttributes(item) match {
+    ManagedAttributes.get(item) match {
       case Some(managedAttributes) =>
         if (!managedAttributes.contains(attribute)) {
           managedAttributes.prepend(attribute)
@@ -69,14 +69,14 @@ final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Ite
       case _ =>
         val managedAttributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
         managedAttributes.prepend(attribute)
-        Util.setManagedAttributes(item, managedAttributes)
+        ManagedAttributes.set(item, managedAttributes)
     }
   }
 }
 
 final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[Unsettable[Item]]) extends Change {
   override protected def exec(): Unit = {
-    val currentlySetAttributes = Util.getManagedAttributes(item)
+    val currentlySetAttributes = ManagedAttributes.get(item)
     attributesToUnset.foreach { attribute =>
       attribute.unset(item)
       currentlySetAttributes.foreach(attributes => attributes -= attribute)

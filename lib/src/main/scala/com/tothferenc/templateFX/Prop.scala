@@ -21,7 +21,7 @@ abstract class Spec[FXType <: Node] {
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
-      (Util.getUserData[ListBuffer[Unsettable[Node]]](node, Attribute.key) match {
+      (UserData.get[ListBuffer[Unsettable[Node]]](node, Attribute.key) match {
         case Some(attributes) =>
           val toUnset: ListBuffer[Unsettable[Node]] = attributes.filterNot { checked =>
             constraints.exists(_.attribute == checked)
