@@ -1,8 +1,8 @@
 package com.tothferenc.templateFX.examples.todo
 
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Scene
-import javafx.scene.control.{Button, Label, ScrollPane, TextField}
+import javafx.scene.control.{ Button, Label, ScrollPane, TextField }
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
@@ -51,15 +51,15 @@ class AppView {
     branch[VBox](Anchor.bottom ~ 0.0)(
       branch[HBox]()(
         leaf[Label](text ~ "New item name:"),
-        leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene))
+        leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
+        leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
+        leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
       ),
-      leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
-      leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene)),
       branch[HBox]()(
         leaf[Label](text ~ "New item position:"),
-        leaf[TextField](id ~ "positionInput", onActionText ~ AppendEH(reactor, scene))
-      ),
-      leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
+        leaf[TextField](id ~ "positionInput", onActionText ~ AppendEH(reactor, scene)),
+        leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
+      )
     )
   )
 }
