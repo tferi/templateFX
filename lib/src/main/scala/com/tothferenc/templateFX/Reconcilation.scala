@@ -54,12 +54,7 @@ object SpecsWithKeys {
   val TFX_KEY = "tfx_key"
 
   private[templateFX] def setKeyOnNode[Key](key: Key, node: Node): Node = {
-    val keySetting: (String, Key) = TFX_KEY -> key
-    if (node.getUserData == null) {
-      node.setUserData(new mutable.ListMap[String, Any]() += keySetting)
-    } else {
-      node.getUserData.asInstanceOf[mutable.Map[String, Any]] += keySetting
-    }
+    UserData.set(node, TFX_KEY, key)
     node
   }
 }
