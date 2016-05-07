@@ -20,7 +20,7 @@ case object Ignore extends ChildrenSpecification {
   override def materializeAll(): List[Node] = Nil
 }
 
-final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends ChildrenSpecification {
+final case class SpecsWithIds[Key](specs: List[(Key, NodeDef)]) extends ChildrenSpecification {
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
     val existingNodesByKey = existingChildren.groupBy { node =>
@@ -59,7 +59,7 @@ object SpecsWithKeys {
   }
 }
 
-final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpecification {
+final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeDef)]) extends ChildrenSpecification {
 
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
@@ -90,11 +90,11 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
   }
 }
 
-final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpecification {
+final case class OrderedSpecs(specs: List[NodeDef]) extends ChildrenSpecification {
 
   override def materializeAll(): List[Node] = specs.map(_.materialize())
 
-  private def reconcileInHierarchy(container: TFXParent, position: Int, nodeO: Option[Node], spec: Spec[_ <: Node]): List[Change] = nodeO match {
+  private def reconcileInHierarchy(container: TFXParent, position: Int, nodeO: Option[Node], spec: NodeDef): List[Change] = nodeO match {
     case Some(node) =>
       spec.reconcileWithNode(container, position, node)
 

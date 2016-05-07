@@ -2,22 +2,21 @@ package com.tothferenc.templateFX
 
 import java.lang.reflect.Constructor
 import javafx.scene.Node
-import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.reflect._
 
 class NoConstructorForParams(clazz: Class[_], params: Seq[Any])
   extends Exception(s"No ${clazz.getSimpleName} constructor was found for parameters: ${params.mkString(", ")}")
 
-abstract class Spec[FXType <: Node] {
-  def constraints: Seq[Constraint[FXType]]
-  def materialize(): FXType
-  def children: ChildrenSpecification
-  def clazz: Class[_]
+final case class Definition[FXType <: Node](
+    constraints: Seq[Constraint[FXType]],
+    children: ChildrenSpecification
+)(constructorParams: Any*)(implicit classTag: ClassTag[FXType]) {
+
+  val clazz = classTag.runtimeClass
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
@@ -44,14 +43,6 @@ abstract class Spec[FXType <: Node] {
       List(Replace(container, this, position))
     }
   }
-}
-
-final case class Definition[FXType <: Node](
-    val constraints: Seq[Constraint[FXType]],
-    val children: ChildrenSpecification
-)(constructorParams: Any*)(implicit classTag: ClassTag[FXType]) extends Spec[FXType] {
-
-  val clazz = classTag.runtimeClass
 
   private def instantiate(): FXType = {
     val constructors: Array[Constructor[_]] = clazz.getConstructors

@@ -36,15 +36,15 @@ final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive
   override protected def exec(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
 }
 
-final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
+final case class Insert[FXType <: Node](container: TFXParent, definition: Definition[FXType], position: Int) extends Change {
   override protected def exec(): Unit = container.getChildren.add(position, definition.materialize())
 }
 
-final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Spec[FXType], position: Int, key: Key) extends Change {
+final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Definition[FXType], position: Int, key: Key) extends Change {
   override protected def exec(): Unit = container.getChildren.add(position, SpecsWithKeys.setKeyOnNode(key, definition.materialize()))
 }
 
-final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
+final case class Replace[FXType <: Node](container: TFXParent, definition: Definition[FXType], position: Int) extends Change {
   override protected def exec(): Unit = container.getChildren.set(position, definition.materialize())
 }
 
