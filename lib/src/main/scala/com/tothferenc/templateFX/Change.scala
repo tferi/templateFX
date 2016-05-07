@@ -3,51 +3,39 @@ package com.tothferenc.templateFX
 import javafx.scene.Node
 
 import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
-import com.typesafe.scalalogging.Logger
-import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ListBuffer
 
-object Change {
-  val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
-}
-
 sealed abstract class Change extends Product with Serializable {
-
-  def execute(): Unit = {
-    Change.logger.debug(this.toString)
-    exec()
-  }
-
-  protected def exec(): Unit
+  def execute(): Unit
 }
 
 final case class RemoveNode(container: TFXParent, node: Node) extends Change {
-  override protected def exec(): Unit = container.getChildren.remove(node)
+  override def execute(): Unit = container.getChildren.remove(node)
 }
 
 final case class RemoveNodes(container: TFXParent, nodes: Seq[Node]) extends Change {
-  override protected def exec(): Unit = container.getChildren.removeAll(nodes: _*)
+  override def execute(): Unit = container.getChildren.removeAll(nodes: _*)
 }
 
 final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
+  override def execute(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
 }
 
 final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, definition.materialize())
+  override def execute(): Unit = container.getChildren.add(position, definition.materialize())
 }
 
 final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Spec[FXType], position: Int, key: Key) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, IdentifiedSpecs.setKeyOnNode(key, definition.materialize()))
+  override def execute(): Unit = container.getChildren.add(position, IdentifiedSpecs.setKeyOnNode(key, definition.materialize()))
 }
 
 final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.set(position, definition.materialize())
+  override def execute(): Unit = container.getChildren.set(position, definition.materialize())
 }
 
 final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPosition: Int) extends Change {
-  override protected def exec(): Unit = {
+  override def execute(): Unit = {
     val currentPosition = container.getChildren.indexOf(node)
     if (currentPosition != targetPosition) {
       container.getChildren.remove(node)
@@ -57,7 +45,7 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
 }
 
 final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
-  override protected def exec(): Unit = {
+  override def execute(): Unit = {
 
     attribute.set(item, value)
 
@@ -75,7 +63,7 @@ final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Ite
 }
 
 final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[Unsettable[Item]]) extends Change {
-  override protected def exec(): Unit = {
+  override def execute(): Unit = {
     val currentlySetAttributes = ManagedAttributes.get(item)
     attributesToUnset.foreach { attribute =>
       attribute.unset(item)
