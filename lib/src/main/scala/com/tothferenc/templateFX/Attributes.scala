@@ -31,13 +31,7 @@ object Attributes {
 
   object Grid {
 
-    case object columnConstraints extends Attribute[GridPane, List[ColumnConstraints]] {
-      override def read(src: GridPane): List[ColumnConstraints] = src.getColumnConstraints.toList
-
-      override def unset(target: GridPane): Unit = target.getStyleClass.clear()
-
-      override def set(target: GridPane, value: List[ColumnConstraints]): Unit = target.getColumnConstraints.setAll(value: _*)
-    }
+    val columnConstraints = Attribute.list[GridPane, ColumnConstraints]("ColumnConstraints")
 
     val column = Attribute.remote[GridPane, Node, lang.Integer]("ColumnIndex")
 
@@ -56,13 +50,7 @@ object Attributes {
     override def unset(target: Node): Unit = target.asInstanceOf[mutable.Map[String, Any]].remove(key)
   }
 
-  case object styleClasses extends Attribute[Styleable, List[String]] {
-    override def read(src: Styleable): List[String] = src.getStyleClass.toList
-
-    override def unset(target: Styleable): Unit = target.getStyleClass.clear()
-
-    override def set(target: Styleable, value: List[String]): Unit = target.getStyleClass.setAll(value: _*)
-  }
+  val styleClasses = Attribute.list[Styleable, String]("StyleClass")
 
   val inputText = Attribute.simple[TextInputControl, String]("Text")
 

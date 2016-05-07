@@ -35,6 +35,30 @@ object Attribute {
     c.Expr[Attribute[Attr, Value]](expr)
   }
 
+  def list[Attr, Value](getterName: String): Attribute[Attr, List[Value]] = macro listImpl[Attr, Value]
+
+  def listImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterName: c.Expr[String]): c.Expr[Attribute[Attr, List[Value]]] = {
+    import c.universe._
+
+    val attrType = weakTypeTag[Attr].tpe
+
+    val Literal(Constant(getset: String)) = getterName.tree
+    val name = {
+      val (firstChar, rest) = getset.splitAt(1)
+      firstChar.toLowerCase + rest
+    }
+    val valType = weakTypeTag[Value].tpe
+    val getter = TermName("get" + getset)
+    val expr =
+      q"""new Attribute[$attrType, List[$valType]]{
+					override def read(src: $attrType): List[$valType] = src.$getter.toList
+          override def unset(target: $attrType): Unit = target.$getter.clear()
+          override def set(target: $attrType, value: List[$valType]): Unit = target.$getter.setAll(value: _*)
+          override def toString(): String = $name
+				 }"""
+    c.Expr[Attribute[Attr, List[Value]]](expr)
+  }
+
   def remote[Holder, Attr, Value](getterSetterName: String): Attribute[Attr, Value] = macro remoteImpl[Holder, Attr, Value]
 
   def remoteImpl[Holder: c.WeakTypeTag, Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String]): c.Expr[Attribute[Attr, Value]] = {
