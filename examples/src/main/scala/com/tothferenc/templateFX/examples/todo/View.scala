@@ -1,8 +1,8 @@
 package com.tothferenc.templateFX.examples.todo
 
-import javafx.event.{ EventHandler, ActionEvent }
+import javafx.event.{ActionEvent, EventHandler}
 import javafx.scene.Scene
-import javafx.scene.control.{ Button, TextField, Label }
+import javafx.scene.control.{Button, Label, ScrollPane, TextField}
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
@@ -39,11 +39,13 @@ final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends Eve
 class AppView {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
     branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
-      items.zipWithIndex.flatMap {
-        case ((key, txt), index) => List(
-          key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
-          key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
-        )
+      unordered {
+        items.zipWithIndex.flatMap {
+          case ((key, txt), index) => List(
+            key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
+            key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
+          )
+        }
       }
     },
     branch[VBox](Anchor.bottom ~ 0.0)(

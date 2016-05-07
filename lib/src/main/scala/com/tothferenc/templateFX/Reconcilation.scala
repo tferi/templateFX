@@ -20,7 +20,7 @@ case object Ignore extends ChildrenSpecification {
   override def materializeAll(): List[Node] = Nil
 }
 
-final case class SpecsWithIds[Key](specs: Map[Key, NodeSpec]) extends ChildrenSpecification {
+final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends ChildrenSpecification {
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
     val existingNodesByKey = existingChildren.groupBy { node =>
@@ -28,13 +28,13 @@ final case class SpecsWithIds[Key](specs: Map[Key, NodeSpec]) extends ChildrenSp
         .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
     }
-    val specKeySet = specs.keySet
+    val specKeySet = specs.map(_._1)
     val removals = for {
       (key, nodes) <- existingNodesByKey if key.isEmpty || !specKeySet.contains(key.get)
       node <- nodes
     } yield node
 
-    val mutationsInsertions: List[Change] = specs.toList.flatMap {
+    val mutationsInsertions: List[Change] = specs.flatMap {
       case (key, spec) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
           spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
