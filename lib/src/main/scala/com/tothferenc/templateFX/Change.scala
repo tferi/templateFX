@@ -2,7 +2,7 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
@@ -58,29 +58,29 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
   }
 }
 
-final case class Mutate[Item <: Node, Attr](item: Item, attribute: Attribute[Item, Attr], value: Attr) extends Change {
+final case class Setting[Item <: Node](item: Item, setters: Seq[FeatureSetter[Item]]) extends Change {
   override protected def exec(): Unit = {
-
-    attribute.set(item, value)
-
-    ManagedAttributes.get(item) match {
-      case Some(managedAttributes) =>
-        if (!managedAttributes.contains(attribute)) {
-          managedAttributes.prepend(attribute)
-        }
-      case _ =>
-        val managedAttributes: ListBuffer[Unsettable[_]] = new ListBuffer[Unsettable[_]]
-        managedAttributes.prepend(attribute)
-        ManagedAttributes.set(item, managedAttributes)
+    val managedAttributes = ManagedAttributes.get(item).getOrElse {
+      val buffer: ListBuffer[RemovableFeature[_]] = new ListBuffer[RemovableFeature[_]]
+      ManagedAttributes.set(item, buffer)
+      buffer
     }
+
+    setters.foreach { setter =>
+      setter.set(item)
+      if (!managedAttributes.contains(setter.feature)) {
+        managedAttributes.prepend(setter.feature)
+      }
+    }
+
   }
 }
 
-final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[Unsettable[Item]]) extends Change {
+final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val currentlySetAttributes = ManagedAttributes.get(item)
     attributesToUnset.foreach { attribute =>
-      attribute.unset(item)
+      attribute.remove(item)
       currentlySetAttributes.foreach(attributes => attributes -= attribute)
     }
   }

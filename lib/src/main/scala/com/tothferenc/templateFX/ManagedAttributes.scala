@@ -2,7 +2,7 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -31,11 +31,11 @@ object UserData {
 
 object ManagedAttributes {
 
-  def get(node: Node): Option[ListBuffer[Unsettable[_]]] = {
-    UserData.get[ListBuffer[Unsettable[_]]](node, Attribute.key)
+  def get(node: Node): Option[ListBuffer[RemovableFeature[_]]] = {
+    UserData.get[ListBuffer[RemovableFeature[_]]](node, Attribute.key)
   }
 
-  def set(node: Node, attributes: ListBuffer[Unsettable[_]]): Unit = {
+  def set(node: Node, attributes: ListBuffer[RemovableFeature[_]]): Unit = {
     UserData.set(node, Attribute.key, attributes)
   }
 }

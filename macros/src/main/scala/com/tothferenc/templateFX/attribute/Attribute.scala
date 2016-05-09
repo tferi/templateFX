@@ -28,7 +28,7 @@ object Attribute {
     val expr =
       q"""new Attribute[$attrType, $valType]{
 					override def read(src: $attrType): $valType = src.$getter()
-          override def unset(target: $attrType): Unit = target.$setter(null)
+          override def remove(target: $attrType): Unit = target.$setter(null)
           override def set(target: $attrType, value: $valType): Unit = target.$setter(value)
           override def toString(): String = $name
 				 }"""
@@ -52,7 +52,7 @@ object Attribute {
     val expr =
       q"""new Attribute[$attrType, List[$valType]]{
 					override def read(src: $attrType): List[$valType] = src.$getter.toList
-          override def unset(target: $attrType): Unit = target.$getter.clear()
+          override def remove(target: $attrType): Unit = target.$getter.clear()
           override def set(target: $attrType, value: List[$valType]): Unit = target.$getter.setAll(value: _*)
           override def toString(): String = $name
 				 }"""
@@ -79,7 +79,7 @@ object Attribute {
     val expr =
       q"""new Attribute[$attrType, $valType] {
 					override def read(src: $attrType): $valType = $holderCompanion.$getter(src)
-          override def unset(target: $attrType): Unit = $holderCompanion.$setter(target, null)
+          override def remove(target: $attrType): Unit = $holderCompanion.$setter(target, null)
           override def set(target: $attrType, value: $valType): Unit = $holderCompanion.$setter(target, value)
           override def toString(): String = $name
 				 }"""
@@ -87,7 +87,7 @@ object Attribute {
   }
 }
 
-abstract class Attribute[-FXType, AttrType] extends Unsettable[FXType] {
+abstract class Attribute[-FXType, AttrType] extends RemovableFeature[FXType] {
 
   def read(src: FXType): AttrType
 

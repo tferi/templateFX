@@ -6,7 +6,7 @@ import javafx.scene.control.Label
 import javafx.scene.layout.{ Pane, AnchorPane }
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.Attributes._
-import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 
 import org.specs2.mutable.Specification
 
@@ -44,19 +44,6 @@ class TemplateSpec extends Specification {
     2 -> leaf[Label](text ~ "world")
   )
 
-  implicit class ChangeMatchers(change: Change) {
-
-    def isMutation[T](attr: Attribute[_, _], value: T): Unit = {
-      change match {
-        case m: Mutate[_, _] =>
-          m.value === value
-          m.attribute === attr
-        case other =>
-          other should beAnInstanceOf[Mutate[_, _]]
-      }
-    }
-  }
-
   "Templates" should {
     "be parsed well" in {
       paneWithHello.materialize().asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
@@ -76,10 +63,6 @@ class TemplateSpec extends Specification {
         leaf[Label](text ~ "world")
       ).requiredChangesIn(pane)
       changes.length === 1
-      changes.headOption match {
-        case Some(Mutate(_, text, "world")) => 1 === 1
-        case _ => 1 === 2
-      }
     }
 
     "be reconciled as expected when an element needs to be replaced with another type" in {
@@ -127,8 +110,6 @@ class TemplateSpec extends Specification {
       val changes = helloDearWorld.requiredChangesIn(pane)
       changes(0) === InsertWithKey(pane, hello, 0, 3)
       changes(1) === Move(pane, child1, 1)
-      changes(2) isMutation (text, "dear")
-      changes(4) isMutation (text, "world")
       changes(3) === Move(pane, child0, 2)
       changes.foreach(_.execute())
       pane.getChildren.collect {
@@ -173,11 +154,11 @@ class TemplateSpec extends Specification {
         pane.getChildren.get(0).asInstanceOf[Label]
       }
       val label = getLabel
-      val attributes = UserData.get[ListBuffer[Unsettable[_]]](label, Attribute.key).getOrElse(Nil).toList
+      val attributes = ManagedAttributes.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
       attributes === List(text)
       val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane)
       changes.exists(_.isInstanceOf[UnsetAttributes[_]]) === true
-      changes.exists(_.isInstanceOf[Mutate[_, _]]) === true
+      changes.exists(_.isInstanceOf[Setting[_]]) === true
       changes.foreach(_.execute())
       val newAttr = ManagedAttributes.get(label)
       newAttr.get.length === 1

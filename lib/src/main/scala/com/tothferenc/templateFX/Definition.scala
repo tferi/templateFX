@@ -3,7 +3,7 @@ package com.tothferenc.templateFX
 import java.lang.reflect.Constructor
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 
 import scala.collection.mutable.ListBuffer
 import scala.reflect._
@@ -20,9 +20,10 @@ final case class Definition[FXType <: Node](
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
-      (UserData.get[ListBuffer[Unsettable[Node]]](node, Attribute.key) match {
+      val nodeAsExpectedType: FXType = node.asInstanceOf[FXType]
+      (UserData.get[ListBuffer[RemovableFeature[Node]]](node, Attribute.key) match {
         case Some(attributes) =>
-          val toUnset: ListBuffer[Unsettable[Node]] = attributes.filterNot { checked =>
+          val toUnset: ListBuffer[RemovableFeature[Node]] = attributes.filterNot { checked =>
             constraints.exists(_.attribute == checked)
           }
           if (toUnset.isEmpty)
@@ -31,8 +32,13 @@ final case class Definition[FXType <: Node](
             List(UnsetAttributes(node, toUnset))
         case _ =>
           Nil
-      }) :::
-        constraints.flatMap(_.apply(node.asInstanceOf[FXType])).toList :::
+      }) ::: {
+        val setters = constraints.flatMap(_.apply(nodeAsExpectedType))
+        if (setters.nonEmpty)
+          List(Setting[FXType](nodeAsExpectedType, constraints.flatMap(_.apply(nodeAsExpectedType))))
+        else
+          Nil
+      } :::
         (node match {
           case container: TFXParent =>
             children.requiredChangesIn(container)
@@ -57,10 +63,10 @@ final case class Definition[FXType <: Node](
 
   def materialize(): FXType = {
     val instance = instantiate()
-    val changes: Seq[Change] = constraints.flatMap { constraint =>
+    val setting: Setting[FXType] = Setting(instance, constraints.flatMap { constraint =>
       constraint.apply(instance)
-    }
-    changes.foreach(_.execute())
+    })
+    setting.execute()
     instance match {
       case container: TFXParent =>
         container.getChildren.addAll(children.materializeAll(): _*)

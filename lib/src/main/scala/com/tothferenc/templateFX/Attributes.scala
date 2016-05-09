@@ -47,7 +47,7 @@ object Attributes {
 
     override def set(target: Node, value: Any): Unit = UserData.set(target, key, value)
 
-    override def unset(target: Node): Unit = target.asInstanceOf[mutable.Map[String, Any]].remove(key)
+    override def remove(target: Node): Unit = target.asInstanceOf[mutable.Map[String, Any]].remove(key)
   }
 
   val styleClasses = Attribute.list[Styleable, String]("StyleClass")

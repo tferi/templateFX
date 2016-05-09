@@ -2,10 +2,14 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, Unsettable }
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 
-abstract class Constraint[-T] extends (T => Option[Change]) {
-  def attribute: Unsettable[_]
+abstract class FeatureSetter[-Item](val feature: RemovableFeature[Item]) {
+  def set(item: Item): Unit
+}
+
+abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
+  def attribute: RemovableFeature[_]
   def isSatisfiedBy(item: T): Boolean
 }
 
@@ -14,9 +18,9 @@ final case class Binding[Item <: Node, Attr](attribute: Attribute[Item, Attr], v
   override def isSatisfiedBy(item: Item): Boolean =
     Option(attribute.read(item)) != Option(value)
 
-  override def apply(item: Item): Option[Change] =
+  override def apply(item: Item): Option[FeatureSetter[Item]] =
     if (isSatisfiedBy(item))
-      Some(Mutate(item, attribute, value))
+      Some(new FeatureSetter[Item](attribute) { override def set(item: Item) = attribute.set(item, value) })
     else
       None
 }
