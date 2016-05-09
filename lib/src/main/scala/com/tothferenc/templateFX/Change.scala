@@ -58,7 +58,7 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
   }
 }
 
-final case class Setting[Item <: Node](item: Item, setters: Seq[FeatureSetter[Item]]) extends Change {
+final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Seq[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val managedAttributes = ManagedAttributes.get(item).getOrElse {
       val buffer: ListBuffer[RemovableFeature[_]] = new ListBuffer[RemovableFeature[_]]
@@ -66,22 +66,16 @@ final case class Setting[Item <: Node](item: Item, setters: Seq[FeatureSetter[It
       buffer
     }
 
-    setters.foreach { setter =>
+    featuresToRemove.foreach { attribute =>
+      attribute.remove(item)
+      managedAttributes -= attribute
+    }
+
+    featureSetters.foreach { setter =>
       setter.set(item)
       if (!managedAttributes.contains(setter.feature)) {
         managedAttributes.prepend(setter.feature)
       }
-    }
-
-  }
-}
-
-final case class UnsetAttributes[Item <: Node](item: Item, attributesToUnset: Seq[RemovableFeature[Item]]) extends Change {
-  override protected def exec(): Unit = {
-    val currentlySetAttributes = ManagedAttributes.get(item)
-    attributesToUnset.foreach { attribute =>
-      attribute.remove(item)
-      currentlySetAttributes.foreach(attributes => attributes -= attribute)
     }
   }
 }

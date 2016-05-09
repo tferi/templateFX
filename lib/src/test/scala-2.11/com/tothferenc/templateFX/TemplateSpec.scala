@@ -157,8 +157,7 @@ class TemplateSpec extends Specification {
       val attributes = ManagedAttributes.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
       attributes === List(text)
       val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane)
-      changes.exists(_.isInstanceOf[UnsetAttributes[_]]) === true
-      changes.exists(_.isInstanceOf[Setting[_]]) === true
+      changes.exists(_.isInstanceOf[Mutation[_]]) === true
       changes.foreach(_.execute())
       val newAttr = ManagedAttributes.get(label)
       newAttr.get.length === 1

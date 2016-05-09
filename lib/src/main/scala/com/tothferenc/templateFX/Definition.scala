@@ -21,30 +21,28 @@ final case class Definition[FXType <: Node](
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == clazz) {
       val nodeAsExpectedType: FXType = node.asInstanceOf[FXType]
-      (UserData.get[ListBuffer[RemovableFeature[Node]]](node, Attribute.key) match {
-        case Some(attributes) =>
-          val toUnset: ListBuffer[RemovableFeature[Node]] = attributes.filterNot { checked =>
+      val featuresToRemove = UserData.get[ListBuffer[RemovableFeature[Node]]](node, Attribute.key) match {
+        case Some(features) =>
+          features.filterNot { checked =>
             constraints.exists(_.attribute == checked)
           }
-          if (toUnset.isEmpty)
-            Nil
-          else
-            List(UnsetAttributes(node, toUnset))
         case _ =>
           Nil
-      }) ::: {
-        val setters = constraints.flatMap(_.apply(nodeAsExpectedType))
-        if (setters.nonEmpty)
-          List(Setting[FXType](nodeAsExpectedType, constraints.flatMap(_.apply(nodeAsExpectedType))))
-        else
-          Nil
-      } :::
-        (node match {
+      }
+
+      val setters = constraints.flatMap(_.apply(nodeAsExpectedType))
+      val mutation = if (setters.nonEmpty || featuresToRemove.nonEmpty)
+        List(Mutation[FXType](nodeAsExpectedType, constraints.flatMap(_.apply(nodeAsExpectedType)), featuresToRemove))
+      else
+        Nil
+      mutation ::: {
+        node match {
           case container: TFXParent =>
             children.requiredChangesIn(container)
           case leaf =>
             Nil
-        })
+        }
+      }
     } else {
       List(Replace(container, this, position))
     }
@@ -63,9 +61,7 @@ final case class Definition[FXType <: Node](
 
   def materialize(): FXType = {
     val instance = instantiate()
-    val setting: Setting[FXType] = Setting(instance, constraints.flatMap { constraint =>
-      constraint.apply(instance)
-    })
+    val setting = Mutation(instance, constraints.flatMap(_(instance)), Nil)
     setting.execute()
     instance match {
       case container: TFXParent =>
