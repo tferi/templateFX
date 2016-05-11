@@ -38,8 +38,8 @@ final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends Eve
 
 class AppView {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    scrollable() {
-      branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+    scrollable(Anchor.top ~ 0.0, Anchor.right ~ 0.0, Anchor.left ~ 0.0) {
+      branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
         unordered {
           items.zipWithIndex.flatMap {
             case ((key, txt), index) => List(

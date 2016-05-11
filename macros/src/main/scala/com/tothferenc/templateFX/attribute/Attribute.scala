@@ -35,6 +35,29 @@ object Attribute {
     c.Expr[Attribute[Attr, Value]](expr)
   }
 
+  def writeOnly[Attr, Value](getterSetterName: String): SettableFeature[Attr, Value] = macro writeOnlyImpl[Attr, Value]
+
+  def writeOnlyImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String]): c.Expr[SettableFeature[Attr, Value]] = {
+    import c.universe._
+
+    val attrType = weakTypeTag[Attr].tpe
+
+    val Literal(Constant(getset: String)) = getterSetterName.tree
+    val name = {
+      val (firstChar, rest) = getset.splitAt(1)
+      firstChar.toLowerCase + rest
+    }
+    val valType = weakTypeTag[Value].tpe
+    val setter = TermName("set" + getset)
+    val expr =
+      q"""new SettableFeature[$attrType, $valType]{
+          override def remove(target: $attrType): Unit = target.$setter(null)
+          override def set(target: $attrType, value: $valType): Unit = target.$setter(value)
+          override def toString(): String = $name
+				 }"""
+    c.Expr[SettableFeature[Attr, Value]](expr)
+  }
+
   def list[Attr, Value](getterName: String): Attribute[Attr, List[Value]] = macro listImpl[Attr, Value]
 
   def listImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterName: c.Expr[String]): c.Expr[Attribute[Attr, List[Value]]] = {
@@ -87,9 +110,10 @@ object Attribute {
   }
 }
 
-abstract class Attribute[-FXType, AttrType] extends RemovableFeature[FXType] {
-
-  def read(src: FXType): AttrType
-
+abstract class SettableFeature[-FXType, AttrType] extends RemovableFeature[FXType] {
   def set(target: FXType, value: AttrType): Unit
+}
+
+abstract class Attribute[-FXType, AttrType] extends SettableFeature[FXType, AttrType] {
+  def read(src: FXType): AttrType
 }

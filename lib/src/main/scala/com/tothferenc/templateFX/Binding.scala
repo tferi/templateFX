@@ -2,7 +2,7 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
+import com.tothferenc.templateFX.attribute.{Attribute, RemovableFeature, SettableFeature}
 
 abstract class FeatureSetter[-Item] {
   def feature: RemovableFeature[Item]
@@ -10,24 +10,24 @@ abstract class FeatureSetter[-Item] {
 }
 
 final case class Align[-Item, Value](
-    feature: Attribute[Item, Value],
-    value: Value
+  feature: SettableFeature[Item, Value],
+  value: Value
   ) extends FeatureSetter[Item] {
   override def set(item: Item): Unit = feature.set(item, value)
 }
 
 abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
   def attribute: RemovableFeature[_]
-  def isSatisfiedBy(item: T): Boolean
+}
+
+final case class Enforcement[Item <: Node, Attr](attribute: SettableFeature[Item, Attr], value: Attr) extends Constraint[Item] {
+  override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(Align(attribute, value))
 }
 
 final case class Binding[Item <: Node, Attr](attribute: Attribute[Item, Attr], value: Attr) extends Constraint[Item] {
 
-  override def isSatisfiedBy(item: Item): Boolean =
-    Option(attribute.read(item)) == Option(value)
-
   override def apply(item: Item): Option[FeatureSetter[Item]] =
-    if (isSatisfiedBy(item))
+    if (Option(attribute.read(item)) == Option(value))
       None
     else
       Some(Align(attribute, value))
