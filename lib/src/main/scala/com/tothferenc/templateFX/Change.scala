@@ -3,6 +3,7 @@ package com.tothferenc.templateFX
 import javafx.scene.Node
 
 import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
+import com.tothferenc.templateFX.specs.Spec
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 

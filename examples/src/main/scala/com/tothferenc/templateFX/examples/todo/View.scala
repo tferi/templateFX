@@ -7,8 +7,8 @@ import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
 import com.tothferenc.templateFX.Attributes._
-import com.tothferenc.templateFX.Spec
 import com.tothferenc.templateFX.Api._
+import com.tothferenc.templateFX.specs.Spec
 
 import scala.util.Try
 

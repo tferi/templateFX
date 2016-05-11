@@ -3,11 +3,12 @@ package com.tothferenc.templateFX
 import javafx.embed.swing.JFXPanel
 import javafx.scene.chart.PieChart
 import javafx.scene.control.Label
-import javafx.scene.layout.{ Pane, AnchorPane }
+import javafx.scene.layout.{ AnchorPane, Pane }
+
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.Attributes._
 import com.tothferenc.templateFX.attribute.RemovableFeature
-
+import com.tothferenc.templateFX.specs.Spec
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._

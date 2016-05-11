@@ -4,6 +4,8 @@ import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.layout.Pane
 
+import com.tothferenc.templateFX.specs.Spec
+
 import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable

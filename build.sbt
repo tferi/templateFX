@@ -16,7 +16,8 @@ val commonSettings = Seq(
 	),
 
 	scalacOptions ++= Seq(
-		"-Xfatal-warnings"
+		"-Xfatal-warnings",
+		"-feature"
 		//"-Ymacro-debug-lite"
 	),
 

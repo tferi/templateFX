@@ -1,9 +1,11 @@
 package com.tothferenc.templateFX
 
 import javafx.scene.Node
+import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.Attribute
+import com.tothferenc.templateFX.specs.{Hierarchy, ScrollableSpec, Spec}
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -24,10 +26,13 @@ object Api {
     def ~(value: Attr) = Binding(attribute, value)
   }
 
+  def scrollable[Content <: Node](constraints: Constraint[ScrollPane]*)(content: Spec[Content]): Spec[ScrollPane] =
+    ScrollableSpec[ScrollPane, Content](constraints, content)()
+
   def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpec): Spec[FXType] =
     Hierarchy[FXType](constraints, specGroup)(constructorParams)
 
-  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Spec[_ <: Node]*): Spec[FXType] =
+  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: NodeSpec*): Spec[FXType] =
     Hierarchy[FXType](constraints, children.toList)()
 
   def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: ChildrenSpec): Spec[FXType] =
