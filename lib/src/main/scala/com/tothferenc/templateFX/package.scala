@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane
 
 package object templateFX {
 
-  type NodeDef = Definition[_ <: Node]
+  type NodeSpec = Spec[_ <: Node]
 
   type TFXParent = Pane
 }

@@ -16,7 +16,7 @@ import scala.collection.mutable.ListBuffer
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
-  private val hello: Definition[Label] = leaf[Label](text ~ "hello")
+  private val hello: Spec[Label] = leaf[Label](text ~ "hello")
 
   private def paneWith(specGroup: ChildrenSpecification) = branchL[AnchorPane]() {
     specGroup
@@ -24,7 +24,7 @@ class TemplateSpec extends Specification {
 
   def child(i: Int, container: TFXParent) = container.getChildren.get(i)
 
-  val paneWithHello: Definition[AnchorPane] = branch[AnchorPane]() {
+  val paneWithHello: Spec[AnchorPane] = branch[AnchorPane]() {
     hello
   }
 
@@ -34,7 +34,7 @@ class TemplateSpec extends Specification {
     }
   }
 
-  val helloWorld: List[Definition[Label]] = List(
+  val helloWorld: List[Spec[Label]] = List(
     hello,
     leaf[Label](text ~ "world")
   )
@@ -73,7 +73,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.materialize()
-      val newDef: Definition[Label] = leaf[Label](text ~ "world")
+      val newDef: Spec[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1

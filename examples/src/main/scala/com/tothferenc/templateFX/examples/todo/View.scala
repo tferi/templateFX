@@ -2,11 +2,12 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Scene
-import javafx.scene.control.{ Button, Label, TextField }
+import javafx.scene.control.{ Button, Label, ScrollPane, TextField }
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
 import com.tothferenc.templateFX.Attributes._
+import com.tothferenc.templateFX.Spec
 import com.tothferenc.templateFX.Api._
 
 import scala.util.Try
