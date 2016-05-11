@@ -39,19 +39,7 @@ final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends Eve
 
 class AppView {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    scrollable(Anchor.top ~ 0.0, Anchor.right ~ 0.0, Anchor.left ~ 0.0, Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS ) {
-      branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
-        unordered {
-          items.zipWithIndex.flatMap {
-            case ((key, txt), index) => List(
-              key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
-              key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
-            )
-          }
-        }
-      }
-    },
-    branch[VBox](Anchor.bottom ~ 0.0)(
+    branch[VBox]()(
       branch[HBox]()(
         leaf[Label](text ~ "New item name:"),
         leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
@@ -63,6 +51,18 @@ class AppView {
         leaf[TextField](id ~ "positionInput", onActionText ~ AppendEH(reactor, scene)),
         leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
       )
-    )
+    ),
+    scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS ) {
+      branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+        unordered {
+          items.zipWithIndex.flatMap {
+            case ((key, txt), index) => List(
+              key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
+              key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
+            )
+          }
+        }
+      }
+    }
   )
 }
