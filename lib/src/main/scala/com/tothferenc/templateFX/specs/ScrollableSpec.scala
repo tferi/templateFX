@@ -22,7 +22,7 @@ final case class ScrollableSpec[Scrollable <: ScrollPane, Content <: Node](
       calculateMutation(scrollable) ::: {
         Option(scrollable.getContent) match {
 
-          case Some(existing) if existing.getClass == contentSpec.specifiedClass=>
+          case Some(existing) if existing.getClass == contentSpec.specifiedClass =>
             contentSpec.calculateMutation(existing.asInstanceOf[Content])
 
           case _ =>

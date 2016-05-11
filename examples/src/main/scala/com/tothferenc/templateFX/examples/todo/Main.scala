@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.{AnchorPane, VBox}
+import javafx.scene.layout.{ AnchorPane, VBox }
 import javafx.stage.Stage
 
 import scala.collection.mutable.ArrayBuffer

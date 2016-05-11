@@ -1,9 +1,9 @@
 package com.tothferenc.templateFX.examples.todo
 
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Scene
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
-import javafx.scene.control.{Button, Label, ScrollPane, TextField}
+import javafx.scene.control.{ Button, Label, ScrollPane, TextField }
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
@@ -52,7 +52,7 @@ class AppView {
         leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
       )
     ),
-    scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS ) {
+    scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
       branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
         unordered {
           items.zipWithIndex.flatMap {

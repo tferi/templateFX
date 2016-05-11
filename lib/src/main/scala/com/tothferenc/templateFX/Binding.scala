@@ -2,7 +2,7 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{Attribute, RemovableFeature, SettableFeature}
+import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature, SettableFeature }
 
 abstract class FeatureSetter[-Item] {
   def feature: RemovableFeature[Item]
@@ -10,9 +10,9 @@ abstract class FeatureSetter[-Item] {
 }
 
 final case class Align[-Item, Value](
-  feature: SettableFeature[Item, Value],
-  value: Value
-  ) extends FeatureSetter[Item] {
+    feature: SettableFeature[Item, Value],
+    value: Value
+) extends FeatureSetter[Item] {
   override def set(item: Item): Unit = feature.set(item, value)
 }
 

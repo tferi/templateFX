@@ -4,8 +4,8 @@ import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
-import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
-import com.tothferenc.templateFX.specs.{Hierarchy, ScrollableSpec, Spec}
+import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollableSpec, Spec }
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag

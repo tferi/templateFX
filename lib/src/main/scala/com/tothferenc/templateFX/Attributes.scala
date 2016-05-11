@@ -2,22 +2,21 @@ package com.tothferenc.templateFX
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
+import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
 import javafx.css.Styleable
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
-import javafx.scene.input.{KeyEvent, MouseEvent}
-import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
+import javafx.scene.input.{ KeyEvent, MouseEvent }
+import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
 
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
-
 
   object Scroll {
     val fitToHeight = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToHeight", false)
