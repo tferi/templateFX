@@ -38,13 +38,15 @@ final case class DeleteEh(reactor: Reactor, scene: Scene, key: Long) extends Eve
 
 class AppView {
   def windowContents(reactor: Reactor, scene: Scene, items: List[(Long, String)]) = List(
-    branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
-      unordered {
-        items.zipWithIndex.flatMap {
-          case ((key, txt), index) => List(
-            key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
-            key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
-          )
+    scrollable() {
+      branchL[GridPane](Anchor.top ~ 0.0, columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+        unordered {
+          items.zipWithIndex.flatMap {
+            case ((key, txt), index) => List(
+              key -> leaf[Label](text ~ txt, Grid.row ~ index, Grid.column ~ 1),
+              key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, scene, key))
+            )
+          }
         }
       }
     },

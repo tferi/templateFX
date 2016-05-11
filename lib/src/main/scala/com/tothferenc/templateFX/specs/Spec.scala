@@ -26,10 +26,19 @@ abstract class Spec[FXType <: Node] {
 
     val featureUpdates = constraints.flatMap(_.apply(nodeOfSameType))
 
-    if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
+    val mutation = if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
       List(Mutation[FXType](nodeOfSameType, featureUpdates, featuresToRemove))
     else
       Nil
+
+    mutation ::: {
+      nodeOfSameType match {
+        case container: TFXParent =>
+          children.requiredChangesIn(container)
+        case leaf =>
+          Nil
+      }
+    }
   }
 }
 
