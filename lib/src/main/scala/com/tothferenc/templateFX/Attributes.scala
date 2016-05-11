@@ -7,6 +7,7 @@ import javafx.css.Styleable
 import javafx.event.{ActionEvent, EventHandler}
 import javafx.scene.Node
 import javafx.scene.chart.Chart
+import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
 import javafx.scene.input.{KeyEvent, MouseEvent}
 import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
@@ -17,8 +18,15 @@ import scala.collection.mutable
 object Attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
+
   object Scroll {
-    val fitToHeight = Attribute.writeOnly[ScrollPane, lang.Boolean] ("FitToHeight")
+    val fitToHeight = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToHeight", false)
+
+    val fitToWidth = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToWidth", false)
+
+    val hBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("HbarPolicy")
+
+    val vBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("VbarPolicy")
   }
 
   object Anchor {

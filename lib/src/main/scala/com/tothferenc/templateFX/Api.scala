@@ -4,7 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
-import com.tothferenc.templateFX.attribute.Attribute
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
 import com.tothferenc.templateFX.specs.{Hierarchy, ScrollableSpec, Spec}
 
 import scala.language.implicitConversions
@@ -24,6 +24,10 @@ object Api {
 
   implicit class AttributeAssigner[FXType, Attr](attribute: Attribute[FXType, Attr]) {
     def ~(value: Attr) = Binding(attribute, value)
+  }
+
+  implicit class SettableAssigner[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
+    def <<(value: Attr) = Enforcement(attribute, value)
   }
 
   def scrollable[Content <: Node](constraints: Constraint[ScrollPane]*)(content: Spec[Content]): Spec[ScrollPane] =

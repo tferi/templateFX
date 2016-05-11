@@ -35,9 +35,9 @@ object Attribute {
     c.Expr[Attribute[Attr, Value]](expr)
   }
 
-  def writeOnly[Attr, Value](getterSetterName: String): SettableFeature[Attr, Value] = macro writeOnlyImpl[Attr, Value]
+  def writeOnly[Attr, Value](getterSetterName: String, default: Value): SettableFeature[Attr, Value] = macro writeOnlyImpl[Attr, Value]
 
-  def writeOnlyImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String]): c.Expr[SettableFeature[Attr, Value]] = {
+  def writeOnlyImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String], default: c.Expr[Value]): c.Expr[SettableFeature[Attr, Value]] = {
     import c.universe._
 
     val attrType = weakTypeTag[Attr].tpe
@@ -51,7 +51,7 @@ object Attribute {
     val setter = TermName("set" + getset)
     val expr =
       q"""new SettableFeature[$attrType, $valType]{
-          override def remove(target: $attrType): Unit = target.$setter(null)
+          override def remove(target: $attrType): Unit = target.$setter($default)
           override def set(target: $attrType, value: $valType): Unit = target.$setter(value)
           override def toString(): String = $name
 				 }"""
