@@ -8,19 +8,19 @@ import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
-abstract class ChildrenSpecification {
+abstract class ChildrenSpec {
   def requiredChangesIn(container: Pane): List[Change]
   def materializeAll(): List[Node]
   def reconcile(container: TFXParent): Unit = requiredChangesIn(container).foreach(_.execute())
 }
 
-case object Ignore extends ChildrenSpecification {
+case object Ignore extends ChildrenSpec {
   override def requiredChangesIn(container: TFXParent): List[Change] = Nil
 
   override def materializeAll(): List[Node] = Nil
 }
 
-final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends ChildrenSpecification {
+final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends ChildrenSpec {
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
     val existingNodesByKey = existingChildren.groupBy { node =>
@@ -59,7 +59,7 @@ object SpecsWithKeys {
   }
 }
 
-final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpecification {
+final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpec {
 
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
@@ -90,7 +90,7 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
   }
 }
 
-final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpecification {
+final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpec {
 
   override def materializeAll(): List[Node] = specs.map(_.materialize())
 

@@ -6,19 +6,18 @@ import javafx.scene.control.Label
 import javafx.scene.layout.{ Pane, AnchorPane }
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.Attributes._
-import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
+import com.tothferenc.templateFX.attribute.RemovableFeature
 
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
-import scala.collection.mutable.ListBuffer
 
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
   private val hello: Spec[Label] = leaf[Label](text ~ "hello")
 
-  private def paneWith(specGroup: ChildrenSpecification) = branchL[AnchorPane]() {
+  private def paneWith(specGroup: ChildrenSpec) = branchL[AnchorPane]() {
     specGroup
   }
 
