@@ -7,7 +7,10 @@ import javafx.stage.Stage
 
 import scala.collection.mutable.ArrayBuffer
 
-final case class AppModel(items: ArrayBuffer[(Long, String)])
+final case class AppModel(
+                           items: ArrayBuffer[(Long, String)],
+                           var hovered: Option[Long]
+                         )
 
 class Main extends Application {
 
@@ -20,7 +23,7 @@ class Main extends Application {
     primaryStage.setScene(scene)
     primaryStage.show()
 
-    val component = new Component(AppModel(ArrayBuffer.empty), reactor => new ComponentRenderer(scene, reactor, rootNode, new AppView))
+    val component = new Component(AppModel(ArrayBuffer.empty, None), reactor => new ComponentRenderer(scene, reactor, rootNode, new AppView))
     component.render()
   }
 }

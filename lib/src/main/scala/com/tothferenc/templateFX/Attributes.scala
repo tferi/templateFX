@@ -2,15 +2,20 @@ package com.tothferenc.templateFX
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
 import javafx.css.Styleable
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ActionEvent, EventHandler}
 import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
-import javafx.scene.input.{ KeyEvent, MouseEvent }
-import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
+import javafx.scene.input.{KeyEvent, MouseEvent}
+import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
+
+import com.sun.javafx.geom.BaseBounds
+import com.sun.javafx.geom.transform.BaseTransform
+import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
+import com.sun.javafx.sg.prism.NGNode
 
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
@@ -75,5 +80,9 @@ object Attributes {
 
   val style = Attribute.simple[Node, String]("Style")
 
-  val onMouseClick = Attribute.simple[Node, EventHandler[_ >: MouseEvent]]("OnMouseClicked")
+  val onMouseClicked = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseClicked")
+
+  val onMouseEntered = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseEntered")
+
+  val onMouseExited = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseExited")
 }

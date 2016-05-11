@@ -22,6 +22,10 @@ class Component(appModel: AppModel, protoRenderer: Reactor => Renderer[AppModel]
       case Delete(key) =>
         val index = appModel.items.indexWhere(_._1 == key)
         if (index > -1) appModel.items.remove(index)
+      case MouseEntered(key) =>
+        appModel.hovered = Some(key)
+      case MouseExited(key) =>
+        appModel.hovered = None
       case _ =>
         ()
     }
