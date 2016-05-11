@@ -4,8 +4,16 @@ import javafx.scene.Node
 
 import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
 
-abstract class FeatureSetter[-Item](val feature: RemovableFeature[Item]) {
+abstract class FeatureSetter[-Item] {
+  def feature: RemovableFeature[Item]
   def set(item: Item): Unit
+}
+
+final case class Align[-Item, Value](
+    feature: Attribute[Item, Value],
+    value: Value
+  ) extends FeatureSetter[Item] {
+  override def set(item: Item): Unit = feature.set(item, value)
 }
 
 abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
@@ -16,11 +24,11 @@ abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
 final case class Binding[Item <: Node, Attr](attribute: Attribute[Item, Attr], value: Attr) extends Constraint[Item] {
 
   override def isSatisfiedBy(item: Item): Boolean =
-    Option(attribute.read(item)) != Option(value)
+    Option(attribute.read(item)) == Option(value)
 
   override def apply(item: Item): Option[FeatureSetter[Item]] =
     if (isSatisfiedBy(item))
-      Some(new FeatureSetter[Item](attribute) { override def set(item: Item) = attribute.set(item, value) })
-    else
       None
+    else
+      Some(Align(attribute, value))
 }
