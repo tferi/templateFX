@@ -31,11 +31,19 @@ object UserData {
 
 object ManagedAttributes {
 
+  def getOrInit[FXType <: Node](node: FXType): mutable.Set[RemovableFeature[FXType]] = {
+    get(node).getOrElse {
+      val set = new mutable.HashSet[RemovableFeature[FXType]]
+      ManagedAttributes.set(node, set)
+      set
+    }
+  }
+
   def get[FXType <: Node](node: FXType): Option[mutable.Set[RemovableFeature[FXType]]] = {
     UserData.get[mutable.Set[RemovableFeature[FXType]]](node, Attribute.key)
   }
 
-  def set(node: Node, attributes: mutable.Set[RemovableFeature[_]]): Unit = {
+  def set[FXType <: Node](node: FXType, attributes: mutable.Set[RemovableFeature[FXType]]): Unit = {
     UserData.set(node, Attribute.key, attributes)
   }
 }

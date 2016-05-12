@@ -17,7 +17,7 @@ final case class Align[-Item, Value](
 }
 
 abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
-  def feature: RemovableFeature[_]
+  def feature: RemovableFeature[T]
 }
 
 final case class Enforcement[Item <: Node, Attr](feature: SettableFeature[Item, Attr], value: Attr) extends Constraint[Item] {

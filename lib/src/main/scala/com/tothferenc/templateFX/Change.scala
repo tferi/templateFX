@@ -66,11 +66,7 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
 
 final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
-    val managedAttributes = ManagedAttributes.get(item).getOrElse {
-      val set: scala.collection.mutable.Set[RemovableFeature[_]] = new mutable.HashSet[RemovableFeature[_]]
-      ManagedAttributes.set(item, set)
-      set
-    }
+    val managedAttributes = ManagedAttributes.getOrInit(item)
 
     featuresToRemove.foreach { attribute =>
       attribute.remove(item)
