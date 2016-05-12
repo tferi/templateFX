@@ -6,7 +6,9 @@ templateFX
 Coming soon!
 
 Laundry list:
-  * Write macro for extracting attributes from any javafx class based on getters/setters.
+  * Investigate macro-based instantiation instead of using reflection.
+  * Bring NodeFixtures and Attributes closer together.
+  * Scale NodeFixtures up for use in GridPane.
   * Performance optimization.
   * Extensive tests.
   * Set-once properties.
