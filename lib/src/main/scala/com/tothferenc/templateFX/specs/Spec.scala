@@ -46,12 +46,12 @@ abstract class ReflectiveSpec[FXType <: Node] extends Spec[FXType] {
 
   protected def constructorParams: Seq[Any]
 
-	def addChildren(instance: FXType): Unit
+	def initNodesBelow(instance: FXType): Unit
 
   def materialize(): FXType = {
     val instance = UniversalConstructor.instantiate[FXType](constructorParams)
     Mutation(instance, constraints.flatMap(_(instance)), Nil).execute()
-	  addChildren(instance)
+	  initNodesBelow(instance)
     instance
   }
 }

@@ -13,7 +13,7 @@ final case class Hierarchy[FXType <: Node](
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[FXType]]
 
-  override def addChildren(instance: FXType): Unit = instance match {
+  override def initNodesBelow(instance: FXType): Unit = instance match {
     case container: TFXParent =>
       container.getChildren.addAll(children.materializeAll(): _*)
     case _ =>
