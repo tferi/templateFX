@@ -1,12 +1,9 @@
 package com.tothferenc.templateFX.specs
 
-import java.lang.reflect.Constructor
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
-import com.tothferenc.templateFX.{ Change, Replace, UserData, _ }
+import com.tothferenc.templateFX._
 
-import scala.collection.mutable.ListBuffer
 import scala.reflect._
 
 final case class Hierarchy[FXType <: Node](
@@ -15,6 +12,13 @@ final case class Hierarchy[FXType <: Node](
 )(protected val constructorParams: Any*)(implicit classTag: ClassTag[FXType]) extends ReflectiveSpec[FXType] {
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[FXType]]
+
+  override def addChildren(instance: FXType): Unit = instance match {
+    case container: TFXParent =>
+      container.getChildren.addAll(children.materializeAll(): _*)
+    case _ =>
+      ()
+  }
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == specifiedClass) {

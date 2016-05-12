@@ -46,16 +46,12 @@ abstract class ReflectiveSpec[FXType <: Node] extends Spec[FXType] {
 
   protected def constructorParams: Seq[Any]
 
+	def addChildren(instance: FXType): Unit
+
   def materialize(): FXType = {
     val instance = UniversalConstructor.instantiate[FXType](constructorParams)
-    val setting = Mutation(instance, constraints.flatMap(_(instance)), Nil)
-    setting.execute()
-    instance match {
-      case container: TFXParent =>
-        container.getChildren.addAll(children.materializeAll(): _*)
-      case _ =>
-        ()
-    }
+    Mutation(instance, constraints.flatMap(_(instance)), Nil).execute()
+	  addChildren(instance)
     instance
   }
 }

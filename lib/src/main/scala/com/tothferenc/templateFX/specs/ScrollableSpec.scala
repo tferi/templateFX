@@ -22,6 +22,8 @@ final case class ScrollableSpec[Scrollable <: ScrollPane, Content <: Node](
 
   override def children: ChildrenSpec = Ignore
 
+  override def addChildren(instance: Scrollable): Unit = instance.setContent(contentSpec.materialize())
+
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == specifiedClass) {
       val scrollable: Scrollable = node.asInstanceOf[Scrollable]
