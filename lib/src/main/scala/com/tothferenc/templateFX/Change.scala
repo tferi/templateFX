@@ -2,12 +2,13 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{Attribute, RemovableFeature}
-import com.tothferenc.templateFX.specs.{NodeFixture, Spec}
+import com.tothferenc.templateFX.attribute.RemovableFeature
+import com.tothferenc.templateFX.specs.NodeFixture
+import com.tothferenc.templateFX.specs.Spec
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable
 
 object Change {
   lazy val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
@@ -63,12 +64,12 @@ final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPo
   }
 }
 
-final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Seq[RemovableFeature[Item]]) extends Change {
+final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val managedAttributes = ManagedAttributes.get(item).getOrElse {
-      val buffer: ListBuffer[RemovableFeature[_]] = new ListBuffer[RemovableFeature[_]]
-      ManagedAttributes.set(item, buffer)
-      buffer
+      val set: scala.collection.mutable.Set[RemovableFeature[_]] = new mutable.HashSet[RemovableFeature[_]]
+      ManagedAttributes.set(item, set)
+      set
     }
 
     featuresToRemove.foreach { attribute =>
@@ -78,9 +79,7 @@ final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureS
 
     featureSetters.foreach { setter =>
       setter.set(item)
-      if (!managedAttributes.contains(setter.feature)) {
-        managedAttributes.prepend(setter.feature)
-      }
+      managedAttributes += setter.feature
     }
   }
 }

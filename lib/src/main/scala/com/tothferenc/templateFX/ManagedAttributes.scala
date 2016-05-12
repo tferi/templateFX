@@ -31,11 +31,11 @@ object UserData {
 
 object ManagedAttributes {
 
-  def get(node: Node): Option[ListBuffer[RemovableFeature[_]]] = {
-    UserData.get[ListBuffer[RemovableFeature[_]]](node, Attribute.key)
+  def get[FXType <: Node](node: FXType): Option[mutable.Set[RemovableFeature[FXType]]] = {
+    UserData.get[mutable.Set[RemovableFeature[FXType]]](node, Attribute.key)
   }
 
-  def set(node: Node, attributes: ListBuffer[RemovableFeature[_]]): Unit = {
+  def set(node: Node, attributes: mutable.Set[RemovableFeature[_]]): Unit = {
     UserData.set(node, Attribute.key, attributes)
   }
 }

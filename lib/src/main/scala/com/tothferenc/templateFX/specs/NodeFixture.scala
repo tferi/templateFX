@@ -11,9 +11,9 @@ abstract class NodeFixture[-Container] {
 
   def set(container: Container, node: Node): Unit
 
-  def reconcile[SpecType  <: Node](container: Container, specOption: Option[Spec[SpecType]]): List[Change] = {
+  def reconcile[SpecType <: Node](container: Container, specOption: Option[Spec[SpecType]]): List[Change] = {
     get(container) -> specOption match {
-      case (Some(existing), Some(specified)) if existing.getClass == specified.specifiedClass  =>
+      case (Some(existing), Some(specified)) if existing.getClass == specified.specifiedClass =>
         specified.calculateMutation(existing.asInstanceOf[SpecType])
 
       case (None, None) =>

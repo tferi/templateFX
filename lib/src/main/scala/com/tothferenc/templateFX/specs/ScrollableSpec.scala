@@ -7,7 +7,6 @@ import com.tothferenc.templateFX._
 import scala.language.existentials
 import scala.reflect.ClassTag
 
-
 case object ScrollableContent extends NodeFixture[ScrollPane] {
   override def get(container: ScrollPane): Option[Node] = Option(container.getContent)
   override def set(container: ScrollPane, node: Node): Unit = container.setContent(node)

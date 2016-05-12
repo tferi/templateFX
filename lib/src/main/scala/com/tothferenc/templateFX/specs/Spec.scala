@@ -15,7 +15,7 @@ abstract class Spec[FXType <: Node] {
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
   def calculateMutation(nodeOfSameType: FXType): List[Change] = {
-    val featuresToRemove = UserData.get[ListBuffer[RemovableFeature[FXType]]](nodeOfSameType, Attribute.key) match {
+    val featuresToRemove = ManagedAttributes.get(nodeOfSameType) match {
       case Some(features) =>
         features.filterNot { checked =>
           constraints.exists(_.feature == checked)
@@ -46,12 +46,12 @@ abstract class ReflectiveSpec[FXType <: Node] extends Spec[FXType] {
 
   protected def constructorParams: Seq[Any]
 
-	def initNodesBelow(instance: FXType): Unit
+  def initNodesBelow(instance: FXType): Unit
 
   def materialize(): FXType = {
     val instance = UniversalConstructor.instantiate[FXType](constructorParams)
     Mutation(instance, constraints.flatMap(_(instance)), Nil).execute()
-	  initNodesBelow(instance)
+    initNodesBelow(instance)
     instance
   }
 }

@@ -160,7 +160,7 @@ class TemplateSpec extends Specification {
       changes.exists(_.isInstanceOf[Mutation[_]]) === true
       changes.foreach(_.execute())
       val newAttr = ManagedAttributes.get(label)
-      newAttr.get.length === 1
+      newAttr.get.size === 1
       newAttr.get.contains(styleClasses)
 
     }

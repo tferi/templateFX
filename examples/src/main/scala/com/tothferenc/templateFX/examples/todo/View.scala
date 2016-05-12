@@ -1,9 +1,9 @@
 package com.tothferenc.templateFX.examples.todo
 
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Scene
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
-import javafx.scene.control.{Button, Label, ScrollPane, TextField}
+import javafx.scene.control.{ Button, Label, ScrollPane, TextField }
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout._
 

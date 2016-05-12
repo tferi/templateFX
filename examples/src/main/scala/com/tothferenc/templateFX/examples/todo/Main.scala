@@ -8,9 +8,9 @@ import javafx.stage.Stage
 import scala.collection.mutable.ArrayBuffer
 
 final case class AppModel(
-                           items: ArrayBuffer[(Long, String)],
-                           var hovered: Option[Long]
-                         )
+  items: ArrayBuffer[(Long, String)],
+  var hovered: Option[Long]
+)
 
 class Main extends Application {
 
