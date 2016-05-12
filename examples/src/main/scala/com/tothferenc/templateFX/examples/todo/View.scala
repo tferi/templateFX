@@ -64,18 +64,21 @@ class AppView {
       )
     ),
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
-      branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
-        unordered {
-          items.zipWithIndex.flatMap {
-            case ((key, txt), index) =>
-              val shownText = if (hovered.contains(key)) txt + " HOVERED" else txt
-              List(
-              key -> leaf[Label](text ~ shownText, Grid.row ~ index, Grid.column ~ 1, onMouseEntered ~ MouseEnteredEh(reactor, key), onMouseExited ~ MouseExitedEh(reactor, key)),
-              key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, key))
-            )
+      if (items.nonEmpty)
+        branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+          unordered {
+            items.zipWithIndex.flatMap {
+              case ((key, txt), index) =>
+                val shownText = if (hovered.contains(key)) txt + " HOVERED" else txt
+                List(
+                  key -> leaf[Label](text ~ shownText, Grid.row ~ index, Grid.column ~ 1, onMouseEntered ~ MouseEnteredEh(reactor, key), onMouseExited ~ MouseExitedEh(reactor, key)),
+                  key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, key))
+                )
+            }
           }
         }
-      }
+      else
+        leaf[Label](text ~ "The list is empty. you may add items with the controls.")
     }
   )
 }

@@ -2,8 +2,8 @@ package com.tothferenc.templateFX
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
-import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.attribute.{Attribute, RemovableFeature}
+import com.tothferenc.templateFX.specs.{NodeFixture, Spec}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
@@ -23,6 +23,10 @@ sealed abstract class Change extends Product with Serializable {
   }
 
   protected def exec(): Unit
+}
+
+final case class SetFixture[Container, NodeType <: Node](container: Container, fixture: NodeFixture[Container], spec: Option[Spec[NodeType]]) extends Change {
+  override protected def exec(): Unit = fixture.set(container, spec.map(_.materialize()).orNull)
 }
 
 final case class RemoveNode(container: TFXParent, node: Node) extends Change {

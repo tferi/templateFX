@@ -18,7 +18,7 @@ abstract class Spec[FXType <: Node] {
     val featuresToRemove = UserData.get[ListBuffer[RemovableFeature[FXType]]](nodeOfSameType, Attribute.key) match {
       case Some(features) =>
         features.filterNot { checked =>
-          constraints.exists(_.attribute == checked)
+          constraints.exists(_.feature == checked)
         }
       case _ =>
         Nil

@@ -17,18 +17,18 @@ final case class Align[-Item, Value](
 }
 
 abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
-  def attribute: RemovableFeature[_]
+  def feature: RemovableFeature[_]
 }
 
-final case class Enforcement[Item <: Node, Attr](attribute: SettableFeature[Item, Attr], value: Attr) extends Constraint[Item] {
-  override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(Align(attribute, value))
+final case class Enforcement[Item <: Node, Attr](feature: SettableFeature[Item, Attr], value: Attr) extends Constraint[Item] {
+  override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(Align(feature, value))
 }
 
-final case class Binding[Item <: Node, Attr](attribute: Attribute[Item, Attr], value: Attr) extends Constraint[Item] {
+final case class Binding[Item <: Node, Attr](feature: Attribute[Item, Attr], value: Attr) extends Constraint[Item] {
 
   override def apply(item: Item): Option[FeatureSetter[Item]] =
-    if (Option(attribute.read(item)) == Option(value))
+    if (Option(feature.read(item)) == Option(value))
       None
     else
-      Some(Align(attribute, value))
+      Some(Align(feature, value))
 }
