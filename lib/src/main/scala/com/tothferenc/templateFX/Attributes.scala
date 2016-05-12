@@ -2,19 +2,19 @@ package com.tothferenc.templateFX
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
 import javafx.css.Styleable
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ActionEvent, EventHandler}
 import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
-import javafx.scene.input.{ KeyEvent, MouseEvent }
-import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
+import javafx.scene.input._
+import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
 
 import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
-import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
+import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
 import com.sun.javafx.sg.prism.NGNode
 
 import scala.collection.convert.wrapAsScala._
@@ -85,4 +85,34 @@ object Attributes {
   val onMouseEntered = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseEntered")
 
   val onMouseExited = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseExited")
+
+  val onMouseMoved = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseMoved")
+
+  val onMousePressed = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMousePressed")
+
+  val onMouseRelease = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseReleased")
+
+  val onDragDetected = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnDragDetected")
+
+  val onDragDone = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDone")
+
+  val onDragDropped = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDropped")
+
+  val onDragExited = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragExited")
+
+  val onDragEntered = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragEntered")
+
+  val onDragOver = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragOver")
+
+  val onMouseDragged = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseDragged")
+
+  val onMouseDragReleased = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragReleased")
+
+  val onMouseDragExited = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragExited")
+
+  val onMouseDragEntered = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragEntered")
+
+  val onMouseDragOver = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragOver")
+
+  val onContextMenuRequested = Attribute.simple[Node, SuperHandler[ContextMenuEvent]]("OnContextMenuRequested")
 }
