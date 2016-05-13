@@ -74,7 +74,6 @@ object Attributes {
 
   val onActionButton = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction")
 
-  val onKeyPressed = Attribute.simple[TextInputControl, SuperHandler[KeyEvent]]("OnKeyPressed")
 
   val id = Attribute.simple[Node, String]("Id")
 
@@ -90,7 +89,7 @@ object Attributes {
 
   val onMousePressed = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMousePressed")
 
-  val onMouseRelease = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseReleased")
+  val onMouseReleased = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseReleased")
 
   val onDragDetected = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnDragDetected")
 
@@ -115,4 +114,46 @@ object Attributes {
   val onMouseDragOver = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragOver")
 
   val onContextMenuRequested = Attribute.simple[Node, SuperHandler[ContextMenuEvent]]("OnContextMenuRequested")
+
+  val onInputMethodTextChanged = Attribute.simple[Node, SuperHandler[InputMethodEvent]]("OnInputMethodTextChanged")
+
+  val onKeyPressed = Attribute.simple[TextInputControl, SuperHandler[KeyEvent]]("OnKeyPressed")
+
+  val onKeyReleased = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyReleased")
+
+  val onKeyTyped = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyTyped")
+
+  val onRotate = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotate")
+
+  val onRotationStarted = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationStarted")
+
+  val onRotateionFinished = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationFinished")
+
+  val onScroll = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScroll")
+
+  val onScrollStarted = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollStarted")
+
+  val onScrollFinished = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollFinished")
+
+  val onZoom = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoom")
+
+  val onZoomStarted = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomStarted")
+
+  val onZoomFinished = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomFinished")
+
+  val onSwipeUp = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeUp")
+
+  val onSwipeRight = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeRight")
+
+  val onSwipeDown = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeDown")
+
+  val onSwipeLeft = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeLeft")
+
+  val onTouchMoved = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchMoved")
+
+  val onTouchPressed = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchPressed")
+
+  val onTouchReleased = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchReleased")
+
+  val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary")
 }
