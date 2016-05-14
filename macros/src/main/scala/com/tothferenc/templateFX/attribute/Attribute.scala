@@ -1,9 +1,7 @@
 package com.tothferenc.templateFX.attribute
 
 import scala.language.experimental.macros
-import scala.reflect.macros.Universe
 import scala.reflect.macros.whitebox.Context
-import scala.util.control.NonFatal
 
 object Attribute {
   val key = "attributes"

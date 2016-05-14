@@ -26,7 +26,7 @@ sealed abstract class Change extends Product with Serializable {
   protected def exec(): Unit
 }
 
-final case class SetFixture[Container, NodeType <: Node](container: Container, fixture: NodeFixture[Container], spec: Option[Spec[NodeType]]) extends Change {
+final case class SetFixture[Container](container: Container, fixture: NodeFixture[Container], spec: Option[NodeSpec]) extends Change {
   override protected def exec(): Unit = fixture.set(container, spec.map(_.materialize()).orNull)
 }
 

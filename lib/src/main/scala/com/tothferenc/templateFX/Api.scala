@@ -5,7 +5,7 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
-import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollableSpec, Spec }
+import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollSpec, Spec }
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -30,8 +30,8 @@ object Api {
     def <<(value: Attr) = Enforcement(attribute, value)
   }
 
-  def scrollable[Content <: Node](constraints: Constraint[ScrollPane]*)(content: Spec[Content]): Spec[ScrollPane] =
-    ScrollableSpec[ScrollPane, Content](constraints, content)()
+  def scrollable(constraints: Constraint[ScrollPane]*)(content: NodeSpec): Spec[ScrollPane] =
+    ScrollSpec[ScrollPane](constraints, content)()
 
   def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpec): Spec[FXType] =
     Hierarchy[FXType](constraints, specGroup)(constructorParams)

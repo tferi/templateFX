@@ -14,7 +14,8 @@ abstract class Spec[FXType <: Node] {
   def children: ChildrenSpec
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
-  def calculateMutation(nodeOfSameType: FXType): List[Change] = {
+  def calculateMutation(node: Node): List[Change] = {
+    val nodeOfSameType = node.asInstanceOf[FXType]
     val featuresToRemove = ManagedAttributes.get(nodeOfSameType) match {
       case Some(features) =>
         features.filterNot { checked =>
