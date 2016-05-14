@@ -20,39 +20,9 @@ import com.sun.javafx.sg.prism.NGNode
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
-object Attributes {
+package object attributes {
+
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
-
-  object Scroll {
-    val fitToHeight = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToHeight", false)
-
-    val fitToWidth = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToWidth", false)
-
-    val hBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("HbarPolicy")
-
-    val vBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("VbarPolicy")
-  }
-
-  object Anchor {
-
-    val top = Attribute.remote[AnchorPane, Node, lang.Double]("TopAnchor")
-
-    val bottom = Attribute.remote[AnchorPane, Node, lang.Double]("BottomAnchor")
-
-    val left = Attribute.remote[AnchorPane, Node, lang.Double]("LeftAnchor")
-
-    val right = Attribute.remote[AnchorPane, Node, lang.Double]("RightAnchor")
-
-  }
-
-  object Grid {
-
-    val columnConstraints = Attribute.list[GridPane, ColumnConstraints]("ColumnConstraints")
-
-    val column = Attribute.remote[GridPane, Node, lang.Integer]("ColumnIndex")
-
-    val row = Attribute.remote[GridPane, Node, lang.Integer]("RowIndex")
-  }
 
   val text = Attribute.simple[Labeled, String]("Text")
 

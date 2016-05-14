@@ -1,16 +1,17 @@
 package com.tothferenc.templateFX.examples.todo
 
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
 import javafx.scene.Scene
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
-import javafx.scene.control.{ Button, Label, ScrollPane, TextField }
+import javafx.scene.control.Button
+import javafx.scene.control.Label
+import javafx.scene.control.TextField
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout._
 
-import com.tothferenc.templateFX.Attributes.Grid.columnConstraints
-import com.tothferenc.templateFX.Attributes._
 import com.tothferenc.templateFX.Api._
-import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.attributes._
 
 import scala.util.Try
 
@@ -65,7 +66,7 @@ class AppView {
     ),
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
       if (items.nonEmpty)
-        branchL[GridPane](columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+        branchL[GridPane](Grid.columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
           unordered {
             items.zipWithIndex.flatMap {
               case ((key, txt), index) =>

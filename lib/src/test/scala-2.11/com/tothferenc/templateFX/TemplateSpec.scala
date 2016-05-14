@@ -6,7 +6,7 @@ import javafx.scene.control.Label
 import javafx.scene.layout.{ AnchorPane, Pane }
 
 import com.tothferenc.templateFX.Api._
-import com.tothferenc.templateFX.Attributes._
+import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.Spec
 import org.specs2.mutable.Specification
@@ -51,7 +51,7 @@ class TemplateSpec extends Specification {
 
     "have their constraints applied to inheritors" in {
       val container: TFXParent = branch[AnchorPane]() {
-        leaf[PieChart](com.tothferenc.templateFX.Attributes.title ~ "well")
+        leaf[PieChart](com.tothferenc.templateFX.attributes.title ~ "well")
       }.materialize()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
       chart.getTitle === "well"
