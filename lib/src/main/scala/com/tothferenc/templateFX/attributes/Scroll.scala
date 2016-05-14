@@ -24,7 +24,7 @@ object Scroll {
 
   val fitToWidth = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToWidth", false)
 
-  val hBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("HbarPolicy")
+  val hBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("HbarPolicy", null)
 
-  val vBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("VbarPolicy")
+  val vBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("VbarPolicy", null)
 }

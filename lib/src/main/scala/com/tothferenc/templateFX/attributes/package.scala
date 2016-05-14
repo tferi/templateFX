@@ -24,9 +24,9 @@ package object attributes {
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
-  val text = Attribute.simple[Labeled, String]("Text")
+  val text = Attribute.simple[Labeled, String]("Text", null)
 
-  val title = Attribute.simple[Chart, String]("Title")
+  val title = Attribute.simple[Chart, String]("Title", null)
 
   final case class user(key: String) extends Attribute[Node, Any] {
     override def read(src: Node): Any = UserData.get[Any](src, key).orNull
@@ -38,91 +38,91 @@ package object attributes {
 
   val styleClasses = Attribute.list[Styleable, String]("StyleClass")
 
-  val inputText = Attribute.simple[TextInputControl, String]("Text")
+  val inputText = Attribute.simple[TextInputControl, String]("Text", null)
 
-  val onActionText = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction")
+  val onActionText = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction", null)
 
-  val onActionButton = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction")
+  val onActionButton = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction", null)
 
-  val id = Attribute.simple[Node, String]("Id")
+  val id = Attribute.simple[Node, String]("Id", null)
 
-  val style = Attribute.simple[Node, String]("Style")
+  val style = Attribute.simple[Node, String]("Style", null)
 
-  val onMouseClicked = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseClicked")
+  val onMouseClicked = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseClicked", null)
 
-  val onMouseEntered = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseEntered")
+  val onMouseEntered = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseEntered", null)
 
-  val onMouseExited = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseExited")
+  val onMouseExited = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseExited", null)
 
-  val onMouseMoved = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseMoved")
+  val onMouseMoved = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseMoved", null)
 
-  val onMousePressed = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMousePressed")
+  val onMousePressed = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMousePressed", null)
 
-  val onMouseReleased = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseReleased")
+  val onMouseReleased = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseReleased", null)
 
-  val onDragDetected = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnDragDetected")
+  val onDragDetected = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnDragDetected", null)
 
-  val onDragDone = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDone")
+  val onDragDone = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDone", null)
 
-  val onDragDropped = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDropped")
+  val onDragDropped = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragDropped", null)
 
-  val onDragExited = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragExited")
+  val onDragExited = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragExited", null)
 
-  val onDragEntered = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragEntered")
+  val onDragEntered = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragEntered", null)
 
-  val onDragOver = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragOver")
+  val onDragOver = Attribute.simple[Node, SuperHandler[DragEvent]]("OnDragOver", null)
 
-  val onMouseDragged = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseDragged")
+  val onMouseDragged = Attribute.simple[Node, SuperHandler[MouseEvent]]("OnMouseDragged", null)
 
-  val onMouseDragReleased = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragReleased")
+  val onMouseDragReleased = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragReleased", null)
 
-  val onMouseDragExited = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragExited")
+  val onMouseDragExited = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragExited", null)
 
-  val onMouseDragEntered = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragEntered")
+  val onMouseDragEntered = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragEntered", null)
 
-  val onMouseDragOver = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragOver")
+  val onMouseDragOver = Attribute.simple[Node, SuperHandler[MouseDragEvent]]("OnMouseDragOver", null)
 
-  val onContextMenuRequested = Attribute.simple[Node, SuperHandler[ContextMenuEvent]]("OnContextMenuRequested")
+  val onContextMenuRequested = Attribute.simple[Node, SuperHandler[ContextMenuEvent]]("OnContextMenuRequested", null)
 
-  val onInputMethodTextChanged = Attribute.simple[Node, SuperHandler[InputMethodEvent]]("OnInputMethodTextChanged")
+  val onInputMethodTextChanged = Attribute.simple[Node, SuperHandler[InputMethodEvent]]("OnInputMethodTextChanged", null)
 
-  val onKeyPressed = Attribute.simple[TextInputControl, SuperHandler[KeyEvent]]("OnKeyPressed")
+  val onKeyPressed = Attribute.simple[TextInputControl, SuperHandler[KeyEvent]]("OnKeyPressed", null)
 
-  val onKeyReleased = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyReleased")
+  val onKeyReleased = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyReleased", null)
 
-  val onKeyTyped = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyTyped")
+  val onKeyTyped = Attribute.simple[Node, SuperHandler[KeyEvent]]("OnKeyTyped", null)
 
-  val onRotate = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotate")
+  val onRotate = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotate", null)
 
-  val onRotationStarted = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationStarted")
+  val onRotationStarted = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationStarted", null)
 
-  val onRotateionFinished = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationFinished")
+  val onRotateionFinished = Attribute.simple[Node, SuperHandler[RotateEvent]]("OnRotationFinished", null)
 
-  val onScroll = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScroll")
+  val onScroll = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScroll", null)
 
-  val onScrollStarted = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollStarted")
+  val onScrollStarted = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollStarted", null)
 
-  val onScrollFinished = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollFinished")
+  val onScrollFinished = Attribute.simple[Node, SuperHandler[ScrollEvent]]("OnScrollFinished", null)
 
-  val onZoom = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoom")
+  val onZoom = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoom", null)
 
-  val onZoomStarted = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomStarted")
+  val onZoomStarted = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomStarted", null)
 
-  val onZoomFinished = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomFinished")
+  val onZoomFinished = Attribute.simple[Node, SuperHandler[ZoomEvent]]("OnZoomFinished", null)
 
-  val onSwipeUp = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeUp")
+  val onSwipeUp = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeUp", null)
 
-  val onSwipeRight = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeRight")
+  val onSwipeRight = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeRight", null)
 
-  val onSwipeDown = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeDown")
+  val onSwipeDown = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeDown", null)
 
-  val onSwipeLeft = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeLeft")
+  val onSwipeLeft = Attribute.simple[Node, SuperHandler[SwipeEvent]]("OnSwipeLeft", null)
 
-  val onTouchMoved = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchMoved")
+  val onTouchMoved = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchMoved", null)
 
-  val onTouchPressed = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchPressed")
+  val onTouchPressed = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchPressed", null)
 
-  val onTouchReleased = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchReleased")
+  val onTouchReleased = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchReleased", null)
 
-  val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary")
+  val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary", null)
 }

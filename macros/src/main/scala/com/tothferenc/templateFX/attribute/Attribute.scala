@@ -8,9 +8,9 @@ object Attribute {
 
   private case class MethodNotFoundException(tpe: String, method: String, cause: Throwable) extends Exception(s"Method $method was not found on $tpe", cause)
 
-  def simple[Attr, Value](getterSetterName: String): Attribute[Attr, Value] = macro simpleImpl[Attr, Value]
+  def simple[Attr, Value](getterSetterName: String, default: Value): Attribute[Attr, Value] = macro simpleImpl[Attr, Value]
 
-  def simpleImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String]): c.Expr[Attribute[Attr, Value]] = {
+  def simpleImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String], default: c.Expr[Value]): c.Expr[Attribute[Attr, Value]] = {
     import c.universe._
 
     val attrType = weakTypeTag[Attr].tpe
@@ -26,7 +26,7 @@ object Attribute {
     val expr =
       q"""new Attribute[$attrType, $valType]{
 					override def read(src: $attrType): $valType = src.$getter()
-          override def remove(target: $attrType): Unit = target.$setter(null)
+          override def remove(target: $attrType): Unit = target.$setter($default)
           override def set(target: $attrType, value: $valType): Unit = target.$setter(value)
           override def toString(): String = $name
 				 }"""
