@@ -2,6 +2,7 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.geometry.HPos
 import javafx.scene.Scene
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.Button
@@ -72,8 +73,8 @@ class AppView {
               case ((key, txt), index) =>
                 val shownText = if (hovered.contains(key)) txt + " HOVERED" else txt
                 List(
-                  key -> leaf[Label](text ~ shownText, Grid.row ~ index, Grid.column ~ 1, onMouseEntered ~ MouseEnteredEh(reactor, key), onMouseExited ~ MouseExitedEh(reactor, key)),
-                  key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, key))
+                  key -> leaf[Label](text ~ shownText, Grid.row ~ index, Grid.column ~ 1, onMouseEntered ~ MouseEnteredEh(reactor, key), onMouseExited ~ MouseExitedEh(reactor, key), Grid.hAlignment ~ HPos.LEFT),
+                  key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, key), Grid.hAlignment ~ HPos.RIGHT)
                 )
             }
           }

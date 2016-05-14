@@ -15,16 +15,17 @@ final case class AppModel(
 class Main extends Application {
 
   override def start(primaryStage: Stage) {
-    primaryStage.setTitle("Sup!")
+    primaryStage.setTitle("TemplateFX example application")
 
     val rootNode = new VBox()
 
     val scene: Scene = new Scene(rootNode, 600, 800)
     primaryStage.setScene(scene)
-    primaryStage.show()
 
     val component = new Component(AppModel(ArrayBuffer.empty, None), reactor => new ComponentRenderer(scene, reactor, rootNode, new AppView))
     component.render()
+
+    primaryStage.show()
   }
 }
 
