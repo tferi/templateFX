@@ -2,14 +2,14 @@ package com.tothferenc.templateFX.examples.todo
 
 import com.typesafe.scalalogging.LazyLogging
 
-class Component(appModel: AppModel, protoRenderer: Reactor => Renderer[AppModel]) extends Reactor with LazyLogging {
+class Component(appModel: AppModel, protoRenderer: Reactor[Intent] => Renderer[AppModel]) extends Reactor[Intent] with LazyLogging {
   private def nextId = System.currentTimeMillis()
 
   private val renderer = protoRenderer(this)
 
   def render(): Unit = renderer.render(appModel)
 
-  override def handle(message: Any): Unit = {
+  override def handle(message: Intent): Unit = {
     val begin = System.currentTimeMillis()
     message match {
       case Append(item) if item.nonEmpty =>
@@ -22,12 +22,10 @@ class Component(appModel: AppModel, protoRenderer: Reactor => Renderer[AppModel]
       case Delete(key) =>
         val index = appModel.items.indexWhere(_._1 == key)
         if (index > -1) appModel.items.remove(index)
-      case MouseEntered(key) =>
+      case Highlight(key) =>
         appModel.hovered = Some(key)
-      case MouseExited(key) =>
+      case RemoveHighlight(key) =>
         appModel.hovered = None
-      case _ =>
-        ()
     }
     renderer.render(appModel)
     logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - begin} ms.")

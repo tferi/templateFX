@@ -9,6 +9,6 @@ abstract class Renderer[-Input] {
   def render(input: Input): Unit
 }
 
-class ComponentRenderer(scene: Scene, reactor: Reactor, root: Pane, view: AppView) extends Renderer[AppModel] {
+class ComponentRenderer(scene: Scene, reactor: Reactor[Intent], root: Pane, view: AppView) extends Renderer[AppModel] {
   override def render(input: AppModel): Unit = view.windowContents(reactor, scene, input.items.toList, input.hovered).reconcile(root)
 }

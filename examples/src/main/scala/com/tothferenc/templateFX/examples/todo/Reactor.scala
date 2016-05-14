@@ -1,5 +1,5 @@
 package com.tothferenc.templateFX.examples.todo
 
-abstract class Reactor {
-  def handle(message: Any): Unit
+abstract class Reactor[-Message] {
+  def handle(message: Message): Unit
 }

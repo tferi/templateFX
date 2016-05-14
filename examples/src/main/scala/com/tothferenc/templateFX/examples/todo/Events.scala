@@ -1,8 +1,9 @@
 package com.tothferenc.templateFX.examples.todo
 
-final case class Append(text: String)
-final case class Prepend(text: String)
-final case class Insert(text: String, position: Int)
-final case class Delete(id: Long)
-final case class MouseEntered(id: Long)
-final case class MouseExited(id: Long)
+sealed abstract class Intent
+final case class Append(text: String)extends Intent
+final case class Prepend(text: String)extends Intent
+final case class Insert(text: String, position: Int)extends Intent
+final case class Delete(id: Long)extends Intent
+final case class Highlight(id: Long)extends Intent
+final case class RemoveHighlight(id: Long)extends Intent
