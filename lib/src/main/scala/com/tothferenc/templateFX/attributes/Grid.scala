@@ -2,6 +2,7 @@ package com.tothferenc.templateFX.attributes
 
 import java.lang
 import javafx.geometry.HPos
+import javafx.geometry.Pos
 import javafx.geometry.VPos
 import javafx.scene.Node
 import javafx.scene.layout.ColumnConstraints
@@ -13,6 +14,8 @@ import com.tothferenc.templateFX.attribute.Attribute
 import scala.collection.convert.wrapAsScala._
 
 object Grid {
+
+	val alignment = Attribute.simple[GridPane, Pos]("Alignment", null)
 
   val columnConstraints = Attribute.list[GridPane, ColumnConstraints]("ColumnConstraints")
 

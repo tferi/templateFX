@@ -26,6 +26,13 @@ class Component(appModel: AppModel, protoRenderer: Reactor[Intent] => Renderer[A
         appModel.hovered = Some(key)
       case RemoveHighlight(key) =>
         appModel.hovered = None
+      case Move(key, targetPosition) =>
+        val index = appModel.items.lastIndexWhere(_._1 == key)
+        if (index > -1) {
+          val item = appModel.items(index)
+          appModel.items.remove(index)
+          appModel.items.insert(targetPosition, item)
+        }
     }
     renderer.render(appModel)
     logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - begin} ms.")

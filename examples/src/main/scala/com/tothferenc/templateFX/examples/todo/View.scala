@@ -3,12 +3,14 @@ package com.tothferenc.templateFX.examples.todo
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.HPos
+import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
-import javafx.scene.input.MouseEvent
+import javafx.scene.input._
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Api._
@@ -40,14 +42,62 @@ final case class DeleteEh(reactor: Reactor[Intent], key: Long) extends EventHand
     reactor handle Delete(key)
 }
 
-final case class MouseEnteredEh(reactor: Reactor[Intent], key: Long) extends EventHandler[MouseEvent] {
+final case class HighlightEh(reactor: Reactor[Intent], key: Long) extends EventHandler[MouseEvent] {
   override def handle(event: MouseEvent): Unit =
     reactor handle Highlight(key)
 }
 
-final case class MouseExitedEh(reactor: Reactor[Intent], key: Long) extends EventHandler[MouseEvent] {
+final case class RemoveHighlightEH(reactor: Reactor[Intent], key: Long) extends EventHandler[MouseEvent] {
   override def handle(event: MouseEvent): Unit =
     reactor handle RemoveHighlight(key)
+}
+
+final case class DragDetectedEh(key: Long) extends EventHandler[MouseEvent] {
+  override def handle(event: MouseEvent): Unit = {
+
+    val eventTarget = event.getTarget.asInstanceOf[Node]
+
+    /* drag was detected, start a drag-and-drop gesture*/
+    /* allow any transfer mode */
+    val dragBoard = eventTarget.startDragAndDrop(TransferMode.MOVE)
+
+    /* Put a string on a dragboard */
+    val clipboardContent = new ClipboardContent()
+    clipboardContent.putString(key.toString)
+    dragBoard.setContent(clipboardContent)
+
+    event.consume()
+  }
+}
+
+case object AcceptMove extends EventHandler[DragEvent] {
+  override def handle(event: DragEvent): Unit = {
+    event.acceptTransferModes(TransferMode.MOVE)
+    event.consume()
+  }
+}
+
+final case class DragDroppedEh(reactor: Reactor[Intent], index: Int) extends EventHandler[DragEvent] {
+  override def handle(event: DragEvent): Unit = {
+
+    /* data dropped */
+    /* if there is a string data on dragboard, read it and use it */
+    val dragBoard = event.getDragboard
+    Try(dragBoard.getString).flatMap(s => Try(s.toLong)).foreach { id =>
+      event.setDropCompleted(true)
+      reactor handle Move(id, index)
+
+    }
+    /* let the source know whether the string was successfully
+		 * transferred and used */
+
+    event.consume()
+  }
+}
+
+object AppView {
+  val textConstrainsInGrid: ColumnConstraints = new ColumnConstraints(100, 500, 600, Priority.ALWAYS, HPos.LEFT, true)
+  val buttonConstraintsInGrid: ColumnConstraints = new ColumnConstraints(100, 100, 300, Priority.SOMETIMES, HPos.RIGHT, true)
 }
 
 class AppView {
@@ -66,19 +116,22 @@ class AppView {
       )
     ),
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
-      if (items.nonEmpty)
-        branchL[GridPane](Grid.columnConstraints ~ List(new ColumnConstraints(100, 200, 300), new ColumnConstraints(100, 200, 300))) {
+      if (items.nonEmpty) {
+        branchL[GridPane](Grid.columnConstraints ~ List(AppView.textConstrainsInGrid, AppView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered {
             items.zipWithIndex.flatMap {
               case ((key, txt), index) =>
                 val shownText = if (hovered.contains(key)) txt + " HOVERED" else txt
                 List(
-                  key -> leaf[Label](text ~ shownText, Grid.row ~ index, Grid.column ~ 1, onMouseEntered ~ MouseEnteredEh(reactor, key), onMouseExited ~ MouseExitedEh(reactor, key), Grid.hAlignment ~ HPos.LEFT),
-                  key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, key), Grid.hAlignment ~ HPos.RIGHT)
+                  key -> branch[Pane](Grid.row ~ index, Grid.column ~ 0, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(key), onDragDropped ~ DragDroppedEh(reactor, index))(
+                    leaf[Label](text ~ shownText, onMouseEntered ~ HighlightEh(reactor, key), onMouseExited ~ RemoveHighlightEH(reactor, key))
+                  ),
+                  key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 1, onActionButton ~ DeleteEh(reactor, key))
                 )
             }
           }
         }
+      }
       else
         leaf[Label](text ~ "The list is empty. you may add items with the controls.")
     }
