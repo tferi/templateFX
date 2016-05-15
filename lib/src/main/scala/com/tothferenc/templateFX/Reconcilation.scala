@@ -79,7 +79,7 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
     val mutationsMovesInsertions = specsWithKeys.zipWithIndex.flatMap {
       case ((key, spec), desiredPosition) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          Move(container, node, desiredPosition) :: spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
+          MoveNode(container, node, desiredPosition) :: spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
         case _ =>
           List(InsertWithKey(container, spec, desiredPosition, key))
       }

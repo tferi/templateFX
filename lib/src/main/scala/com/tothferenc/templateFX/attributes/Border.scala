@@ -11,7 +11,7 @@ import com.tothferenc.templateFX.attribute.Attribute
 
 object Border {
 
-	val alignment = Attribute.remote[BorderPane, Node, Pos]("Alignment")
+  val alignment = Attribute.remote[BorderPane, Node, Pos]("Alignment")
 
-	val margin = Attribute.remote[BorderPane, Node, Insets]("Margin")
+  val margin = Attribute.remote[BorderPane, Node, Insets]("Margin")
 }

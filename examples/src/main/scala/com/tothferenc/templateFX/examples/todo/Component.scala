@@ -22,10 +22,6 @@ class Component(appModel: AppModel, protoRenderer: Reactor[Intent] => Renderer[A
       case Delete(key) =>
         val index = appModel.items.indexWhere(_._1 == key)
         if (index > -1) appModel.items.remove(index)
-      case Highlight(key) =>
-        appModel.hovered = Some(key)
-      case RemoveHighlight(key) =>
-        appModel.hovered = None
       case Move(key, targetPosition) =>
         val index = appModel.items.lastIndexWhere(_._1 == key)
         if (index > -1) {

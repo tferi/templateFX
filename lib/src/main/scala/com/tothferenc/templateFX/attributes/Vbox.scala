@@ -11,9 +11,9 @@ import com.tothferenc.templateFX.attribute.Attribute
 
 object Vbox {
 
-	val vGrow = Attribute.remote[VBox, Node, Priority]("Vgrow")
+  val vGrow = Attribute.remote[VBox, Node, Priority]("Vgrow")
 
-	val margin = Attribute.remote[VBox, Node, Insets]("Margin")
+  val margin = Attribute.remote[VBox, Node, Insets]("Margin")
 
-	val spacing = Attribute.simple[VBox, Double]("Spacing", 0)
+  val spacing = Attribute.simple[VBox, Double]("Spacing", 0)
 }

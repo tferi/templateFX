@@ -7,12 +7,11 @@ import javafx.scene.layout.HBox
 
 import com.tothferenc.templateFX.attribute.Attribute
 
-
 object Hbox {
 
-	val hGrow = Attribute.remote[HBox, Node, Priority]("Hgrow")
+  val hGrow = Attribute.remote[HBox, Node, Priority]("Hgrow")
 
-	val margin = Attribute.remote[HBox, Node, Insets]("Margin")
+  val margin = Attribute.remote[HBox, Node, Insets]("Margin")
 
-	val spacing = Attribute.simple[HBox, Double]("Spacing", 0)
+  val spacing = Attribute.simple[HBox, Double]("Spacing", 0)
 }

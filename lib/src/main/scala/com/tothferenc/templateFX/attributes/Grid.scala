@@ -15,7 +15,7 @@ import scala.collection.convert.wrapAsScala._
 
 object Grid {
 
-	val alignment = Attribute.simple[GridPane, Pos]("Alignment", null)
+  val alignment = Attribute.simple[GridPane, Pos]("Alignment", null)
 
   val columnConstraints = Attribute.list[GridPane, ColumnConstraints]("ColumnConstraints")
 
@@ -27,11 +27,11 @@ object Grid {
 
   val rowSpan = Attribute.remote[GridPane, Node, lang.Integer]("RowSpan")
 
-	val hAlignment = Attribute.remote[GridPane, Node, HPos]("Halignment")
+  val hAlignment = Attribute.remote[GridPane, Node, HPos]("Halignment")
 
-	val vAlignment = Attribute.remote[GridPane, Node, VPos]("Valignment")
+  val vAlignment = Attribute.remote[GridPane, Node, VPos]("Valignment")
 
-	val vGrow = Attribute.remote[GridPane, Node, Priority]("Vgrow")
+  val vGrow = Attribute.remote[GridPane, Node, Priority]("Vgrow")
 
-	val hGrow = Attribute.remote[GridPane, Node, Priority]("Hgrow")
+  val hGrow = Attribute.remote[GridPane, Node, Priority]("Hgrow")
 }

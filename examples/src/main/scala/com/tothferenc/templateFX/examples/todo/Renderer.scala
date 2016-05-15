@@ -4,11 +4,12 @@ import javafx.scene.Scene
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.Api._
+import com.tothferenc.templateFX.examples.todo.view.TodoView
 
 abstract class Renderer[-Input] {
   def render(input: Input): Unit
 }
 
-class ComponentRenderer(scene: Scene, reactor: Reactor[Intent], root: Pane, view: AppView) extends Renderer[AppModel] {
-  override def render(input: AppModel): Unit = view.windowContents(reactor, scene, input.items.toList, input.hovered).reconcile(root)
+class ComponentRenderer(scene: Scene, reactor: Reactor[Intent], root: Pane, view: TodoView) extends Renderer[AppModel] {
+  override def render(input: AppModel): Unit = view.windowContents(reactor, scene, input.items.toList).reconcile(root)
 }

@@ -54,7 +54,7 @@ final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[
   override protected def exec(): Unit = container.getChildren.set(position, definition.materialize())
 }
 
-final case class Move[FXType <: Node](container: TFXParent, node: Node, targetPosition: Int) extends Change {
+final case class MoveNode[FXType <: Node](container: TFXParent, node: Node, targetPosition: Int) extends Change {
   override protected def exec(): Unit = {
     val currentPosition = container.getChildren.indexOf(node)
     if (currentPosition != targetPosition) {

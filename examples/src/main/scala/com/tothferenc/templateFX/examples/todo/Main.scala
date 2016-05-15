@@ -5,11 +5,12 @@ import javafx.scene.Scene
 import javafx.scene.layout.{ AnchorPane, VBox }
 import javafx.stage.Stage
 
+import com.tothferenc.templateFX.examples.todo.view.TodoView
+
 import scala.collection.mutable.ArrayBuffer
 
 final case class AppModel(
-  items: ArrayBuffer[(Long, String)],
-  var hovered: Option[Long]
+  items: ArrayBuffer[(Long, String)]
 )
 
 class Main extends Application {
@@ -21,8 +22,10 @@ class Main extends Application {
 
     val scene: Scene = new Scene(rootNode, 600, 800)
     primaryStage.setScene(scene)
+    val cssRef: String = com.tothferenc.templateFX.examples.todo.Main.getClass.getResource("todo.css").toExternalForm
+    scene.getStylesheets.add(cssRef)
 
-    val component = new Component(AppModel(ArrayBuffer.empty, None), reactor => new ComponentRenderer(scene, reactor, rootNode, new AppView))
+    val component = new Component(AppModel(ArrayBuffer.empty), reactor => new ComponentRenderer(scene, reactor, rootNode, new TodoView))
     component.render()
 
     primaryStage.show()
