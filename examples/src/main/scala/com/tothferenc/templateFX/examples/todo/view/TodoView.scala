@@ -19,7 +19,7 @@ object TodoView {
 }
 
 class TodoView {
-  def windowContents(reactor: Reactor[Intent], scene: Scene, items: List[(Long, String)]) = {
+  def windowContents(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem]) = {
     List(
       branch[VBox]()(
         branch[HBox]()(
@@ -39,12 +39,12 @@ class TodoView {
           branchL[GridPane](Grid.columnConstraints ~ List(TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
             unordered {
               items.zipWithIndex.flatMap {
-                case ((key, txt), index) =>
+                case (TodoItem(todoItemId, done, txt), index) =>
                   List(
-                    key -> branch[HBox](Grid.row ~ index, Grid.column ~ 0, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(key), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
+                    todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 0, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                       leaf[Label](text ~ txt)
                     ),
-                    key + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 1, onActionButton ~ DeleteEh(reactor, key))
+                    todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 1, onActionButton ~ DeleteEh(reactor, todoItemId))
                   )
               }
             }

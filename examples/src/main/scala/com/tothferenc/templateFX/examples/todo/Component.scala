@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.examples.todo
 
 import com.typesafe.scalalogging.LazyLogging
 
-class Component(appModel: AppModel, protoRenderer: Reactor[Intent] => Renderer[AppModel]) extends Reactor[Intent] with LazyLogging {
+class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[TodoModel]) extends Reactor[Intent] with LazyLogging {
   private def nextId = System.currentTimeMillis()
 
   private val renderer = protoRenderer(this)
@@ -13,17 +13,17 @@ class Component(appModel: AppModel, protoRenderer: Reactor[Intent] => Renderer[A
     val begin = System.currentTimeMillis()
     message match {
       case Append(item) if item.nonEmpty =>
-        appModel.items.append(nextId -> item)
+        appModel.items.append(TodoItem(nextId, false, item))
       case Prepend(item) if item.nonEmpty =>
-        appModel.items.prepend(nextId -> item)
+        appModel.items.prepend(TodoItem(nextId, false, item))
       case Insert(item, position) if item.nonEmpty =>
         val actualPosition = if (position > appModel.items.length) appModel.items.length else position
-        appModel.items.insert(actualPosition, nextId -> item)
+        appModel.items.insert(actualPosition, TodoItem(nextId, false, item))
       case Delete(key) =>
-        val index = appModel.items.indexWhere(_._1 == key)
+        val index = appModel.items.indexWhere(_.id == key)
         if (index > -1) appModel.items.remove(index)
       case Move(key, targetPosition) =>
-        val index = appModel.items.lastIndexWhere(_._1 == key)
+        val index = appModel.items.lastIndexWhere(_.id == key)
         if (index > -1) {
           val item = appModel.items(index)
           appModel.items.remove(index)
