@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX.attribute
 
 import scala.language.experimental.macros
+import scala.reflect.macros.Universe
 import scala.reflect.macros.whitebox.Context
 
 object Attribute {
@@ -13,6 +14,9 @@ object Attribute {
   def simpleImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String], default: c.Expr[Value]): c.Expr[Attribute[Attr, Value]] = {
     import c.universe._
 
+    val scalaBooleanType = weakTypeTag[Boolean].tpe
+    val javaBooleanType = weakTypeTag[java.lang.Boolean].tpe
+
     val attrType = weakTypeTag[Attr].tpe
 
     val Literal(Constant(getset: String)) = getterSetterName.tree
@@ -21,7 +25,8 @@ object Attribute {
       firstChar.toLowerCase + rest
     }
     val valType = weakTypeTag[Value].tpe
-    val getter = TermName("get" + getset)
+    val getterPrefix = if (scalaBooleanType == valType || javaBooleanType == valType) "is" else "get"
+    val getter = TermName(getterPrefix + getset)
     val setter = TermName("set" + getset)
     val expr =
       q"""new Attribute[$attrType, $valType]{

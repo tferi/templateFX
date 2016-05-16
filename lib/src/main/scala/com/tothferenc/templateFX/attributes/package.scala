@@ -2,19 +2,24 @@ package com.tothferenc.templateFX
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
 import javafx.css.Styleable
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ActionEvent, EventHandler}
+import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
 import javafx.scene.input._
-import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
+import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
+import javafx.scene.paint.Paint
+import javafx.scene.text.Font
+import javafx.scene.text.TextAlignment
 
 import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
-import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
+import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
 import com.sun.javafx.sg.prism.NGNode
 
 import scala.collection.convert.wrapAsScala._
@@ -24,17 +29,37 @@ package object attributes {
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
-  val selected = new Attribute[CheckBox, Boolean] {
-    override def read(src: CheckBox): Boolean = src.isSelected
+  val selected = Attribute.simple[CheckBox, Boolean]("Selected", false)
 
-    override def set(target: CheckBox, value: Boolean): Unit = target.setSelected(value)
-
-    override def remove(item: CheckBox): Unit = item.setSelected(false)
-
-    override def toString: String = "completed"
-  }
+  val indeterminate = Attribute.simple[CheckBox, Boolean]("Indeterminate", false)
 
   val text = Attribute.simple[Labeled, String]("Text", null)
+
+  val alignment = Attribute.simple[Labeled, Pos]("Alignment", null)
+
+  val textAlignment = Attribute.simple[Labeled, TextAlignment]("TextAlignment", null)
+
+  val textOverrun = Attribute.simple[Labeled, OverrunStyle]("TextOverrun", null)
+
+  val ellipsisString = Attribute.simple[Labeled, String]("EllipsisString", null)
+
+  val wrapText = Attribute.simple[Labeled, Boolean]("WrapText", false)
+
+  val graphic = Attribute.simple[Labeled, Node]("Graphic", null)
+
+  val underline = Attribute.simple[Labeled, Boolean]("Underline", false)
+
+  val lineSpacing = Attribute.simple[Labeled, Double]("LineSpacing", 0.0)
+
+  val contentDisplay = Attribute.simple[Labeled, ContentDisplay]("ContentDisplay", null)
+
+  val graphicTextGap = Attribute.simple[Labeled, Double]("GraphicTextGap", 4.0)
+
+  val mnemonicParsing = Attribute.simple[Labeled, Boolean]("MnemonicParsing", false)
+
+  val textFill = Attribute.simple[Labeled, Paint]("TextFill", null)
+
+  val font = Attribute.simple[Labeled, Font]("Font", null)
 
   val title = Attribute.simple[Chart, String]("Title", null)
 
