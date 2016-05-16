@@ -20,6 +20,14 @@ final case class Hierarchy[FXType <: Node](
       ()
   }
 
+  override def reconcileChildren(node: FXType): List[Change] =
+    node match {
+      case container: TFXParent =>
+        children.requiredChangesIn(container)
+      case leaf =>
+        Nil
+    }
+
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == specifiedClass) {
       calculateMutation(node.asInstanceOf[FXType])
