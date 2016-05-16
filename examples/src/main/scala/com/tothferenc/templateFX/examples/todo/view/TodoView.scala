@@ -4,6 +4,7 @@ import javafx.geometry.HPos
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Button
+import javafx.scene.control.CheckBox
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.TextField
@@ -14,6 +15,7 @@ import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
 
 object TodoView {
+  val checkboxConstraintsInGrid: ColumnConstraints = new ColumnConstraints(10, 50, 100, Priority.SOMETIMES, HPos.RIGHT, true)
   val textConstrainsInGrid: ColumnConstraints = new ColumnConstraints(100, 500, 600, Priority.ALWAYS, HPos.LEFT, true)
   val buttonConstraintsInGrid: ColumnConstraints = new ColumnConstraints(100, 100, 300, Priority.SOMETIMES, HPos.RIGHT, true)
 }
@@ -36,15 +38,16 @@ class TodoView {
       ),
       scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
         if (items.nonEmpty) {
-          branchL[GridPane](Grid.columnConstraints ~ List(TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
+          branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
             unordered {
               items.zipWithIndex.flatMap {
                 case (TodoItem(todoItemId, done, txt), index) =>
                   List(
-                    todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 0, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
+                    todoItemId + "-checkbox" -> leaf[CheckBox](Grid.row ~ index, Grid.column ~ 0),
+                    todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                       leaf[Label](text ~ txt)
                     ),
-                    todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 1, onActionButton ~ DeleteEh(reactor, todoItemId))
+                    todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
                   )
               }
             }
