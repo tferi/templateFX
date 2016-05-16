@@ -2,16 +2,13 @@ package com.tothferenc.templateFX.examples.todo
 
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.{ AnchorPane, VBox }
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
+import com.tothferenc.templateFX.examples.todo.model.TodoModel
 import com.tothferenc.templateFX.examples.todo.view.TodoView
 
 import scala.collection.mutable.ArrayBuffer
-
-final case class TodoItem(id: Long, var completed: Boolean, var name: String)
-
-final case class TodoModel(items: ArrayBuffer[TodoItem], var showCompleted: Boolean)
 
 class Main extends Application {
 

@@ -2,10 +2,7 @@ package com.tothferenc.templateFX.specs
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.attribute.{ Attribute, RemovableFeature }
-import com.tothferenc.templateFX.{ Change, _ }
-
-import scala.collection.mutable.ListBuffer
+import com.tothferenc.templateFX._
 
 abstract class Spec[FXType <: Node] {
   implicit def specifiedClass: Class[FXType]
