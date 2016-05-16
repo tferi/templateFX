@@ -21,7 +21,7 @@ object TodoView {
 }
 
 class TodoView {
-  def windowContents(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem]) = {
+  def windowContents(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean) = {
     List(
       branch[VBox]()(
         branch[HBox]()(
@@ -33,17 +33,19 @@ class TodoView {
         branch[HBox]()(
           leaf[Label](text ~ "New item position:"),
           leaf[TextField](id ~ "positionInput", onActionText ~ AppendEH(reactor, scene)),
-          leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene))
+          leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
+          leaf[CheckBox](onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
         )
       ),
       scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
         if (items.nonEmpty) {
           branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
             unordered {
-              items.zipWithIndex.flatMap {
+              val shown = if (showCompleted) items else items.filterNot(_.completed)
+              shown.zipWithIndex.flatMap {
                 case (TodoItem(todoItemId, done, txt), index) =>
                   List(
-                    todoItemId + "-checkbox" -> leaf[CheckBox](Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CheckboxEh(reactor, todoItemId, !done)),
+                    todoItemId + "-checkbox" -> leaf[CheckBox](text ~ "Show completed", selected ~ done, Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
                     todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                       leaf[Label](text ~ txt)
                     ),

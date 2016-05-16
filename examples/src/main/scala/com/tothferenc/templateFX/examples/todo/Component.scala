@@ -30,6 +30,8 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
         }
       case ToggleCompleted(key, completed) =>
         appModel.items.find(_.id == key).foreach(_.completed = completed)
+      case ToggleShowCompleted(show) =>
+        appModel.showCompleted = show
     }
     renderer.render(appModel)
     logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - begin} ms.")

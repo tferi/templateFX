@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 
 final case class TodoItem(id: Long, var completed: Boolean, var name: String)
 
-final case class TodoModel(items: ArrayBuffer[TodoItem])
+final case class TodoModel(items: ArrayBuffer[TodoItem], var showCompleted: Boolean)
 
 class Main extends Application {
 
@@ -25,7 +25,7 @@ class Main extends Application {
     val cssRef: String = com.tothferenc.templateFX.examples.todo.Main.getClass.getResource("todo.css").toExternalForm
     scene.getStylesheets.add(cssRef)
 
-    val component = new Component(TodoModel(ArrayBuffer.empty), reactor => new ComponentRenderer(scene, reactor, rootNode, new TodoView))
+    val component = new Component(TodoModel(ArrayBuffer.empty, false), reactor => new ComponentRenderer(scene, reactor, rootNode, new TodoView))
     component.render()
 
     primaryStage.show()

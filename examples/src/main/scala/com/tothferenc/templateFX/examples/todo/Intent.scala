@@ -7,3 +7,4 @@ final case class Insert(text: String, position: Int) extends Intent
 final case class Delete(id: Long) extends Intent
 final case class Move(id: Long, position: Int) extends Intent
 final case class ToggleCompleted(id: Long, completed: Boolean) extends Intent
+final case class ToggleShowCompleted(show: Boolean) extends Intent
