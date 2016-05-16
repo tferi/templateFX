@@ -17,23 +17,19 @@ trait TextReader {
 }
 
 final case class InsertEh(reactor: Reactor[Intent], scene: Scene) extends EventHandler[ActionEvent] with TextReader {
-  override def handle(event: ActionEvent): Unit =
-    reactor handle Insert(getText(scene, "#textInput"), Try(getText(scene, "#positionInput").toInt).getOrElse(0))
+  override def handle(event: ActionEvent): Unit = reactor handle Insert(getText(scene, "#textInput"), Try(getText(scene, "#positionInput").toInt).getOrElse(0))
 }
 
 final case class AppendEH(reactor: Reactor[Intent], scene: Scene) extends EventHandler[ActionEvent] with TextReader {
-  override def handle(event: ActionEvent): Unit =
-    reactor handle Append(getText(scene, "#textInput"))
+  override def handle(event: ActionEvent): Unit = reactor handle Append(getText(scene, "#textInput"))
 }
 
 final case class PrependEH(reactor: Reactor[Intent], scene: Scene) extends EventHandler[ActionEvent] with TextReader {
-  override def handle(event: ActionEvent): Unit =
-    reactor handle Prepend(getText(scene, "#textInput"))
+  override def handle(event: ActionEvent): Unit = reactor handle Prepend(getText(scene, "#textInput"))
 }
 
 final case class DeleteEh(reactor: Reactor[Intent], key: Long) extends EventHandler[ActionEvent] {
-  override def handle(event: ActionEvent): Unit =
-    reactor handle Delete(key)
+  override def handle(event: ActionEvent): Unit = reactor handle Delete(key)
 }
 
 final case class SetCursorToHand(scene: Scene) extends EventHandler[MouseEvent] {
