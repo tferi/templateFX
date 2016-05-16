@@ -20,8 +20,7 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
         val actualPosition = if (position > appModel.items.length) appModel.items.length else position
         appModel.items.insert(actualPosition, TodoItem(nextId, false, item))
       case Delete(key) =>
-        val index = appModel.items.indexWhere(_.id == key)
-        if (index > -1) appModel.items.remove(index)
+        indexOfKey(key).foreach(appModel.items.remove)
       case Move(key, targetPosition) =>
         val index = appModel.items.lastIndexWhere(_.id == key)
         if (index > -1) {
@@ -29,8 +28,15 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
           appModel.items.remove(index)
           appModel.items.insert(targetPosition, item)
         }
+      case ToggleCompleted(key, completed) =>
+        appModel.items.find(_.id == key).foreach(_.completed = completed)
     }
     renderer.render(appModel)
     logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - begin} ms.")
+  }
+
+  private def indexOfKey(key: Long): Option[Int] = {
+    val index = appModel.items.indexWhere(_.id == key)
+    if (index > -1) Some(index) else None
   }
 }

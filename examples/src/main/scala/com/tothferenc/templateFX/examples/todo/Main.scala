@@ -9,11 +9,9 @@ import com.tothferenc.templateFX.examples.todo.view.TodoView
 
 import scala.collection.mutable.ArrayBuffer
 
-final case class TodoItem(id: Long, done: Boolean, name: String)
+final case class TodoItem(id: Long, var completed: Boolean, var name: String)
 
-final case class TodoModel(
-  items: ArrayBuffer[TodoItem]
-)
+final case class TodoModel(items: ArrayBuffer[TodoItem])
 
 class Main extends Application {
 

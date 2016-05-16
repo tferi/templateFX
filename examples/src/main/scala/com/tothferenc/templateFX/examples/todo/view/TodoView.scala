@@ -43,7 +43,7 @@ class TodoView {
               items.zipWithIndex.flatMap {
                 case (TodoItem(todoItemId, done, txt), index) =>
                   List(
-                    todoItemId + "-checkbox" -> leaf[CheckBox](Grid.row ~ index, Grid.column ~ 0),
+                    todoItemId + "-checkbox" -> leaf[CheckBox](Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CheckboxEh(reactor, todoItemId, !done)),
                     todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                       leaf[Label](text ~ txt)
                     ),

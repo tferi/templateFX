@@ -24,6 +24,16 @@ package object attributes {
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
+  val selected = new Attribute[CheckBox, Boolean] {
+    override def read(src: CheckBox): Boolean = src.isSelected
+
+    override def set(target: CheckBox, value: Boolean): Unit = target.setSelected(value)
+
+    override def remove(item: CheckBox): Unit = item.setSelected(false)
+
+    override def toString: String = "completed"
+  }
+
   val text = Attribute.simple[Labeled, String]("Text", null)
 
   val title = Attribute.simple[Chart, String]("Title", null)

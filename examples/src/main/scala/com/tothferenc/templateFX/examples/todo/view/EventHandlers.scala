@@ -40,6 +40,10 @@ final case class SetCursorToHand(scene: Scene) extends EventHandler[MouseEvent] 
   override def handle(event: MouseEvent): Unit = scene.setCursor(Cursor.HAND)
 }
 
+final case class CheckboxEh(reactor: Reactor[ToggleCompleted], key: Long, completed: Boolean) extends EventHandler[MouseEvent] {
+  override def handle(event: MouseEvent): Unit = reactor handle ToggleCompleted(key, completed)
+}
+
 final case class SetCursorToDefault(scene: Scene) extends EventHandler[MouseEvent] {
   override def handle(event: MouseEvent): Unit = scene.setCursor(Cursor.DEFAULT)
 }
