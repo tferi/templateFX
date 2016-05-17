@@ -4,15 +4,28 @@ import javafx.scene.Node
 
 import com.tothferenc.templateFX._
 
-abstract class Spec[FXType <: Node] {
+abstract class Template {
+  type Output
+  def materialize(): Output
+  def calculateMutation(otherItem: Node): List[Change]
+}
+
+object Template {
+  type Aux[Out] = Template { type Output = Out}
+}
+
+abstract class Spec[FXType <: Node] extends Template {
+
+  type Output = FXType
+
   implicit def specifiedClass: Class[FXType]
   def constraints: Seq[Constraint[FXType]]
   def materialize(): FXType
   def children: ChildrenSpec
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
-  def calculateMutation(node: Node): List[Change] = {
-    val nodeOfSameType = node.asInstanceOf[FXType]
+  override def calculateMutation(otherItem: Node): List[Change] = {
+    val nodeOfSameType = otherItem.asInstanceOf[FXType]
     val featuresToRemove = ManagedAttributes.get(nodeOfSameType) match {
       case Some(features) =>
         features.filterNot { checked =>
