@@ -21,11 +21,7 @@ final case class Hierarchy[FXType <: Node](
   }
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
-    if (node.getClass == specifiedClass) {
-      calculateMutation(node.asInstanceOf[FXType])
-    } else {
-      List(Replace(container, this, position))
-    }
+    mutationsIfTypeMatches(node).getOrElse(List(Replace(container, this, position)))
   }
 }
 

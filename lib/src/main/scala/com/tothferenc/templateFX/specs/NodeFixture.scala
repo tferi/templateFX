@@ -14,7 +14,7 @@ abstract class NodeFixture[-Container] {
   def reconcile(container: Container, specOption: Option[NodeSpec]): List[Change] = {
     read(container) -> specOption match {
       case (Some(existing), Some(specified)) if existing.getClass == specified.specifiedClass =>
-        specified.calculateMutation(existing)
+        specified.mutationsIfTypeMatches(existing).get
 
       case (None, None) =>
         Nil

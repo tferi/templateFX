@@ -7,7 +7,7 @@ import com.tothferenc.templateFX._
 abstract class Template {
   type Output
   def materialize(): Output
-  def calculateMutation(otherItem: Node): List[Change]
+  def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]]
 }
 
 object Template {
@@ -24,31 +24,34 @@ abstract class Spec[FXType <: Node] extends Template {
   def children: ChildrenSpec
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
-  override def calculateMutation(otherItem: Node): List[Change] = {
-    val nodeOfSameType = otherItem.asInstanceOf[FXType]
-    val featuresToRemove = ManagedAttributes.get(nodeOfSameType) match {
-      case Some(features) =>
-        features.filterNot { checked =>
-          constraints.exists(_.feature == checked)
+  override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
+    otherItem match {
+      case sameAsOutputType: Output @unchecked if specifiedClass == sameAsOutputType.getClass =>
+        val featuresToRemove = ManagedAttributes.get(sameAsOutputType) match {
+          case Some(features) =>
+            features.filterNot { checked =>
+              constraints.exists(_.feature == checked)
+            }
+          case _ =>
+            Nil
         }
-      case _ =>
-        Nil
-    }
 
-    val featureUpdates = constraints.flatMap(_.apply(nodeOfSameType))
+        val featureUpdates = constraints.flatMap(_.apply(sameAsOutputType))
 
-    val mutation = if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
-      List(Mutation[FXType](nodeOfSameType, featureUpdates, featuresToRemove))
-    else
-      Nil
-
-    mutation ::: {
-      nodeOfSameType match {
-        case container: TFXParent =>
-          children.requiredChangesIn(container)
-        case leaf =>
+        val mutation = if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
+          List(Mutation[FXType](sameAsOutputType, featureUpdates, featuresToRemove))
+        else
           Nil
-      }
+
+        Some(mutation ::: {
+          sameAsOutputType match {
+            case container: TFXParent =>
+              children.requiredChangesIn(container)
+            case leaf =>
+              Nil
+          }
+        })
+      case _ => None
     }
   }
 }
