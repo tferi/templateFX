@@ -5,6 +5,7 @@ import javafx.scene.Node
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.NodeFixture
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.userdata._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
@@ -64,7 +65,7 @@ final case class MoveNode[FXType <: Node](container: TFXParent, node: Node, targ
   }
 }
 
-final case class Mutation[Item <: Node](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
+final case class Mutation[Item: UserDataAccess](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val managedAttributes = ManagedAttributes.getOrInit(item)
 

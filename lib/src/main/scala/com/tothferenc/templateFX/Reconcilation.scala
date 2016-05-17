@@ -5,6 +5,7 @@ import javafx.scene.Node
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.userdata.UserData
 
 import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._

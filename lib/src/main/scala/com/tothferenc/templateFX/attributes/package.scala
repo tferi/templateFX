@@ -21,6 +21,7 @@ import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
 import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
 import com.sun.javafx.sg.prism.NGNode
+import com.tothferenc.templateFX.userdata.UserData
 
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
@@ -64,7 +65,7 @@ package object attributes {
   val title = Attribute.simple[Chart, String]("Title", null)
 
   final case class user(key: String) extends Attribute[Node, Any] {
-    override def read(src: Node): Any = UserData.get[Any](src, key).orNull
+    override def read(src: Node): Any = UserData.get[Node, Any](src, key).orNull
 
     override def set(target: Node, value: Any): Unit = UserData.set(target, key, value)
 

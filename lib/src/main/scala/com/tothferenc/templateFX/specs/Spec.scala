@@ -3,6 +3,8 @@ package com.tothferenc.templateFX.specs
 import javafx.scene.Node
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.userdata.ManagedAttributes
+import com.tothferenc.templateFX.userdata.UserDataAccess
 
 abstract class Template {
   type Output
@@ -14,35 +16,43 @@ object Template {
   type Aux[Out] = Template { type Output = Out }
 }
 
-abstract class Spec[FXType <: Node] extends Template {
+abstract class ConstraintBasedReconcilation extends Template {
+
+  implicit def userDataAccess: UserDataAccess[Output]
+
+  def constraints: Seq[Constraint[Output]]
+
+  def requiredChangesIn(item: Output): List[Change] = {
+    val featuresToRemove = ManagedAttributes.get(item) match {
+      case Some(features) =>
+        features.filterNot { checked =>
+          constraints.exists(_.feature == checked)
+        }
+      case _ =>
+        Nil
+    }
+
+    val featureUpdates = constraints.flatMap(_.apply(item))
+
+    if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
+      List(Mutation[Output](item, featureUpdates, featuresToRemove))
+    else
+      Nil
+  }
+}
+
+abstract class Spec[FXType <: Node] extends ConstraintBasedReconcilation {
 
   type Output = FXType
 
   implicit def specifiedClass: Class[FXType]
-  def constraints: Seq[Constraint[FXType]]
   def materialize(): FXType
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
   override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
     otherItem match {
-      case sameAsOutputType: Output @unchecked if specifiedClass == sameAsOutputType.getClass =>
-        val featuresToRemove = ManagedAttributes.get(sameAsOutputType) match {
-          case Some(features) =>
-            features.filterNot { checked =>
-              constraints.exists(_.feature == checked)
-            }
-          case _ =>
-            Nil
-        }
-
-        val featureUpdates = constraints.flatMap(_.apply(sameAsOutputType))
-
-        val mutation = if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
-          List(Mutation[FXType](sameAsOutputType, featureUpdates, featuresToRemove))
-        else
-          Nil
-
-        Some(mutation)
+      case expected: Output @unchecked if specifiedClass == expected.getClass =>
+        Some(requiredChangesIn(expected))
       case _ => None
     }
   }

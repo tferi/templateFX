@@ -9,6 +9,7 @@ import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.userdata.ManagedAttributes
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._

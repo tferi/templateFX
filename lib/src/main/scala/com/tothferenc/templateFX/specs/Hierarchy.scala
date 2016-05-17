@@ -3,6 +3,7 @@ package com.tothferenc.templateFX.specs
 import javafx.scene.Node
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.userdata._
 
 import scala.reflect._
 
@@ -12,6 +13,8 @@ final case class Hierarchy[FXType <: Node](
 )(protected val constructorParams: Any*)(implicit classTag: ClassTag[FXType]) extends ReflectiveSpec[FXType] {
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[FXType]]
+
+  override implicit def userDataAccess: UserDataAccess[FXType] = nodeUserDataAccess
 
   override def initNodesBelow(instance: FXType): Unit = instance match {
     case container: TFXParent =>
@@ -35,5 +38,6 @@ final case class Hierarchy[FXType <: Node](
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     mutationsIfTypeMatches(node).getOrElse(List(Replace(container, this, position)))
   }
+
 }
 
