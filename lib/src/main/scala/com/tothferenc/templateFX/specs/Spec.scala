@@ -9,7 +9,7 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 abstract class Template {
   type Output
   def materialize(): Output
-  def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]]
+  def reconcilationSteps(other: Node): Option[List[Change]]
 }
 
 object Template {
@@ -49,7 +49,7 @@ abstract class Spec[FXType <: Node] extends ConstraintBasedReconcilation {
   def materialize(): FXType
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
-  override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
+  override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
     otherItem match {
       case expected: Output @unchecked if specifiedClass == expected.getClass =>
         Some(requiredChangesIn(expected))

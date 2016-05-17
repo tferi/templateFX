@@ -14,8 +14,8 @@ abstract class Fixtures[FXType <: Node] extends ReflectiveSpec[FXType] {
     case (fixture, specOpt) => SetFixture(instance, fixture, specOpt).execute()
   }
 
-  override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
-    super.mutationsIfTypeMatches(otherItem).map {
+  override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
+    super.reconcilationSteps(otherItem).map {
       _ ::: fixtures.zip(specs).flatMap {
         case (fixture, specOpt) => fixture.reconcile(otherItem.asInstanceOf[FXType], specOpt)
       }
@@ -23,6 +23,6 @@ abstract class Fixtures[FXType <: Node] extends ReflectiveSpec[FXType] {
   }
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
-    mutationsIfTypeMatches(node).getOrElse(List(Replace(container, this, position)))
+    reconcilationSteps(node).getOrElse(List(Replace(container, this, position)))
   }
 }

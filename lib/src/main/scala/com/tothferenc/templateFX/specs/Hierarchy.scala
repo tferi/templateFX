@@ -23,8 +23,8 @@ final case class Hierarchy[FXType <: Node](
       ()
   }
 
-  override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
-    super.mutationsIfTypeMatches(otherItem).map {
+  override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
+    super.reconcilationSteps(otherItem).map {
       _ ::: (otherItem match {
         case container: TFXParent =>
           children.requiredChangesIn(container)
@@ -36,7 +36,7 @@ final case class Hierarchy[FXType <: Node](
   }
 
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
-    mutationsIfTypeMatches(node).getOrElse(List(Replace(container, this, position)))
+    reconcilationSteps(node).getOrElse(List(Replace(container, this, position)))
   }
 
 }
