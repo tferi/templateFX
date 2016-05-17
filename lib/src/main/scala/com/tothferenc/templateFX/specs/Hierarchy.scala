@@ -32,11 +32,6 @@ final case class Hierarchy[FXType <: Node](
           Nil
       })
     }
-
-  }
-
-  def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
-    reconcilationSteps(node).getOrElse(List(Replace(container, this, position)))
   }
 
 }

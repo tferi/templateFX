@@ -47,7 +47,6 @@ abstract class Spec[FXType <: Node] extends ConstraintBasedReconcilation {
 
   implicit def specifiedClass: Class[FXType]
   def materialize(): FXType
-  def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
   override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
     otherItem match {

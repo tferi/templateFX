@@ -40,7 +40,7 @@ final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends Childre
     val mutationsInsertions: List[Change] = specs.flatMap {
       case (key, spec) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
+          spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, existingChildren.indexOf(node))))
         case _ =>
           List(InsertWithKey(container, spec, 0, key))
       }
@@ -50,7 +50,7 @@ final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends Childre
 
   override def materializeAll(): List[Node] = specs.map {
     case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.materialize())
-  }.toList
+  }
 }
 
 object SpecsWithKeys {
@@ -80,7 +80,8 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
     val mutationsMovesInsertions = specsWithKeys.zipWithIndex.flatMap {
       case ((key, spec), desiredPosition) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          MoveNode(container, node, desiredPosition) :: spec.reconcileWithNode(container, existingChildren.indexOf(node), node)
+          spec.reconcilationSteps(node).map(MoveNode(container, node, desiredPosition) :: _)
+            .getOrElse(List(Replace(container, spec, existingChildren.indexOf(node))))
         case _ =>
           List(InsertWithKey(container, spec, desiredPosition, key))
       }
@@ -99,7 +100,7 @@ final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpec {
 
   private def reconcileInHierarchy(container: TFXParent, position: Int, nodeO: Option[Node], spec: Spec[_ <: Node]): List[Change] = nodeO match {
     case Some(node) =>
-      spec.reconcileWithNode(container, position, node)
+      spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, position)))
 
     case None =>
       List(Insert(container, spec, position))

@@ -21,8 +21,4 @@ abstract class Fixtures[FXType <: Node] extends ReflectiveSpec[FXType] {
       }
     }
   }
-
-  def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
-    reconcilationSteps(node).getOrElse(List(Replace(container, this, position)))
-  }
 }
