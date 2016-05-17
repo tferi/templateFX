@@ -11,7 +11,7 @@ abstract class Template {
 }
 
 object Template {
-  type Aux[Out] = Template { type Output = Out}
+  type Aux[Out] = Template { type Output = Out }
 }
 
 abstract class Spec[FXType <: Node] extends Template {
@@ -21,7 +21,6 @@ abstract class Spec[FXType <: Node] extends Template {
   implicit def specifiedClass: Class[FXType]
   def constraints: Seq[Constraint[FXType]]
   def materialize(): FXType
-  def children: ChildrenSpec
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
   override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
@@ -43,14 +42,7 @@ abstract class Spec[FXType <: Node] extends Template {
         else
           Nil
 
-        Some(mutation ::: {
-          sameAsOutputType match {
-            case container: TFXParent =>
-              children.requiredChangesIn(container)
-            case leaf =>
-              Nil
-          }
-        })
+        Some(mutation)
       case _ => None
     }
   }

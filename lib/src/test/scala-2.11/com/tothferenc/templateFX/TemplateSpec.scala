@@ -27,12 +27,9 @@ class TemplateSpec extends Specification {
   val paneWithHello: Spec[AnchorPane] = branch[AnchorPane]() {
     hello
   }
+  val paneWithHelloChildrenSpec = OrderedSpecs(List(paneWithHello))
 
-  val labelInTwoPanes = branch[AnchorPane]() {
-    branch[AnchorPane]() {
-      hello
-    }
-  }
+  val labelInTwoPanes = branch[AnchorPane]()(paneWithHello)
 
   val helloWorld: List[Spec[Label]] = List(
     hello,
@@ -86,7 +83,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled #2" in {
       val pane = paneWithHello.materialize()
-      labelInTwoPanes.children.reconcile(pane)
+      paneWithHelloChildrenSpec.reconcile(pane)
       pane.getChildren.get(0).asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
     }
 

@@ -20,6 +20,18 @@ final case class Hierarchy[FXType <: Node](
       ()
   }
 
+  override def mutationsIfTypeMatches(otherItem: Node): Option[List[Change]] = {
+    super.mutationsIfTypeMatches(otherItem).map {
+      _ ::: (otherItem match {
+        case container: TFXParent =>
+          children.requiredChangesIn(container)
+        case leaf =>
+          Nil
+      })
+    }
+
+  }
+
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     mutationsIfTypeMatches(node).getOrElse(List(Replace(container, this, position)))
   }
