@@ -8,7 +8,7 @@ abstract class Spec[FXType <: Node] {
   implicit def specifiedClass: Class[FXType]
   def constraints: Seq[Constraint[FXType]]
   def materialize(): FXType
-  def reconcileChildren(node: FXType): List[Change]
+  def children: ChildrenSpec
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change]
 
   def calculateMutation(node: Node): List[Change] = {
@@ -24,10 +24,19 @@ abstract class Spec[FXType <: Node] {
 
     val featureUpdates = constraints.flatMap(_.apply(nodeOfSameType))
 
-    (if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
+    val mutation = if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
       List(Mutation[FXType](nodeOfSameType, featureUpdates, featuresToRemove))
     else
-      Nil) ::: reconcileChildren(nodeOfSameType)
+      Nil
+
+    mutation ::: {
+      nodeOfSameType match {
+        case container: TFXParent =>
+          children.requiredChangesIn(container)
+        case leaf =>
+          Nil
+      }
+    }
   }
 }
 

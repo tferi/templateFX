@@ -2,9 +2,9 @@ package com.tothferenc.templateFX
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
 import javafx.css.Styleable
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ActionEvent, EventHandler}
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
@@ -12,14 +12,14 @@ import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
 import javafx.scene.input._
-import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
+import javafx.scene.layout.{AnchorPane, ColumnConstraints, GridPane}
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
 import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
-import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
+import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
 import com.sun.javafx.sg.prism.NGNode
 
 import scala.collection.convert.wrapAsScala._

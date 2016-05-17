@@ -84,6 +84,12 @@ class TemplateSpec extends Specification {
       pane.getChildren.get(1).asInstanceOf[Label].getText === "world"
     }
 
+    "be reconciled #2" in {
+      val pane = paneWithHello.materialize()
+      labelInTwoPanes.children.reconcile(pane)
+      pane.getChildren.get(0).asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
+    }
+
     "be able to do a simple reconcilation with replacements by key" in {
       val pane = paneWith(keyedHelloWorld).materialize()
       val child0 = child(0, pane)

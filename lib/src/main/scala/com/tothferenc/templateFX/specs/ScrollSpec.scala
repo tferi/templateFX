@@ -23,6 +23,8 @@ final case class ScrollSpec[Scrollable <: ScrollPane](
 
   override implicit val specifiedClass: Class[Scrollable] = classTag.runtimeClass.asInstanceOf[Class[Scrollable]]
 
+  override def children: ChildrenSpec = Ignore
+
   override def fixtures: List[NodeFixture[Scrollable]] = ScrollSpec.fixtures
 
   override val specs: List[Option[NodeSpec]] = List(Some(contentSpec))

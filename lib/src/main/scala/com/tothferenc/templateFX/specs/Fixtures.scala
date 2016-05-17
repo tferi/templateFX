@@ -14,14 +14,11 @@ abstract class Fixtures[FXType <: Node] extends ReflectiveSpec[FXType] {
     case (fixture, specOpt) => SetFixture(instance, fixture, specOpt).execute()
   }
 
-  override def reconcileChildren(node: FXType): List[Change] =
-    fixtures.zip(specs).flatMap {
-      case (fixture, specOpt) => fixture.reconcile(node.asInstanceOf[FXType], specOpt)
-    }
-
   def reconcileWithNode(container: TFXParent, position: Int, node: Node): List[Change] = {
     if (node.getClass == specifiedClass) {
-      calculateMutation(node)
+      calculateMutation(node) ::: fixtures.zip(specs).flatMap {
+        case (fixture, specOpt) => fixture.reconcile(node.asInstanceOf[FXType], specOpt)
+      }
     } else {
       List(Replace(container, this, position))
     }
