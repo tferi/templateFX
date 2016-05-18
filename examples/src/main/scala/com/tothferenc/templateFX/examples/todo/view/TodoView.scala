@@ -30,11 +30,11 @@ class TodoView {
   }
 
   def itemsTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Spec[ScrollPane] = {
+    val shown = if (showCompleted) items else items.filterNot(_.completed)
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
-      if (items.nonEmpty) {
+      if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
-            val shown = if (showCompleted) items else items.filterNot(_.completed)
             shown.zipWithIndex.flatMap {
               case (TodoItem(todoItemId, done, txt), index) =>
                 List(
@@ -47,8 +47,9 @@ class TodoView {
             }
           }
         }
-      } else
-        leaf[Label](text ~ "The list is empty. you may add items with the controls.")
+      } else {
+        leaf[Label](text ~ (if (items.isEmpty) "The list is empty. you may add items with the controls." else "Completed items are not shown."))
+      }
     }
   }
 

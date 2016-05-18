@@ -15,7 +15,7 @@ abstract class Fixtures[T] extends ReflectiveSpec[T] {
   }
 
   override def reconcilationSteps(otherItem: Any): Option[List[Change]] = {
-    super.reconcilationSteps(otherItem).map {
+    reconcilationStepsForThisNode(otherItem).map {
       _ ::: fixtures.zip(specs).flatMap {
         case (fixture, specOpt) => fixture.reconcile(otherItem.asInstanceOf[T], specOpt)
       }

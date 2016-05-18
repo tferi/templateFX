@@ -24,7 +24,7 @@ final case class Hierarchy[FXType <: Node](
   }
 
   override def reconcilationSteps(otherItem: Any): Option[List[Change]] = {
-    super.reconcilationSteps(otherItem).map {
+    reconcilationStepsForThisNode(otherItem).map {
       _ ::: (otherItem match {
         case container: TFXParent =>
           children.requiredChangesIn(container)

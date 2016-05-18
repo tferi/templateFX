@@ -40,7 +40,7 @@ abstract class Spec[T] extends ConstraintBasedReconcilation[T] {
 
   implicit def specifiedClass: Class[T]
 
-  override def reconcilationSteps(otherItem: Any): Option[List[Change]] = {
+  protected def reconcilationStepsForThisNode(otherItem: Any): Option[List[Change]] = {
     otherItem match {
       case expected: T @unchecked if specifiedClass == expected.getClass =>
         Some(requiredChangesIn(expected))
