@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Tab
 
 import com.tothferenc.templateFX.Constraint
+import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 
 import scala.reflect.ClassTag

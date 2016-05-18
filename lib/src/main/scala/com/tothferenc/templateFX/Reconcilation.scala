@@ -1,11 +1,8 @@
 package com.tothferenc.templateFX
 
 import javafx.collections.ObservableList
-import javafx.scene.Node
-import javafx.scene.layout.Pane
 
-import com.tothferenc.templateFX.specs.Spec
-import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserData
 import com.tothferenc.templateFX.userdata.UserDataAccess
 

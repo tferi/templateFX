@@ -4,8 +4,8 @@ import javafx.scene.Node
 
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.NodeFixture
-import com.tothferenc.templateFX.specs.Spec
-import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.specs.base.ClassAwareSpec
+import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory

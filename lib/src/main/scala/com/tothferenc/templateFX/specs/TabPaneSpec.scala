@@ -5,6 +5,7 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.specs.base.ReflectiveSpec
 import com.tothferenc.templateFX.userdata._
 
 import scala.reflect.ClassTag
@@ -14,7 +15,7 @@ trait NodeDataAccess[T <: Node] {
 }
 
 final case class TabPaneSpec[SubTabPane <: TabPane](
-  constraints: Seq[Constraint[SubTabPane]],
+    constraints: Seq[Constraint[SubTabPane]],
     tabTemplates: CollectionSpec[SubTabPane, Tab],
     constructorParams: Any*
 )(implicit classTag: ClassTag[SubTabPane]) extends ReflectiveSpec[SubTabPane] with NodeDataAccess[SubTabPane] {

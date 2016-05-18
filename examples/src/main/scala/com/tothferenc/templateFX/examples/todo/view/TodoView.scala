@@ -12,8 +12,8 @@ import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
-import com.tothferenc.templateFX.specs.Spec
-import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.specs.base.ClassAwareSpec
+import com.tothferenc.templateFX.specs.base.Template
 
 object TodoView {
   val checkboxConstraintsInGrid: ColumnConstraints = new ColumnConstraints(10, 50, 100, Priority.SOMETIMES, HPos.RIGHT, true)
@@ -29,7 +29,7 @@ class TodoView {
     )
   }
 
-  def itemsTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Spec[ScrollPane] = {
+  def itemsTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): ClassAwareSpec[ScrollPane] = {
     val shown = if (showCompleted) items else items.filterNot(_.completed)
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
       if (shown.nonEmpty) {
@@ -53,7 +53,7 @@ class TodoView {
     }
   }
 
-  def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Spec[VBox] = {
+  def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): ClassAwareSpec[VBox] = {
     branch[VBox]()(
       branch[HBox]()(
         leaf[Label](text ~ "New item name:"),

@@ -3,6 +3,7 @@ package com.tothferenc.templateFX.specs
 import javafx.scene.Node
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.specs.base.Template
 
 import scala.language.existentials
 

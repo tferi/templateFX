@@ -9,8 +9,8 @@ import javafx.scene.layout.{ AnchorPane, Pane }
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.attribute.RemovableFeature
-import com.tothferenc.templateFX.specs.Spec
-import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.specs.base.ClassAwareSpec
+import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
@@ -74,7 +74,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.build()
-      val newDef: Spec[Label] = leaf[Label](text ~ "world")
+      val newDef: ClassAwareSpec[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1

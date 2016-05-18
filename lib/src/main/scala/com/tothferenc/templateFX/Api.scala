@@ -6,8 +6,9 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
-import com.tothferenc.templateFX.specs.Template
-import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollSpec, Spec }
+import com.tothferenc.templateFX.specs.base.ClassAwareSpec
+import com.tothferenc.templateFX.specs.base.Template
+import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollSpec }
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -38,22 +39,22 @@ object Api {
     def <<(value: Attr) = Enforcement(attribute, value)
   }
 
-  def scrollable(constraints: Constraint[ScrollPane]*)(content: NodeSpec): Spec[ScrollPane] =
+  def scrollable(constraints: Constraint[ScrollPane]*)(content: NodeSpec): ClassAwareSpec[ScrollPane] =
     ScrollSpec[ScrollPane](constraints, content)()
 
-  def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =
+  def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): ClassAwareSpec[FXType] =
     Hierarchy[FXType](constraints, specGroup)(constructorParams)
 
-  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Template[Node]*): Spec[FXType] =
+  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Template[Node]*): ClassAwareSpec[FXType] =
     Hierarchy[FXType](constraints, children.toList)()
 
-  def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =
+  def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): ClassAwareSpec[FXType] =
     Hierarchy[FXType](constraints, specGroup)()
 
-  def leafC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*): Spec[FXType] =
+  def leafC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*): ClassAwareSpec[FXType] =
     Hierarchy[FXType](constraints, Ignore)(constructorParams)
 
-  def leaf[FXType <: Node: ClassTag](constraints: Constraint[FXType]*): Spec[FXType] =
+  def leaf[FXType <: Node: ClassTag](constraints: Constraint[FXType]*): ClassAwareSpec[FXType] =
     Hierarchy[FXType](constraints, Ignore)()
 
 }
