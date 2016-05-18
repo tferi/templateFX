@@ -13,7 +13,7 @@ abstract class Template[+T] {
 
 abstract class ConstraintBasedReconcilation[T] extends Template[T] {
 
-  implicit def userDataAccess: UserDataAccess[T]
+  implicit protected def userDataAccess: UserDataAccess[T]
 
   def constraints: Seq[Constraint[T]]
 
