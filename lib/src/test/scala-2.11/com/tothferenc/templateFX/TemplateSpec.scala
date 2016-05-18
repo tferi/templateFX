@@ -4,7 +4,7 @@ import javafx.embed.swing.JFXPanel
 import javafx.scene.Node
 import javafx.scene.chart.PieChart
 import javafx.scene.control.Label
-import javafx.scene.layout.{AnchorPane, Pane}
+import javafx.scene.layout.{ AnchorPane, Pane }
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
