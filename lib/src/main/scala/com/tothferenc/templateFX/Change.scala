@@ -28,7 +28,7 @@ sealed abstract class Change extends Product with Serializable {
 }
 
 final case class SetFixture[Container](container: Container, fixture: NodeFixture[Container], spec: Option[NodeSpec]) extends Change {
-  override protected def exec(): Unit = fixture.set(container, spec.map(_.materialize()).orNull)
+  override protected def exec(): Unit = fixture.set(container, spec.map(_.build()).orNull)
 }
 
 final case class RemoveNode(container: TFXParent, node: Node) extends Change {
@@ -44,15 +44,15 @@ final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive
 }
 
 final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, definition.materialize())
+  override protected def exec(): Unit = container.getChildren.add(position, definition.build())
 }
 
 final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Spec[FXType], position: Int, key: Key) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, SpecsWithKeys.setKeyOnNode(key, definition.materialize()))
+  override protected def exec(): Unit = container.getChildren.add(position, SpecsWithKeys.setKeyOnNode(key, definition.build()))
 }
 
 final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.set(position, definition.materialize())
+  override protected def exec(): Unit = container.getChildren.set(position, definition.build())
 }
 
 final case class MoveNode[FXType <: Node](container: TFXParent, node: Node, targetPosition: Int) extends Change {

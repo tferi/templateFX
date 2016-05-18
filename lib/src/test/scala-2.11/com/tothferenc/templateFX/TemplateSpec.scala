@@ -44,19 +44,19 @@ class TemplateSpec extends Specification {
 
   "Templates" should {
     "be parsed well" in {
-      paneWithHello.materialize().asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
+      paneWithHello.build().asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
     }
 
     "have their constraints applied to inheritors" in {
       val container: TFXParent = branch[AnchorPane]() {
         leaf[PieChart](com.tothferenc.templateFX.attributes.title ~ "well")
-      }.materialize()
+      }.build()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
       chart.getTitle === "well"
     }
 
     "be reconciled as expected when a single mutation is needed" in {
-      val pane = paneWithHello.materialize()
+      val pane = paneWithHello.build()
       val changes: List[Change] = List(
         leaf[Label](text ~ "world")
       ).requiredChangesIn(pane)
@@ -64,13 +64,13 @@ class TemplateSpec extends Specification {
     }
 
     "be reconciled as expected when an element needs to be replaced with another type" in {
-      val pane = paneWithHello.materialize()
+      val pane = paneWithHello.build()
       List(leaf[PieChart]()).reconcile(pane)
       pane.getChildren.get(0) should beAnInstanceOf[PieChart]
     }
 
     "be reconciled as expected when an element needs to be inserted" in {
-      val pane = paneWithHello.materialize()
+      val pane = paneWithHello.build()
       val newDef: Spec[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
@@ -83,13 +83,13 @@ class TemplateSpec extends Specification {
     }
 
     "be reconciled #2" in {
-      val pane = paneWithHello.materialize()
+      val pane = paneWithHello.build()
       paneWithHelloChildrenSpec.reconcile(pane)
       pane.getChildren.get(0).asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
     }
 
     "be able to do a simple reconcilation with replacements by key" in {
-      val pane = paneWith(keyedHelloWorld).materialize()
+      val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       keyedHelloWorld.reverse.requiredChangesIn(pane) === List(MoveNode(pane, child1, 0), MoveNode(pane, child0, 1))
@@ -102,7 +102,7 @@ class TemplateSpec extends Specification {
         2 -> leaf[Label](text ~ "dear"),
         1 -> leaf[Label](text ~ "world")
       )
-      val pane = paneWith(keyedHelloWorld).materialize()
+      val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       val changes = helloDearWorld.requiredChangesIn(pane)
@@ -122,7 +122,7 @@ class TemplateSpec extends Specification {
         2 -> leaf[Label](text ~ "dear"),
         3 -> leaf[Label](text ~ "world")
       )
-      val pane = paneWith(helloDearWorld).materialize()
+      val pane = paneWith(helloDearWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       val child2 = child(2, pane)
@@ -138,7 +138,7 @@ class TemplateSpec extends Specification {
     }
 
     "be able to remove sequence of elements" in {
-      val pane = paneWith(helloWorld).materialize()
+      val pane = paneWith(helloWorld).build()
       val changes: List[Change] = List(hello).requiredChangesIn(pane)
       changes === List(RemoveSeq(pane, 1, 2))
       changes.foreach(_.execute())
@@ -147,7 +147,7 @@ class TemplateSpec extends Specification {
     }
 
     "manage attributes as expected" in {
-      val pane = paneWithHello.materialize()
+      val pane = paneWithHello.build()
       def getLabel: Label = {
         pane.getChildren.get(0).asInstanceOf[Label]
       }

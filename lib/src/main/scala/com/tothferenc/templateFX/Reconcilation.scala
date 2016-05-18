@@ -49,7 +49,7 @@ final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends Childre
   }
 
   override def materializeAll(): List[Node] = specs.map {
-    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.materialize())
+    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.build())
   }
 }
 
@@ -90,13 +90,13 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
   }
 
   override def materializeAll(): List[Node] = specsWithKeys.map {
-    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.materialize())
+    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.build())
   }
 }
 
 final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpec {
 
-  override def materializeAll(): List[Node] = specs.map(_.materialize())
+  override def materializeAll(): List[Node] = specs.map(_.build())
 
   private def reconcileInHierarchy(container: TFXParent, position: Int, nodeO: Option[Node], spec: Spec[_ <: Node]): List[Change] = nodeO match {
     case Some(node) =>

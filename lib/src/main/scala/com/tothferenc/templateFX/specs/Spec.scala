@@ -6,8 +6,8 @@ import com.tothferenc.templateFX._
 import com.tothferenc.templateFX.userdata.ManagedAttributes
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
-abstract class Template[T] {
-  def materialize(): T
+abstract class Template[+T] {
+  def build(): T
   def reconcilationSteps(other: Node): Option[List[Change]]
 }
 
@@ -36,14 +36,13 @@ abstract class ConstraintBasedReconcilation[T] extends Template[T] {
   }
 }
 
-abstract class Spec[FXType <: Node] extends ConstraintBasedReconcilation[FXType] {
+abstract class Spec[T] extends ConstraintBasedReconcilation[T] {
 
-  implicit def specifiedClass: Class[FXType]
-  def materialize(): FXType
+  implicit def specifiedClass: Class[T]
 
   override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
     otherItem match {
-      case expected: FXType @unchecked if specifiedClass == expected.getClass =>
+      case expected: T @unchecked if specifiedClass == expected.getClass =>
         Some(requiredChangesIn(expected))
       case _ =>
         None
@@ -51,14 +50,14 @@ abstract class Spec[FXType <: Node] extends ConstraintBasedReconcilation[FXType]
   }
 }
 
-abstract class ReflectiveSpec[FXType <: Node] extends Spec[FXType] {
+abstract class ReflectiveSpec[T] extends Spec[T] {
 
   protected def constructorParams: Seq[Any]
 
-  def initNodesBelow(instance: FXType): Unit
+  def initNodesBelow(instance: T): Unit
 
-  def materialize(): FXType = {
-    val instance = UniversalConstructor.instantiate[FXType](constructorParams)
+  def build(): T = {
+    val instance = UniversalConstructor.instantiate[T](constructorParams)
     Mutation(instance, constraints.flatMap(_(instance)), Nil).execute()
     initNodesBelow(instance)
     instance
