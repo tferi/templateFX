@@ -2,6 +2,7 @@ package com.tothferenc.templateFX.examples.todo.view
 
 import javafx.geometry.HPos
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control._
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
@@ -12,6 +13,7 @@ import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.specs.Template
 
 object TodoView {
   val checkboxConstraintsInGrid: ColumnConstraints = new ColumnConstraints(10, 50, 100, Priority.SOMETIMES, HPos.RIGHT, true)
@@ -31,13 +33,13 @@ class TodoView {
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
       if (items.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
-          unordered {
+          unordered[String] {
             val shown = if (showCompleted) items else items.filterNot(_.completed)
             shown.zipWithIndex.flatMap {
               case (TodoItem(todoItemId, done, txt), index) =>
                 List(
                   todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
-                  todoItemId -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
+                  todoItemId.toString -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                     leaf[Label](text ~ txt)
                   ),
                   todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))

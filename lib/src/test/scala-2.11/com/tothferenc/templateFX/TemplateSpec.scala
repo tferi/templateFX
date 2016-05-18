@@ -4,13 +4,14 @@ import javafx.embed.swing.JFXPanel
 import javafx.scene.Node
 import javafx.scene.chart.PieChart
 import javafx.scene.control.Label
-import javafx.scene.layout.{ AnchorPane, Pane }
+import javafx.scene.layout.{AnchorPane, Pane}
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.Spec
-import com.tothferenc.templateFX.userdata.ManagedAttributes
+import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
@@ -18,7 +19,7 @@ import scala.collection.convert.wrapAsScala._
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
-  private val hello: Spec[Label] = leaf[Label](text ~ "hello")
+  private val hello: Template[Node] = leaf[Label](text ~ "hello")
 
   private def paneWith(specGroup: CollectionSpec[TFXParent, Node]) = branchL[AnchorPane]() {
     specGroup
@@ -26,14 +27,15 @@ class TemplateSpec extends Specification {
 
   def child(i: Int, container: TFXParent) = container.getChildren.get(i)
 
-  val paneWithHello: Spec[AnchorPane] = branch[AnchorPane]() {
+  val paneWithHello: Template[AnchorPane] = branch[AnchorPane]() {
     hello
   }
-  val paneWithHelloChildrenSpec = OrderedSpecs(List(paneWithHello))
+
+  val paneWithHelloChildrenSpec = OrderedSpecs[Pane, Node](List(paneWithHello))(paneChildrenAccess, nodeUserDataAccess)
 
   val labelInTwoPanes = branch[AnchorPane]()(paneWithHello)
 
-  val helloWorld: List[Spec[Label]] = List(
+  val helloWorld: List[Template[Node]] = List(
     hello,
     leaf[Label](text ~ "world")
   )
@@ -76,7 +78,7 @@ class TemplateSpec extends Specification {
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1
-      val insertNode: Insert[Label] = changes.head.asInstanceOf[Insert[Label]]
+      val insertNode: Insert[TFXParent, Label] = changes.head.asInstanceOf[Insert[TFXParent, Label]]
       insertNode.container === pane
       changes.foreach(_.execute())
       pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
@@ -128,7 +130,7 @@ class TemplateSpec extends Specification {
       val child1 = child(1, pane)
       val child2 = child(2, pane)
       val changes = List(1 -> hello).requiredChangesIn(pane)
-      val change = changes(0).asInstanceOf[RemoveNodes]
+      val change = changes(0).asInstanceOf[RemoveNodes[TFXParent, Node]]
       change.nodes should contain(child1)
       change.nodes should contain(child2)
       change.nodes.length === 2

@@ -8,7 +8,7 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 
 abstract class Template[+T] {
   def build(): T
-  def reconcilationSteps(other: Node): Option[List[Change]]
+  def reconcilationSteps(other: Any): Option[List[Change]]
 }
 
 abstract class ConstraintBasedReconcilation[T] extends Template[T] {
@@ -40,7 +40,7 @@ abstract class Spec[T] extends ConstraintBasedReconcilation[T] {
 
   implicit def specifiedClass: Class[T]
 
-  override def reconcilationSteps(otherItem: Node): Option[List[Change]] = {
+  override def reconcilationSteps(otherItem: Any): Option[List[Change]] = {
     otherItem match {
       case expected: T @unchecked if specifiedClass == expected.getClass =>
         Some(requiredChangesIn(expected))

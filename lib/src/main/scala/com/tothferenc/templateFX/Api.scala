@@ -1,25 +1,33 @@
 package com.tothferenc.templateFX
 
+import javafx.collections.ObservableList
 import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Pane
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
-import com.tothferenc.templateFX.specs.{ Hierarchy, ScrollSpec, Spec }
+import com.tothferenc.templateFX.attribute.{Attribute, SettableFeature}
+import com.tothferenc.templateFX.specs.Template
+import com.tothferenc.templateFX.specs.{Hierarchy, ScrollSpec, Spec}
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
+class PaneNodesAccess extends CollectionAccess[Pane, Node] {
+  override def getCollection(container: Pane): ObservableList[Node] = container.getChildren
+}
+
 object Api {
 
-  implicit def specs2ordered(specs: List[NodeSpec]): CollectionSpec[TFXParent, Node] = OrderedSpecs(specs)
-  implicit def specs2orderedWithIds[Key](specs: List[(Key, NodeSpec)]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
+  implicit val paneChildrenAccess = new PaneNodesAccess
 
-  def unordered[Key](specs: List[(Key, NodeSpec)]) = SpecsWithIds(specs)
+  implicit def specs2ordered(specs: List[Template[Node]]): CollectionSpec[TFXParent, Node] = OrderedSpecs(specs)
+  implicit def specs2orderedWithIds[Key](specs: List[(Key, Template[Node])]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
 
-  implicit class ReconcilationSyntax(reconcilableGroup: CollectionSpec[TFXParent, Node]) {
-    def changes(container: Pane): List[Change] = reconcilableGroup.requiredChangesIn(container)
-    def reconcile(container: Pane): Unit = changes(container).foreach(_.execute())
+  def unordered[Key](specs: List[(Key, Template[Node])]) = SpecsWithIds(specs)
+
+  implicit class ReconcilationSyntax[Container](reconcilableGroup: CollectionSpec[Container, Node]) {
+    def changes(container: Container): List[Change] = reconcilableGroup.requiredChangesIn(container)
+    def reconcile(container: Container): Unit = changes(container).foreach(_.execute())
   }
 
   implicit class AttributeAssigner[FXType, Attr](attribute: Attribute[FXType, Attr]) {
@@ -36,7 +44,7 @@ object Api {
   def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =
     Hierarchy[FXType](constraints, specGroup)(constructorParams)
 
-  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: NodeSpec*): Spec[FXType] =
+  def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: Template[Node]*): Spec[FXType] =
     Hierarchy[FXType](constraints, children.toList)()
 
   def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =

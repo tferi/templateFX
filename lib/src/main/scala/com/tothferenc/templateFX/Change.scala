@@ -36,32 +36,33 @@ final case class RemoveNode(container: TFXParent, node: Node) extends Change {
   override protected def exec(): Unit = container.getChildren.remove(node)
 }
 
-final case class RemoveNodes(container: TFXParent, nodes: Seq[Node]) extends Change {
-  override protected def exec(): Unit = container.getChildren.removeAll(nodes: _*)
+final case class RemoveNodes[Container, Item](container: Container, nodes: Seq[Item])(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
+  override protected def exec(): Unit = collectionAccess.getCollection(container).removeAll(nodes: _*)
 }
 
-final case class RemoveSeq(container: TFXParent, fromInclusive: Int, toExclusive: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.remove(fromInclusive, toExclusive)
+final case class RemoveSeq[Container](container: Container, fromInclusive: Int, toExclusive: Int)(implicit collectionAccess: CollectionAccess[Container, _]) extends Change {
+  override protected def exec(): Unit = collectionAccess.getCollection(container).remove(fromInclusive, toExclusive)
 }
 
-final case class Insert[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, definition.build())
+final case class Insert[Container, Item](container: Container, definition: Template[Item], position: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
+  override protected def exec(): Unit = collectionAccess.getCollection(container).add(position, definition.build())
 }
 
-final case class InsertWithKey[FXType <: Node, Key](container: TFXParent, definition: Spec[FXType], position: Int, key: Key) extends Change {
-  override protected def exec(): Unit = container.getChildren.add(position, SpecsWithKeys.setKeyOnNode(key, definition.build()))
+final case class InsertWithKey[Container, Item, Key](container: Container, definition: Template[Item], position: Int, key: Key)(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends Change {
+  override protected def exec(): Unit = collectionAccess.getCollection(container).add(position, SpecsWithKeys.setKeyOnItem(key, definition.build()))
 }
 
-final case class Replace[FXType <: Node](container: TFXParent, definition: Spec[FXType], position: Int) extends Change {
-  override protected def exec(): Unit = container.getChildren.set(position, definition.build())
+final case class Replace[Container, Item](container: Container, definition: Template[Item], position: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
+  override protected def exec(): Unit = collectionAccess.getCollection(container).set(position, definition.build())
 }
 
-final case class MoveNode[FXType <: Node](container: TFXParent, node: Node, targetPosition: Int) extends Change {
+final case class MoveNode[Container, Item](container: Container, item: Item, targetPosition: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
   override protected def exec(): Unit = {
-    val currentPosition = container.getChildren.indexOf(node)
+    val collection = collectionAccess.getCollection(container)
+    val currentPosition = collection.indexOf(item)
     if (currentPosition != targetPosition) {
-      container.getChildren.remove(node)
-      container.getChildren.add(targetPosition, node)
+      collection.remove(item)
+      collection.add(targetPosition, item)
     }
   }
 }

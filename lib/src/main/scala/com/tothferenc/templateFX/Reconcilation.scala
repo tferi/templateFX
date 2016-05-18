@@ -5,7 +5,9 @@ import javafx.scene.Node
 import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.specs.Template
 import com.tothferenc.templateFX.userdata.UserData
+import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
@@ -17,17 +19,22 @@ abstract class CollectionSpec[-Container, +Item] {
   def reconcile(container: Container): Unit = requiredChangesIn(container).foreach(_.execute())
 }
 
+abstract class CollectionAccess[-Container, Item] {
+  def getCollection(container: Container): ObservableList[Item]
+}
+
 case object Ignore extends CollectionSpec[Any, Nothing] {
   override def requiredChangesIn(container: Any): List[Change] = Nil
 
   override def materializeAll(): List[Nothing] = Nil
 }
 
-final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends CollectionSpec[TFXParent, Node] {
-  override def requiredChangesIn(container: TFXParent): List[Change] = {
-    val existingChildren: ObservableList[Node] = container.getChildren
-    val existingNodesByKey = existingChildren.groupBy { node =>
-      node.getUserData.asInstanceOf[mutable.Map[String, Any]]
+final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
+
+  override def requiredChangesIn(container: Container): List[Change] = {
+    val existingChildren: ObservableList[Item] = collectionAccess.getCollection(container)
+    val existingNodesByKey = existingChildren.groupBy { item =>
+      userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
     }
@@ -48,26 +55,26 @@ final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends Collect
     (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsInsertions
   }
 
-  override def materializeAll(): List[Node] = specs.map {
-    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.build())
+  override def materializeAll(): List[Item] = specs.map {
+    case (key, spec) => SpecsWithKeys.setKeyOnItem(key, spec.build())
   }
 }
 
 object SpecsWithKeys {
   val TFX_KEY = "tfx_key"
 
-  private[templateFX] def setKeyOnNode[Key](key: Key, node: Node): Node = {
-    UserData.set(node, TFX_KEY, key)
-    node
+  private[templateFX] def setKeyOnItem[Item, Key](key: Key, item: Item)(implicit userDataAccess: UserDataAccess[Item]): Item = {
+    UserData.set(item, TFX_KEY, key)
+    item
   }
 }
 
-final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends CollectionSpec[TFXParent, Node] {
+final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def requiredChangesIn(container: TFXParent): List[Change] = {
-    val existingChildren: ObservableList[Node] = container.getChildren
-    val existingNodesByKey = existingChildren.groupBy { node =>
-      node.getUserData.asInstanceOf[mutable.Map[String, Any]]
+  override def requiredChangesIn(container: Container): List[Change] = {
+    val existingChildren: ObservableList[Item] = collectionAccess.getCollection(container)
+    val existingNodesByKey = existingChildren.groupBy { item =>
+      userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
     }
@@ -89,16 +96,16 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
     (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsMovesInsertions
   }
 
-  override def materializeAll(): List[Node] = specsWithKeys.map {
-    case (key, spec) => SpecsWithKeys.setKeyOnNode(key, spec.build())
+  override def materializeAll(): List[Item] = specsWithKeys.map {
+    case (key, spec) => SpecsWithKeys.setKeyOnItem(key, spec.build())
   }
 }
 
-final case class OrderedSpecs(specs: List[NodeSpec]) extends CollectionSpec[TFXParent, Node] {
+final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def materializeAll(): List[Node] = specs.map(_.build())
+  override def materializeAll(): List[Item] = specs.map(_.build())
 
-  private def reconcileInHierarchy(container: TFXParent, position: Int, nodeO: Option[Node], spec: Spec[_ <: Node]): List[Change] = nodeO match {
+  private def reconcileInHierarchy(container: Container, position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = nodeO match {
     case Some(node) =>
       spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, position)))
 
@@ -106,8 +113,8 @@ final case class OrderedSpecs(specs: List[NodeSpec]) extends CollectionSpec[TFXP
       List(Insert(container, spec, position))
   }
 
-  override def requiredChangesIn(container: Pane): List[Change] = {
-    val childrenOnSceneGraph = container.getChildren
+  override def requiredChangesIn(container: Container): List[Change] = {
+    val childrenOnSceneGraph = collectionAccess.getCollection(container)
     val numChildrenOnSceneGraph: Int = childrenOnSceneGraph.size()
     val numChildrenSpecs: Int = specs.length
 
