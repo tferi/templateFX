@@ -5,6 +5,7 @@ import javafx.scene.Node
 import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.NodeFixture
 import com.tothferenc.templateFX.specs.Spec
+import com.tothferenc.templateFX.specs.Template
 import com.tothferenc.templateFX.userdata._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
@@ -27,7 +28,7 @@ sealed abstract class Change extends Product with Serializable {
   protected def exec(): Unit
 }
 
-final case class SetFixture[Container](container: Container, fixture: NodeFixture[Container], spec: Option[NodeSpec]) extends Change {
+final case class SetFixture[Container](container: Container, fixture: NodeFixture[Container], spec: Option[Template[Node]]) extends Change {
   override protected def exec(): Unit = fixture.set(container, spec.map(_.build()).orNull)
 }
 

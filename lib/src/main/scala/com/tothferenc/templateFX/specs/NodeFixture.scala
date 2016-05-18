@@ -11,10 +11,10 @@ abstract class NodeFixture[-Container] {
 
   def set(container: Container, node: Node): Unit
 
-  def reconcile(container: Container, specOption: Option[NodeSpec]): List[Change] = {
+  def reconcile(container: Container, specOption: Option[Template[Node]]): List[Change] = {
     read(container) -> specOption match {
-      case (Some(existing), Some(specified)) if existing.getClass == specified.specifiedClass =>
-        specified.reconcilationSteps(existing).get
+      case (Some(existing), Some(specified)) =>
+        specified.reconcilationSteps(existing).getOrElse(List(SetFixture(container, this, specOption)))
 
       case (None, None) =>
         Nil
