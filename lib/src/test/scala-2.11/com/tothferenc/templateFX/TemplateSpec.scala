@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX
 
 import javafx.embed.swing.JFXPanel
+import javafx.scene.Node
 import javafx.scene.chart.PieChart
 import javafx.scene.control.Label
 import javafx.scene.layout.{ AnchorPane, Pane }
@@ -19,7 +20,7 @@ class TemplateSpec extends Specification {
 
   private val hello: Spec[Label] = leaf[Label](text ~ "hello")
 
-  private def paneWith(specGroup: ChildrenSpec) = branchL[AnchorPane]() {
+  private def paneWith(specGroup: CollectionSpec[TFXParent, Node]) = branchL[AnchorPane]() {
     specGroup
   }
 

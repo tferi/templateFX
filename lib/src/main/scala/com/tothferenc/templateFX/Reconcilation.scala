@@ -11,19 +11,19 @@ import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
-abstract class ChildrenSpec {
-  def requiredChangesIn(container: Pane): List[Change]
-  def materializeAll(): List[Node]
-  def reconcile(container: TFXParent): Unit = requiredChangesIn(container).foreach(_.execute())
+abstract class CollectionSpec[-Container, +Item] {
+  def requiredChangesIn(container: Container): List[Change]
+  def materializeAll(): List[Item]
+  def reconcile(container: Container): Unit = requiredChangesIn(container).foreach(_.execute())
 }
 
-case object Ignore extends ChildrenSpec {
-  override def requiredChangesIn(container: TFXParent): List[Change] = Nil
+case object Ignore extends CollectionSpec[Any, Nothing] {
+  override def requiredChangesIn(container: Any): List[Change] = Nil
 
-  override def materializeAll(): List[Node] = Nil
+  override def materializeAll(): List[Nothing] = Nil
 }
 
-final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends ChildrenSpec {
+final case class SpecsWithIds[Key](specs: List[(Key, NodeSpec)]) extends CollectionSpec[TFXParent, Node] {
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
     val existingNodesByKey = existingChildren.groupBy { node =>
@@ -62,7 +62,7 @@ object SpecsWithKeys {
   }
 }
 
-final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends ChildrenSpec {
+final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) extends CollectionSpec[TFXParent, Node] {
 
   override def requiredChangesIn(container: TFXParent): List[Change] = {
     val existingChildren: ObservableList[Node] = container.getChildren
@@ -94,7 +94,7 @@ final case class OrderedSpecsWithIds[Key](specsWithKeys: List[(Key, NodeSpec)]) 
   }
 }
 
-final case class OrderedSpecs(specs: List[NodeSpec]) extends ChildrenSpec {
+final case class OrderedSpecs(specs: List[NodeSpec]) extends CollectionSpec[TFXParent, Node] {
 
   override def materializeAll(): List[Node] = specs.map(_.build())
 

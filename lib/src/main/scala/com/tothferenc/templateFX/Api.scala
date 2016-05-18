@@ -12,12 +12,12 @@ import scala.reflect.ClassTag
 
 object Api {
 
-  implicit def specs2ordered(specs: List[NodeSpec]): ChildrenSpec = OrderedSpecs(specs)
-  implicit def specs2orderedWithIds[Key](specs: List[(Key, NodeSpec)]): ChildrenSpec = OrderedSpecsWithIds(specs)
+  implicit def specs2ordered(specs: List[NodeSpec]): CollectionSpec[TFXParent, Node] = OrderedSpecs(specs)
+  implicit def specs2orderedWithIds[Key](specs: List[(Key, NodeSpec)]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
 
   def unordered[Key](specs: List[(Key, NodeSpec)]) = SpecsWithIds(specs)
 
-  implicit class ReconcilationSyntax(reconcilableGroup: ChildrenSpec) {
+  implicit class ReconcilationSyntax(reconcilableGroup: CollectionSpec[TFXParent, Node]) {
     def changes(container: Pane): List[Change] = reconcilableGroup.requiredChangesIn(container)
     def reconcile(container: Pane): Unit = changes(container).foreach(_.execute())
   }
@@ -33,13 +33,13 @@ object Api {
   def scrollable(constraints: Constraint[ScrollPane]*)(content: NodeSpec): Spec[ScrollPane] =
     ScrollSpec[ScrollPane](constraints, content)()
 
-  def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: ChildrenSpec): Spec[FXType] =
+  def branchC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =
     Hierarchy[FXType](constraints, specGroup)(constructorParams)
 
   def branch[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(children: NodeSpec*): Spec[FXType] =
     Hierarchy[FXType](constraints, children.toList)()
 
-  def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: ChildrenSpec): Spec[FXType] =
+  def branchL[FXType <: Node: ClassTag](constraints: Constraint[FXType]*)(specGroup: CollectionSpec[TFXParent, Node]): Spec[FXType] =
     Hierarchy[FXType](constraints, specGroup)()
 
   def leafC[FXType <: Node: ClassTag](constructorParams: Any*)(constraints: Constraint[FXType]*): Spec[FXType] =

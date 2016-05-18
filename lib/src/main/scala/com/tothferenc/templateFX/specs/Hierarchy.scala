@@ -9,7 +9,7 @@ import scala.reflect._
 
 final case class Hierarchy[FXType <: Node](
     constraints: Seq[Constraint[FXType]],
-    children: ChildrenSpec
+    children: CollectionSpec[TFXParent, Node]
 )(protected val constructorParams: Any*)(implicit classTag: ClassTag[FXType]) extends ReflectiveSpec[FXType] {
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[FXType]]
