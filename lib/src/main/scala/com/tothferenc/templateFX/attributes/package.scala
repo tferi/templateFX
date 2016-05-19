@@ -161,4 +161,6 @@ package object attributes {
   val onTouchReleased = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchReleased", null)
 
   val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary", null)
+
+  val textTab = Attribute.simple[Tab, String]("Text", null)
 }

@@ -74,7 +74,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.build()
-      val newDef: ClassAwareSpec[Label] = leaf[Label](text ~ "world")
+      val newDef: Template[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1

@@ -13,6 +13,10 @@ private object UniversalConstructor {
           case (param, index) => param.getClass == constructor.getParameterTypes()(index)
         }
       }.getOrElse(throw new NoConstructorForParams(clazz, constructorParams)).asInstanceOf[Constructor[Expected]]
-    constructor.newInstance()
+    try {
+      constructor.newInstance()
+    } catch {
+      case instantiation: InstantiationException => throw new Exception("Unable to instantiate abstract class: " + clazz.getSimpleName, instantiation)
+    }
   }
 }

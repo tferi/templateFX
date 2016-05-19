@@ -4,14 +4,16 @@ import javafx.geometry.HPos
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.Scene
-import javafx.scene.control._
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
+import javafx.scene.control._
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
+import com.tothferenc.templateFX.specs.Leaf
+import com.tothferenc.templateFX.specs.TabSpec
 import com.tothferenc.templateFX.specs.base.ClassAwareSpec
 import com.tothferenc.templateFX.specs.base.Template
 
@@ -22,14 +24,17 @@ object TodoView {
 }
 
 class TodoView {
-  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean) = {
+  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
-      itemsTemplate(reactor, scene, items, showCompleted)
+      tabs()(
+        TabSpec[Tab](List(textTab ~ "items"), itemsTab(reactor, scene, items, showCompleted)),
+        TabSpec[Tab](List(textTab ~ "dummy"), leaf[Label](text ~ "Hello"))
+      )
     )
   }
 
-  def itemsTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): ClassAwareSpec[ScrollPane] = {
+  def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Template[ScrollPane] = {
     val shown = if (showCompleted) items else items.filterNot(_.completed)
     scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
       if (shown.nonEmpty) {
@@ -53,7 +58,7 @@ class TodoView {
     }
   }
 
-  def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): ClassAwareSpec[VBox] = {
+  def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
     branch[VBox]()(
       branch[HBox]()(
         leaf[Label](text ~ "New item name:"),

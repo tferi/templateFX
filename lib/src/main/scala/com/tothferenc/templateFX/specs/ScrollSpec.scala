@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 
 import scala.language.existentials
@@ -20,7 +21,7 @@ object ScrollSpec {
 
 final case class ScrollSpec[Scrollable <: ScrollPane](
     constraints: Seq[Constraint[Scrollable]],
-    contentSpec: NodeSpec
+    contentSpec: Template[Node]
 )(protected val constructorParams: Any*)(implicit classTag: ClassTag[Scrollable]) extends Fixtures[Scrollable] {
 
   override implicit val specifiedClass: Class[Scrollable] = classTag.runtimeClass.asInstanceOf[Class[Scrollable]]
@@ -29,5 +30,5 @@ final case class ScrollSpec[Scrollable <: ScrollPane](
 
   override def fixtures: List[NodeFixture[Scrollable]] = ScrollSpec.fixtures
 
-  override val specs: List[Option[NodeSpec]] = List(Some(contentSpec))
+  override val specs: List[Option[Template[Node]]] = List(Some(contentSpec))
 }

@@ -1,10 +1,18 @@
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import sbt.Keys._
 import sbt._
+
+import scala.reflect.ClassTag
+import scalariform.formatter.preferences.DanglingCloseParenthesis
+import scalariform.formatter.preferences.Preserve
 
 val commonSettings = Seq(
 	version := "1.0",
 
 	scalaVersion := "2.11.7",
+
+	ScalariformKeys.preferences := ScalariformKeys.preferences.value
+		  .setPreference(DanglingCloseParenthesis, Preserve),
 
 	libraryDependencies ++= Seq(
 		"ch.qos.logback" %  "logback-classic" % "1.1.7", // Needed by scala-logging
