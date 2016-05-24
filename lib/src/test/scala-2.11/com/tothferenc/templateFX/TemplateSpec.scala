@@ -27,13 +27,13 @@ class TemplateSpec extends Specification {
 
   def child(i: Int, container: TFXParent) = container.getChildren.get(i)
 
-  val paneWithHello: Template[AnchorPane] = branch[AnchorPane]() {
+  val paneWithHello: Template[AnchorPane] = branch[AnchorPane, Node]() {
     hello
   }
 
   val paneWithHelloChildrenSpec = OrderedSpecs[Pane, Node](List(paneWithHello))(paneChildrenAccess, nodeUserDataAccess)
 
-  val labelInTwoPanes = branch[AnchorPane]()(paneWithHello)
+  val labelInTwoPanes = branch[AnchorPane, Node]()(paneWithHello)
 
   val helloWorld: List[Template[Node]] = List(
     hello,
@@ -51,7 +51,7 @@ class TemplateSpec extends Specification {
     }
 
     "have their constraints applied to inheritors" in {
-      val container: TFXParent = branch[AnchorPane]() {
+      val container: TFXParent = branch[AnchorPane, Node]() {
         leaf[PieChart](com.tothferenc.templateFX.attributes.title ~ "well")
       }.build()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]

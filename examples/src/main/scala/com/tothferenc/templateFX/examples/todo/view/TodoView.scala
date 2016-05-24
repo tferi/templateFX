@@ -12,9 +12,6 @@ import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
-import com.tothferenc.templateFX.specs.Leaf
-import com.tothferenc.templateFX.specs.TabSpec
-import com.tothferenc.templateFX.specs.base.ClassAwareSpec
 import com.tothferenc.templateFX.specs.base.Template
 
 object TodoView {
@@ -27,16 +24,16 @@ class TodoView {
   def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
-      tabs(Vbox.vGrow ~ Priority.ALWAYS)(
-        TabSpec[Tab](List(textTab ~ "items"), itemsTab(reactor, scene, items, showCompleted)),
-        TabSpec[Tab](List(textTab ~ "dummy"), leaf[Label](text ~ "Hello"))
+      branch[TabPane, Tab](Vbox.vGrow ~ Priority.ALWAYS)(
+        tab(textTab ~ "items")(itemsTab(reactor, scene, items, showCompleted)),
+        tab(textTab ~ "dummy")(leaf[Label](text ~ "Hello"))
       )
     )
   }
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Template[ScrollPane] = {
     val shown = if (showCompleted) items else items.filterNot(_.completed)
-    scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.ALWAYS) {
+    scrollable(Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
@@ -44,7 +41,7 @@ class TodoView {
               case (TodoItem(todoItemId, done, txt), index) =>
                 List(
                   todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
-                  todoItemId.toString -> branch[HBox](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
+                  todoItemId.toString -> branch[HBox, Node](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, index), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                     leaf[Label](text ~ txt)
                   ),
                   todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
@@ -59,14 +56,14 @@ class TodoView {
   }
 
   def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
-    branch[VBox]()(
-      branch[HBox]()(
+    branch[VBox, Node]()(
+      branch[HBox, Node]()(
         leaf[Label](text ~ "New item name:"),
         leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
         leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
         leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
       ),
-      branch[HBox]()(
+      branch[HBox, Node]()(
         leaf[Label](text ~ "New item position:"),
         leaf[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
         leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
