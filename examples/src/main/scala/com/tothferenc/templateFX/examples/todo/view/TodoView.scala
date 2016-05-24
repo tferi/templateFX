@@ -32,7 +32,9 @@ class TodoView {
           fixture[Tab](textTab ~ "Chart")(chartTab(items))
         )
       } else {
-        leaf[Label](text ~ "The list is empty. you may add items with the controls.")
+        branch[StackPane, Node](Vbox.vGrow ~ Priority.ALWAYS)(
+          leaf[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls.")
+        )
       }
     )
   }
