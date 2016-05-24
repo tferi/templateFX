@@ -27,7 +27,7 @@ class TodoView {
   def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
-      tabs()(
+      tabs(Vbox.vGrow ~ Priority.ALWAYS)(
         TabSpec[Tab](List(textTab ~ "items"), itemsTab(reactor, scene, items, showCompleted)),
         TabSpec[Tab](List(textTab ~ "dummy"), leaf[Label](text ~ "Hello"))
       )
