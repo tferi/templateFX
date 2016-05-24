@@ -9,11 +9,8 @@ import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.Attribute
 import com.tothferenc.templateFX.attribute.SettableFeature
-import com.tothferenc.templateFX.specs.Leaf
-import com.tothferenc.templateFX.specs.TabSpec
+import com.tothferenc.templateFX.specs._
 import com.tothferenc.templateFX.specs.base.Template
-import com.tothferenc.templateFX.specs.Hierarchy
-import com.tothferenc.templateFX.specs.ScrollSpec
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions
@@ -28,6 +25,16 @@ class TabPaneTabsAccess extends CollectionAccess[TabPane, Tab] {
 }
 
 object Api {
+
+  implicit case object TabContent extends NodeFixture[Tab] {
+    override def read(container: Tab): Option[Node] = Option(container.getContent)
+    override def set(container: Tab, node: Node): Unit = container.setContent(node)
+  }
+
+  implicit case object ScrollableContent extends NodeFixture[ScrollPane] {
+    override def read(container: ScrollPane): Option[Node] = Option(container.getContent)
+    override def set(container: ScrollPane, node: Node): Unit = container.setContent(node)
+  }
 
   implicit val paneChildrenAccess = new PaneNodesAccess
   implicit val tabPaneChildrenAccess = new TabPaneTabsAccess
@@ -50,9 +57,6 @@ object Api {
     def <<(value: Attr) = Enforcement(attribute, value)
   }
 
-  def scrollable(constraints: Constraint[ScrollPane]*)(content: Template[Node]): Template[ScrollPane] =
-    ScrollSpec[ScrollPane](constraints, content)()
-
   def branchC[N <: TFXParent: ClassTag](constructorParams: Any*)(constraints: Constraint[N]*)(specGroup: CollectionSpec[TFXParent, Node]): Template[N] =
     Hierarchy[N, Node](constraints, specGroup, constructorParams)
 
@@ -67,14 +71,14 @@ object Api {
   def branchL[N <: TFXParent: ClassTag](constraints: Constraint[N]*)(specGroup: CollectionSpec[TFXParent, Node]): Template[N] =
     Hierarchy[N, Node](constraints, specGroup, Nil)
 
-  def leafC[N: ClassTag : UserDataAccess](constructorParams: Any*)(constraints: Constraint[N]*): Template[N] =
+  def leafC[N: ClassTag: UserDataAccess](constructorParams: Any*)(constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, constructorParams)
 
-  def leaf[N: ClassTag : UserDataAccess](constraints: Constraint[N]*): Template[N] =
+  def leaf[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, Nil)
 
-  def tab(constraints: Constraint[Tab]*)(content: Template[Node]): Template[Tab] =
-    TabSpec(constraints, content)
+  def fixture[F: ClassTag: UserDataAccess: NodeFixture](constraints: Constraint[F]*)(content: Template[Node]): Template[F] =
+    FixtureSpec[F](constraints, content)
 
   def tabs[T <: TabPane: ClassTag](constraints: Constraint[T]*)(children: Template[Tab]*): Template[T] =
     Hierarchy[T, Tab](constraints, children.toList, Nil)

@@ -6,7 +6,6 @@ import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
 import javafx.css.Styleable
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Node
-import javafx.scene.chart.Chart
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
 import javafx.scene.input._
