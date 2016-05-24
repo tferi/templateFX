@@ -47,19 +47,19 @@ class TodoView {
   }
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Template[ScrollPane] = {
-    val shown = if (showCompleted) items else items.filterNot(_.completed)
+    val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
     fixture[ScrollPane](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
             shown.zipWithIndex.flatMap {
-              case (todoItem @ TodoItem(todoItemId, done, txt), index) =>
+              case ((TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
                 List(
-                  todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ index, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
-                  todoItemId.toString -> branch[HBox, Node](Grid.row ~ index, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, items.indexOf(todoItem)), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
+                  todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ indexInView, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
+                  todoItemId.toString -> branch[HBox, Node](Grid.row ~ indexInView, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, originalIndex), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                     leaf[Label](text ~ txt)
                   ),
-                  todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ index, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
+                  todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ indexInView, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
                 )
             }
           }
