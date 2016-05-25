@@ -1,5 +1,7 @@
 package com.tothferenc.templateFX.attribute
 
+import com.sun.net.httpserver.Authenticator.Success
+
 import scala.language.experimental.macros
 import scala.reflect.macros.Universe
 import scala.reflect.macros.whitebox.Context
