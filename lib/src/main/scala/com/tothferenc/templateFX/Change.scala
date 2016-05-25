@@ -6,6 +6,7 @@ import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
+import scala.collection.convert.decorateAsJava._
 
 object Change {
   lazy val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
@@ -32,7 +33,7 @@ final case class RemoveNode[Container, Item](container: Container, item: Item)(i
 }
 
 final case class RemoveNodes[Container, Item](container: Container, nodes: Seq[Item])(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
-  override protected def exec(): Unit = collectionAccess.getCollection(container).removeAll(nodes: _*)
+  override protected def exec(): Unit = collectionAccess.getCollection(container).removeAll(nodes.asJavaCollection)
 }
 
 final case class RemoveSeq[Container](container: Container, fromInclusive: Int, toExclusive: Int)(implicit collectionAccess: CollectionAccess[Container, _]) extends Change {

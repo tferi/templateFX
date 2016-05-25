@@ -5,6 +5,7 @@ import com.tothferenc.templateFX.specs.base.ReflectiveSpec
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.reflect._
+import scala.collection.convert.decorateAsJava._
 
 final case class Hierarchy[Parent, Children](
     constraints: Seq[Constraint[Parent]],
@@ -19,7 +20,7 @@ final case class Hierarchy[Parent, Children](
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[Parent]]
 
-  override def initNodesBelow(instance: Parent): Unit = collectionAccess.getCollection(instance).addAll(children.materializeAll(): _*)
+  override def initNodesBelow(instance: Parent): Unit = collectionAccess.getCollection(instance).addAll(children.materializeAll().asJavaCollection)
 
   override def reconcilationSteps(other: Any): Option[List[Change]] = {
     reconcilationStepsForThisNode(other).map {

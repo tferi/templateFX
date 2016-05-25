@@ -1,7 +1,5 @@
 package com.tothferenc.templateFX
 
-import javafx.collections.ObservableList
-
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserData
 import com.tothferenc.templateFX.userdata.UserDataAccess
@@ -17,7 +15,7 @@ abstract class CollectionSpec[-Container, +Item] {
 }
 
 abstract class CollectionAccess[-Container, Item] {
-  def getCollection(container: Container): ObservableList[Item]
+  def getCollection(container: Container): java.util.List[Item]
 }
 
 case object Ignore extends CollectionSpec[Any, Nothing] {
@@ -29,7 +27,7 @@ case object Ignore extends CollectionSpec[Any, Nothing] {
 final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
   override def requiredChangesIn(container: Container): List[Change] = {
-    val existingChildren: ObservableList[Item] = collectionAccess.getCollection(container)
+    val existingChildren: java.util.List[Item] = collectionAccess.getCollection(container)
     val existingNodesByKey = existingChildren.groupBy { item =>
       userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)
@@ -69,7 +67,7 @@ object SpecsWithKeys {
 final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
   override def requiredChangesIn(container: Container): List[Change] = {
-    val existingChildren: ObservableList[Item] = collectionAccess.getCollection(container)
+    val existingChildren: java.util.List[Item] = collectionAccess.getCollection(container)
     val existingNodesByKey = existingChildren.groupBy { item =>
       userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)

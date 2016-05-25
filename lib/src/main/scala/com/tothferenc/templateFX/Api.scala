@@ -12,7 +12,6 @@ import com.tothferenc.templateFX.attribute.SettableFeature
 import com.tothferenc.templateFX.specs._
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
-import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
