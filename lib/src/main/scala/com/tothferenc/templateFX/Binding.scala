@@ -27,7 +27,7 @@ final case class Enforcement[Item, Attr](feature: SettableFeature[Item, Attr], v
 final case class Binding[Item, Attr](feature: Attribute[Item, Attr], value: Attr) extends Constraint[Item] {
 
   override def apply(item: Item): Option[FeatureSetter[Item]] =
-    if (Option(feature.read(item)) == Option(value))
+    if (Option(feature.read(item)).exists(existing => feature.isEqual(existing, value)))
       None
     else
       Some(Align(feature, value))

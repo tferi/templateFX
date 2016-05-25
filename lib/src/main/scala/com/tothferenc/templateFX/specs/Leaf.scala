@@ -9,7 +9,8 @@ import scala.reflect.ClassTag
 
 final case class Leaf[T](
     constraints: Seq[Constraint[T]],
-    protected val constructorParams: Seq[Any])(
+    protected val constructorParams: Seq[Any]
+)(
     implicit
     classTag: ClassTag[T],
     protected val userDataAccess: UserDataAccess[T]

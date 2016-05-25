@@ -65,7 +65,8 @@ object Api {
     collectionAccess: CollectionAccess[Container, Item],
     itemUserDataAccess: UserDataAccess[Item],
     containerUserDataAccess: UserDataAccess[Container],
-    classTag: ClassTag[Container]): Template[Container] =
+    classTag: ClassTag[Container]
+  ): Template[Container] =
     Hierarchy[Container, Item](constraints, OrderedSpecs[Container, Item](children.toList), Nil)
 
   def branchL[N <: TFXParent: ClassTag](constraints: Constraint[N]*)(specGroup: CollectionSpec[TFXParent, Node]): Template[N] =

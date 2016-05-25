@@ -8,5 +8,5 @@ import com.tothferenc.templateFX.attribute.Attribute
 
 object Stack {
 
-	val alignment = Attribute.remote[StackPane, Node, Pos]("Alignment")
+  val alignment = Attribute.remote[StackPane, Node, Pos]("Alignment")
 }

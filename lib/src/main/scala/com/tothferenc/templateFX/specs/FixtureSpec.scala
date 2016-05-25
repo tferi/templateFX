@@ -10,7 +10,8 @@ import scala.reflect.ClassTag
 
 final case class FixtureSpec[Container](
     constraints: Seq[Constraint[Container]],
-    contentTemplate: Template[Node], constructorParams: Any*)(
+    contentTemplate: Template[Node], constructorParams: Any*
+)(
     implicit
     classTag: ClassTag[Container],
     override val userDataAccess: UserDataAccess[Container],

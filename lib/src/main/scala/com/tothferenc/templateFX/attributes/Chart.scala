@@ -16,7 +16,10 @@ object Chart {
 
   object Pie {
 
-    val data = Attribute.list[PieChart, PieChart.Data]("Data")
+    private val dataEquality: ((PieChart.Data, PieChart.Data)) => Boolean =
+      { case (d1, d2) => d1.getName == d2.getName && d1.getPieValue == d2.getPieValue }
+
+    val data = Attribute.listCustomEquals[PieChart, PieChart.Data]("Data", dataEquality)
 
     val startAngle = Attribute.simple[PieChart, lang.Double]("StartAngle", 0.0)
 

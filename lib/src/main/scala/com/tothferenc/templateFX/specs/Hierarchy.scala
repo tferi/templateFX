@@ -9,7 +9,8 @@ import scala.reflect._
 final case class Hierarchy[Parent, Children](
     constraints: Seq[Constraint[Parent]],
     children: CollectionSpec[Parent, Children],
-    protected val constructorParams: Seq[Any])(
+    protected val constructorParams: Seq[Any]
+)(
     implicit
     classTag: ClassTag[Parent],
     protected val userDataAccess: UserDataAccess[Parent],

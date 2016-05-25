@@ -85,6 +85,34 @@ object Attribute {
     c.Expr[Attribute[Attr, List[Value]]](expr)
   }
 
+  def listCustomEquals[Attr, Value](getterName: String, customEquals: ((Value, Value)) => Boolean): Attribute[Attr, List[Value]] = macro listCustomEqualsImpl[Attr, Value]
+
+  def listCustomEqualsImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterName: c.Expr[String], customEquals: c.Expr[((Value, Value)) => Boolean]): c.Expr[Attribute[Attr, List[Value]]] = {
+    import c.universe._
+
+    val attrType = weakTypeTag[Attr].tpe
+
+    val Literal(Constant(getset: String)) = getterName.tree
+    val name = {
+      val (firstChar, rest) = getset.splitAt(1)
+      firstChar.toLowerCase + rest
+    }
+    val valType = weakTypeTag[Value].tpe
+    val getter = TermName("get" + getset)
+    val expr =
+      q"""new Attribute[$attrType, List[$valType]]{
+					override def read(src: $attrType): List[$valType] = src.$getter.toList
+          override def remove(target: $attrType): Unit = target.$getter.clear()
+          override def set(target: $attrType, value: List[$valType]): Unit = target.$getter.setAll(value: _*)
+          override def toString(): String = $name
+					override def isEqual(item1: List[$valType], item2: List[$valType]): Boolean = {
+		        item1.length == item2.length &&
+					  item1.zip(item2).forall($customEquals)
+	        }
+				 }"""
+    c.Expr[Attribute[Attr, List[Value]]](expr)
+  }
+
   def remote[Holder, Attr, Value](getterSetterName: String): Attribute[Attr, Value] = macro remoteImpl[Holder, Attr, Value]
 
   def remoteImpl[Holder: c.WeakTypeTag, Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String]): c.Expr[Attribute[Attr, Value]] = {
@@ -119,4 +147,5 @@ abstract class SettableFeature[-FXType, AttrType] extends RemovableFeature[FXTyp
 
 abstract class Attribute[-FXType, AttrType] extends SettableFeature[FXType, AttrType] {
   def read(src: FXType): AttrType
+  def isEqual(item1: AttrType, item2: AttrType) = item1 == item2
 }
