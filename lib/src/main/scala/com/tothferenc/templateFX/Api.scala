@@ -12,6 +12,7 @@ import com.tothferenc.templateFX.attribute.SettableFeature
 import com.tothferenc.templateFX.specs._
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
+import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -26,14 +27,16 @@ class TabPaneTabsAccess extends CollectionAccess[TabPane, Tab] {
 
 object Api {
 
-  implicit case object TabContent extends NodeFixture[Tab] {
+  implicit case object TabContent extends Fixture[Tab, Node] {
     override def read(container: Tab): Option[Node] = Option(container.getContent)
     override def set(container: Tab, node: Node): Unit = container.setContent(node)
+    override def default: Node = null
   }
 
-  implicit case object ScrollableContent extends NodeFixture[ScrollPane] {
+  implicit case object ScrollableContent extends Fixture[ScrollPane, Node] {
     override def read(container: ScrollPane): Option[Node] = Option(container.getContent)
     override def set(container: ScrollPane, node: Node): Unit = container.setContent(node)
+    override def default: Node = null
   }
 
   implicit val paneChildrenAccess = new PaneNodesAccess
@@ -78,8 +81,8 @@ object Api {
   def leaf[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, Nil)
 
-  def fixture[F: ClassTag: UserDataAccess: NodeFixture](constraints: Constraint[F]*)(content: Template[Node]): Template[F] =
-    FixtureSpec[F](constraints, content)
+  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Fixture[F,C]): Template[F] =
+    FixtureSpec[F, C](constraints, content)
 
   def tabs[T <: TabPane: ClassTag](constraints: Constraint[T]*)(children: Template[Tab]*): Template[T] =
     Hierarchy[T, Tab](constraints, children.toList, Nil)

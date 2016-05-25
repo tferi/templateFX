@@ -28,8 +28,8 @@ class TodoView {
       controlsTemplate(reactor, scene, showCompleted),
       if (items.nonEmpty) {
         branch[TabPane, Tab](Vbox.vGrow ~ Priority.ALWAYS, tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE)(
-          fixture[Tab](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted)),
-          fixture[Tab](textTab ~ "Chart")(chartTab(items))
+          fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted)),
+          fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
         )
       } else {
         branch[StackPane, Node](Vbox.vGrow ~ Priority.ALWAYS)(
@@ -48,7 +48,7 @@ class TodoView {
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Template[ScrollPane] = {
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
-    fixture[ScrollPane](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
+    fixture[ScrollPane, Node](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {

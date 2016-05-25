@@ -1,25 +1,23 @@
 package com.tothferenc.templateFX.specs
 
-import javafx.scene.Node
-
 import com.tothferenc.templateFX.Constraint
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 
 import scala.reflect.ClassTag
 
-final case class FixtureSpec[Container](
+final case class FixtureSpec[Container, FixedItem](
     constraints: Seq[Constraint[Container]],
-    contentTemplate: Template[Node], constructorParams: Any*
+    contentTemplate: Template[FixedItem], constructorParams: Any*
 )(
     implicit
     classTag: ClassTag[Container],
     override val userDataAccess: UserDataAccess[Container],
-    nodeFixture: NodeFixture[Container]
-) extends Fixtures[Container] {
+    nodeFixture: Fixture[Container, FixedItem]
+) extends Fixtures[Container, FixedItem] {
   override implicit val specifiedClass: Class[Container] = implicitly[ClassTag[Container]].runtimeClass.asInstanceOf[Class[Container]]
 
-  override val fixtures: List[NodeFixture[Container]] = List(implicitly[NodeFixture[Container]])
+  override val fixtures: List[Fixture[Container, FixedItem]] = List(nodeFixture)
 
-  override def specs: List[Option[Template[Node]]] = List(Some(contentTemplate))
+  override def specs: List[Option[Template[FixedItem]]] = List(Some(contentTemplate))
 }

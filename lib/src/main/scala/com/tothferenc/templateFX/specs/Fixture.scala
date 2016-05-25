@@ -1,18 +1,19 @@
 package com.tothferenc.templateFX.specs
 
-import javafx.scene.Node
-
 import com.tothferenc.templateFX._
 import com.tothferenc.templateFX.specs.base.Template
 
 import scala.language.existentials
 
-abstract class NodeFixture[-Container] {
-  def read(container: Container): Option[Node]
+abstract class Fixture[-Container, FixedItem] {
 
-  def set(container: Container, node: Node): Unit
+  def default: FixedItem
 
-  def reconcile(container: Container, specOption: Option[Template[Node]]): List[Change] = {
+  def read(container: Container): Option[FixedItem]
+
+  def set(container: Container, fixed: FixedItem): Unit
+
+  def reconcile(container: Container, specOption: Option[Template[FixedItem]]): List[Change] = {
     read(container) -> specOption match {
       case (Some(existing), Some(specified)) =>
         specified.reconcilationSteps(existing).getOrElse(List(SetFixture(container, this, specOption)))
