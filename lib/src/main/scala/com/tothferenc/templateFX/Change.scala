@@ -37,7 +37,10 @@ final case class RemoveNodes[Container, Item](container: Container, nodes: Seq[I
 }
 
 final case class RemoveSeq[Container](container: Container, fromInclusive: Int, toExclusive: Int)(implicit collectionAccess: CollectionAccess[Container, _]) extends Change {
-  override protected def exec(): Unit = collectionAccess.getCollection(container).remove(fromInclusive, toExclusive)
+  override protected def exec(): Unit =  {
+    val remove = collectionAccess.getCollection(container).remove _
+    fromInclusive.until(toExclusive).foreach(remove)
+  }
 }
 
 final case class Insert[Container, Item](container: Container, definition: Template[Item], position: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
