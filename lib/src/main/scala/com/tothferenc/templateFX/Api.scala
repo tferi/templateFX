@@ -1,14 +1,13 @@
 package com.tothferenc.templateFX
 
-import javafx.collections.ObservableList
 import javafx.scene.Node
-import javafx.scene.control.ScrollPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.attribute.Attribute
 import com.tothferenc.templateFX.attribute.SettableFeature
+import com.tothferenc.templateFX.collectionaccess._
+import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.specs._
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
@@ -16,30 +15,17 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
-class PaneNodesAccess extends CollectionAccess[Pane, Node] {
-  override def getCollection(container: Pane): ObservableList[Node] = container.getChildren
-}
-
-class TabPaneTabsAccess extends CollectionAccess[TabPane, Tab] {
-  override def getCollection(container: TabPane): ObservableList[Tab] = container.getTabs
-}
-
 object Api {
 
-  implicit case object TabContent extends Fixture[Tab, Node] {
-    override def read(container: Tab): Option[Node] = Option(container.getContent)
-    override def set(container: Tab, node: Node): Unit = container.setContent(node)
-    override def default: Node = null
-  }
+  // Fixtures
+  implicit val tabContent = TabContent
+  implicit val scrollPaneContent = ScrollPaneContent
+  implicit val controlContextMenu = ControlContextMenu
 
-  implicit case object ScrollableContent extends Fixture[ScrollPane, Node] {
-    override def read(container: ScrollPane): Option[Node] = Option(container.getContent)
-    override def set(container: ScrollPane, node: Node): Unit = container.setContent(node)
-    override def default: Node = null
-  }
-
+  // Children Accessors
   implicit val paneChildrenAccess = new PaneNodesAccess
   implicit val tabPaneChildrenAccess = new TabPaneTabsAccess
+  implicit val contextMenuMenuItemsAccess = new ContextMenuMenuItemsAccess
 
   implicit def specs2ordered(specs: List[Template[Node]]): CollectionSpec[TFXParent, Node] = OrderedSpecs(specs)
   implicit def specs2orderedWithIds[Key](specs: List[(Key, Template[Node])]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
@@ -81,7 +67,10 @@ object Api {
     Leaf[N](constraints, Nil)
 
   def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Fixture[F,C]): Template[F] =
-    FixtureSpec[F, C](constraints, content)
+    FixtureSpec[F](constraints, List(ParameterizedFixture(f, Some(content))))
+
+  def fixtures[F](constraints: Constraint[F]*)(fixtures: ParameterizedFixture.For[F] *)(implicit ct: ClassTag[F], ud: UserDataAccess[F]): Template[F] =
+    FixtureSpec[F](constraints, fixtures.toList)
 
   def tabs[T <: TabPane: ClassTag](constraints: Constraint[T]*)(children: Template[Tab]*): Template[T] =
     Hierarchy[T, Tab](constraints, children.toList, Nil)
