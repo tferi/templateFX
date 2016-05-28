@@ -27,7 +27,7 @@ object Chart {
 
     val labelLineLength = Attribute.simple[PieChart, lang.Double]("LabelLineLength", 20.0)
 
-    val labelsVisible = new Attribute[PieChart, lang.Boolean]{
+    val labelsVisible = new Attribute[PieChart, lang.Boolean] {
       override def read(src: PieChart): lang.Boolean = src.getLabelsVisible()
       override def remove(target: PieChart): Unit = target.setLabelsVisible(true)
       override def set(target: PieChart, value: lang.Boolean): Unit = target.setLabelsVisible(value)

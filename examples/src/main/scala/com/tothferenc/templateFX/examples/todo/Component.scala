@@ -34,7 +34,7 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
       case ToggleShowCompleted(show) =>
         appModel.showCompleted = show
       case Edit(editing, EditType.Ongoing) =>
-        appModel.editing = Some(editing)
+        appModel.editing = Some(editing.key)
       case Edit(editing, EditType.Finished) =>
         appModel.editing = None
         appModel.items.find(_.id == editing.key).foreach(_.name = editing.currText)

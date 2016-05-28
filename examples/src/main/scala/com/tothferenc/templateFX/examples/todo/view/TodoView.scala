@@ -24,7 +24,7 @@ object TodoView {
 }
 
 class TodoView {
-  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Editing]): List[Template[Node]] = {
+  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
       if (items.nonEmpty) {
@@ -47,24 +47,39 @@ class TodoView {
     })
   }
 
-  def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Editing]): Template[ScrollPane] = {
+  def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[ScrollPane] = {
+
+
+    def textFieldIfEditing(reactor: Reactor[Intent], scene: Scene, editedItemKey: Long, todoItem: TodoItem): Template[Control] = {
+      if (todoItem.id == editedItemKey)
+        editingTextField(reactor, scene, todoItem.id, todoItem.name)
+      else
+        itemNameLabel(reactor, todoItem)
+    }
+
+    def itemNameLabel(reactor: Reactor[Intent], todoItem: TodoItem): Template[Label] = {
+      leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+    }
+
+    def editingTextField(reactor: Reactor[Intent], scene: Scene, todoItemId: Long, txt: String): Template[TextField] = {
+      leaf[TextField](id ~ "edited-field", inputText onInit txt, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItemId))
+    }
+
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
     fixture[ScrollPane, Node](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
+            val renderItemName: TodoItem => Template[Node] = editing match {
+              case Some(editedItem) => item => textFieldIfEditing(reactor, scene, editedItem, item)
+              case _ => item => itemNameLabel(reactor, item)
+            }
             shown.zipWithIndex.flatMap {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
                 List(
                   todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ indexInView, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
                   todoItemId.toString -> branch[HBox, Node](Grid.row ~ indexInView, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, originalIndex), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
-                    editing match {
-                      case Some(Editing(editedKey, _)) if todoItemId == editedKey =>
-                        val tf = new TextField()
-                        leaf[TextField](id ~ "edited-field", inputText onInit txt, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItemId))
-                      case _ =>
-                        leaf[Label](text ~ txt, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
-                    }
+                    renderItemName(todoItem)
                   ),
                   todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ indexInView, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
                 )

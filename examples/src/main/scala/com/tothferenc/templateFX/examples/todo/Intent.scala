@@ -4,8 +4,8 @@ import com.tothferenc.templateFX.examples.todo.model.Editing
 
 sealed abstract class EditType extends Product with Serializable
 object EditType {
-	case object Ongoing extends EditType
-	case object Finished extends EditType
+  case object Ongoing extends EditType
+  case object Finished extends EditType
 }
 
 sealed abstract class Intent extends Product with Serializable

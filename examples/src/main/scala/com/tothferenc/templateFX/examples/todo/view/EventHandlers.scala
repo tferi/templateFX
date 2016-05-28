@@ -50,7 +50,7 @@ final case class SetCursorToDefault(scene: Scene) extends EventHandler[MouseEven
   override def handle(event: MouseEvent): Unit = scene.setCursor(Cursor.DEFAULT)
 }
 
-final case class EditInputTextApprovedEh(reactor: Reactor[Edit], scene: Scene, todoItemId: Long) extends EventHandler[ActionEvent] with TextReader{
+final case class EditInputTextApprovedEh(reactor: Reactor[Edit], scene: Scene, todoItemId: Long) extends EventHandler[ActionEvent] with TextReader {
   override def handle(event: ActionEvent): Unit = reactor handle Edit(Editing(todoItemId, getText(scene, "#edited-field")), EditType.Finished)
 }
 

@@ -67,10 +67,10 @@ object Api {
   def leaf[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, Nil)
 
-  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Fixture[F,C]): Template[F] =
+  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Fixture[F, C]): Template[F] =
     FixtureSpec[F](constraints, List(ParameterizedFixture(f, Some(content))))
 
-  def fixtures[F](constraints: Constraint[F]*)(fixtures: ParameterizedFixture.For[F] *)(implicit ct: ClassTag[F], ud: UserDataAccess[F]): Template[F] =
+  def fixtures[F](constraints: Constraint[F]*)(fixtures: ParameterizedFixture.For[F]*)(implicit ct: ClassTag[F], ud: UserDataAccess[F]): Template[F] =
     FixtureSpec[F](constraints, fixtures.toList)
 
   def tabs[T <: TabPane: ClassTag](constraints: Constraint[T]*)(children: Template[Tab]*): Template[T] =
