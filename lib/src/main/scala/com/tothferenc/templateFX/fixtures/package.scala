@@ -5,6 +5,7 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.Tab
+import javafx.scene.layout.BorderPane
 
 import com.tothferenc.templateFX.specs.Fixture
 
@@ -26,5 +27,11 @@ package object fixtures {
     override def read(container: Tab): Option[Node] = Option(container.getContent)
     override def set(container: Tab, node: Node): Unit = container.setContent(node)
     override def default: Node = null
+  }
+
+  case object BorderTop extends Fixture[BorderPane, Node] {
+    override def default: Node = null
+    override def set(container: BorderPane, fixed: Node): Unit = container.setTop(fixed)
+    override def read(container: BorderPane): Option[Node] = Option(container.getTop)
   }
 }

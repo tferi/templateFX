@@ -1,11 +1,14 @@
 package com.tothferenc.templateFX.specs
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.attribute.RemovableFeature
 import com.tothferenc.templateFX.specs.base.Template
 
 import scala.language.existentials
 
-abstract class Fixture[-Container, FixedItem] {
+abstract class Fixture[-Container, FixedItem] extends RemovableFeature[Container] {
+
+  override def remove(item: Container): Unit = set(item, default)
 
   def default: FixedItem
 
