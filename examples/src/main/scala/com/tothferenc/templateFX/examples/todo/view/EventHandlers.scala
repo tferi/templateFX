@@ -9,7 +9,6 @@ import javafx.scene.control.TextField
 import javafx.scene.input._
 
 import com.tothferenc.templateFX.examples.todo._
-import com.tothferenc.templateFX.examples.todo.model.Editing
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 
 import scala.util.Try
@@ -50,12 +49,12 @@ final case class SetCursorToDefault(scene: Scene) extends EventHandler[MouseEven
   override def handle(event: MouseEvent): Unit = scene.setCursor(Cursor.DEFAULT)
 }
 
-final case class EditInputTextApprovedEh(reactor: Reactor[Edit], scene: Scene, todoItemId: Long) extends EventHandler[ActionEvent] with TextReader {
-  override def handle(event: ActionEvent): Unit = reactor handle Edit(Editing(todoItemId, getText(scene, "#edited-field")), EditType.Finished)
+final case class EditInputTextApprovedEh(reactor: Reactor[EditFinished], scene: Scene, todoItemId: Long) extends EventHandler[ActionEvent] with TextReader {
+  override def handle(event: ActionEvent): Unit = reactor handle EditFinished(todoItemId, getText(scene, "#edited-field"))
 }
 
-final case class TodoClickedEh(reactor: Reactor[Edit], todoItem: TodoItem) extends EventHandler[MouseEvent] {
-  override def handle(event: MouseEvent): Unit = if (event.getClickCount == 2) reactor handle Edit(Editing(todoItem.id, todoItem.name), EditType.Ongoing)
+final case class TodoClickedEh(reactor: Reactor[Editing], todoItem: TodoItem) extends EventHandler[MouseEvent] {
+  override def handle(event: MouseEvent): Unit = if (event.getClickCount == 2) reactor handle Editing(todoItem.id)
 }
 
 final case class DragDetectedEh(key: Long) extends EventHandler[MouseEvent] {

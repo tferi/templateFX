@@ -13,7 +13,6 @@ import javafx.scene.layout._
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
-import com.tothferenc.templateFX.examples.todo.model.Editing
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 import com.tothferenc.templateFX.specs.base.Template
 
@@ -48,7 +47,6 @@ class TodoView {
   }
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[ScrollPane] = {
-
 
     def textFieldIfEditing(reactor: Reactor[Intent], scene: Scene, editedItemKey: Long, todoItem: TodoItem): Template[Control] = {
       if (todoItem.id == editedItemKey)
