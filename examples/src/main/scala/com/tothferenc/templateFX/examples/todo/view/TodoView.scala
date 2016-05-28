@@ -13,6 +13,7 @@ import javafx.scene.layout._
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.examples.todo._
+import com.tothferenc.templateFX.examples.todo.model.Editing
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 import com.tothferenc.templateFX.specs.base.Template
 
@@ -23,12 +24,12 @@ object TodoView {
 }
 
 class TodoView {
-  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): List[Template[Node]] = {
+  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Editing]): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
       if (items.nonEmpty) {
         branch[TabPane, Tab](Vbox.vGrow ~ Priority.ALWAYS, tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE)(
-          fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted)),
+          fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted, editing)),
           fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
         )
       } else {
@@ -46,7 +47,7 @@ class TodoView {
     })
   }
 
-  def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean): Template[ScrollPane] = {
+  def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Editing]): Template[ScrollPane] = {
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
     fixture[ScrollPane, Node](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
@@ -57,7 +58,12 @@ class TodoView {
                 List(
                   todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ indexInView, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
                   todoItemId.toString -> branch[HBox, Node](Grid.row ~ indexInView, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, originalIndex), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
-                    leaf[Label](text ~ txt)
+                    editing match {
+                      case Some(Editing(editedKey , editedText)) if todoItemId == editedKey => //TODO do not check for every row
+                        leaf[TextField](id ~ "edited-field", inputText ~ editedText)
+                      case _ =>
+                        leaf[Label](text ~ txt)
+                    }
                   ),
                   todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ indexInView, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
                 )

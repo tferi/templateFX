@@ -12,5 +12,5 @@ abstract class Renderer[-Input] {
 }
 
 class ComponentRenderer(scene: Scene, reactor: Reactor[Intent], root: Pane, view: TodoView) extends Renderer[TodoModel] {
-  override def render(input: TodoModel): Unit = view.windowTemplate(reactor, scene, input.items.toList, input.showCompleted).reconcile(root)
+  override def render(input: TodoModel): Unit = view.windowTemplate(reactor, scene, input.items.toList, input.showCompleted, input.editing).reconcile(root)
 }

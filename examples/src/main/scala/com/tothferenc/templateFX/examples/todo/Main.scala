@@ -22,7 +22,7 @@ class Main extends Application {
     val cssRef: String = com.tothferenc.templateFX.examples.todo.Main.getClass.getResource("todo.css").toExternalForm
     scene.getStylesheets.add(cssRef)
 
-    val component = new Component(TodoModel(ArrayBuffer.empty, false), reactor => new ComponentRenderer(scene, reactor, rootNode, new TodoView))
+    val component = new Component(TodoModel(ArrayBuffer.empty, false, None), reactor => new ComponentRenderer(scene, reactor, rootNode, new TodoView))
     component.render()
 
     primaryStage.show()
