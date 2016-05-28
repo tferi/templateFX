@@ -40,7 +40,7 @@ class TodoView {
   }
 
   def chartTab(items: List[TodoItem]): Template[PieChart] = {
-    leaf[PieChart](Chart.title ~ "Completed vs Pending Items", Chart.Pie.data ~ {
+    leaf[PieChart](Chart.title ~ "Completed vs Pending Items", Chart.animated ~ false, Chart.Pie.data ~ {
       val (completed, pending) = items.partition(_.completed)
       List(new PieChart.Data("Completed", completed.length), new PieChart.Data("Pending", pending.length))
     })
@@ -64,7 +64,7 @@ class TodoView {
     }
 
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
-    fixture[ScrollPane, Node](Scroll.fitToHeight << true, Scroll.fitToWidth << true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
+    fixture[ScrollPane, Node](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {

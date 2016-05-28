@@ -31,7 +31,7 @@ object Api {
   implicit def specs2orderedWithIds[Key](specs: List[(Key, Template[Node])]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
   def unordered[Key](specs: List[(Key, Template[Node])]) = SpecsWithIds(specs)
   implicit def tabs2ordered(tabs: List[Template[Tab]]): CollectionSpec[TabPane, Tab] = OrderedSpecs(tabs)
-  implicit def tuple2ParameterizedFixtures[C, I](tuples:List[(Fixture[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t =>ParameterizedFixture.apply(t._1, Some(t._2)))
+  implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Fixture[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
 
   implicit class ReconcilationSyntax[Container](reconcilableGroup: CollectionSpec[Container, Node]) {
     def changes(container: Container): List[Change] = reconcilableGroup.requiredChangesIn(container)
