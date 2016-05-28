@@ -22,7 +22,10 @@ abstract class ConstraintBasedReconcilation[T] extends Template[T] {
         Nil
     }
 
-    val featureUpdates = constraints.flatMap(_.apply(item))
+    val featureUpdates = for {
+      constraint <- constraints if constraint.maintained
+      update <- constraint.apply(item)
+    } yield update
 
     if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)
       List(Mutation[T](item, featureUpdates, featuresToRemove))

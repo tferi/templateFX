@@ -12,7 +12,6 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
   def render(): Unit = renderer.render(appModel)
 
   override def handle(message: Intent): Unit = {
-    val begin = System.currentTimeMillis()
     message match {
       case Append(item) if item.nonEmpty =>
         appModel.items.append(TodoItem(nextId, false, item))
@@ -34,9 +33,15 @@ class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[
         appModel.items.find(_.id == key).foreach(_.completed = completed)
       case ToggleShowCompleted(show) =>
         appModel.showCompleted = show
+      case Edit(editing, EditType.Ongoing) =>
+        appModel.editing = Some(editing)
+      case Edit(editing, EditType.Finished) =>
+        appModel.editing = None
+        appModel.items.find(_.id == editing.key).foreach(_.name = editing.currText)
     }
+    val renderBegin = System.currentTimeMillis()
     renderer.render(appModel)
-    logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - begin} ms.")
+    logger.debug(s"Reaction to $message took ${System.currentTimeMillis() - renderBegin} ms.")
   }
 
   private def indexOfKey(key: Long): Option[Int] = {

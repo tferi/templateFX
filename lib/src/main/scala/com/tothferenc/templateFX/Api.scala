@@ -38,11 +38,12 @@ object Api {
   }
 
   implicit class AttributeAssigner[FXType, Attr](attribute: Attribute[FXType, Attr]) {
-    def ~(value: Attr) = Binding(attribute, value)
+    def ~(value: Attr) = Binding(attribute, value, maintained = true)
   }
 
   implicit class SettableAssigner[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
-    def <<(value: Attr) = Enforcement(attribute, value)
+    def <<(value: Attr) = Enforcement(attribute, value, maintained = true)
+    def onInit(value: Attr) = Enforcement(attribute, value, maintained = false)
   }
 
   def branchC[N <: TFXParent: ClassTag](constructorParams: Any*)(constraints: Constraint[N]*)(specGroup: CollectionSpec[TFXParent, Node]): Template[N] =

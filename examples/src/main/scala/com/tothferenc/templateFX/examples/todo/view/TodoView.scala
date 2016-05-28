@@ -54,15 +54,16 @@ class TodoView {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
             shown.zipWithIndex.flatMap {
-              case ((TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
+              case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
                 List(
                   todoItemId + "-checkbox" -> leaf[CheckBox](selected ~ done, Grid.row ~ indexInView, Grid.column ~ 0, onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)),
                   todoItemId.toString -> branch[HBox, Node](Grid.row ~ indexInView, Grid.column ~ 1, Hbox.hGrow ~ Priority.ALWAYS, onDragOver ~ AcceptMove, onDragDetected ~ DragDetectedEh(todoItemId), onDragDropped ~ DragDroppedEh(reactor, originalIndex), styleClasses ~ List(".todo-item"), onMouseEntered ~ SetCursorToHand(scene), onMouseExited ~ SetCursorToDefault(scene))(
                     editing match {
-                      case Some(Editing(editedKey , editedText)) if todoItemId == editedKey => //TODO do not check for every row
-                        leaf[TextField](id ~ "edited-field", inputText ~ editedText)
+                      case Some(Editing(editedKey, _)) if todoItemId == editedKey =>
+                        val tf = new TextField()
+                        leaf[TextField](id ~ "edited-field", inputText onInit txt, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItemId))
                       case _ =>
-                        leaf[Label](text ~ txt)
+                        leaf[Label](text ~ txt, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
                     }
                   ),
                   todoItemId + "-button" -> leaf[Button](text ~ "Delete", Grid.row ~ indexInView, Grid.column ~ 2, onActionButton ~ DeleteEh(reactor, todoItemId))
