@@ -47,26 +47,21 @@ class TodoView {
   }
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[ScrollPane] = {
-
-    def textFieldIfEditing(reactor: Reactor[Intent], scene: Scene, editedItemKey: Long, todoItem: TodoItem): Template[Control] = {
-      if (todoItem.id == editedItemKey)
-        leaf[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
-      else
-        itemNameLabel(reactor, todoItem)
-    }
-
-    def itemNameLabel(reactor: Reactor[Intent], todoItem: TodoItem): Template[Label] = {
-      leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
-    }
-
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
     leaf[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, scrollPaneContent ~~ {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
             val renderItemName: TodoItem => Template[Node] = editing match {
-              case Some(editedItem) => item => textFieldIfEditing(reactor, scene, editedItem, item)
-              case _ => item => itemNameLabel(reactor, item)
+              case Some(editedItemKey) =>
+                todoItem =>
+                  if (todoItem.id == editedItemKey)
+                    leaf[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
+                  else
+                    leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+              case _ =>
+                todoItem =>
+                  leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
             }
             shown.zipWithIndex.flatMap {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
