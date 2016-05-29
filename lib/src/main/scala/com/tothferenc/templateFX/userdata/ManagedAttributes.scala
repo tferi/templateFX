@@ -1,7 +1,7 @@
 package com.tothferenc.templateFX.userdata
 
-import com.tothferenc.templateFX.attribute.Attribute
-import com.tothferenc.templateFX.attribute.RemovableFeature
+import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.RemovableFeature
 
 import scala.collection.mutable
 

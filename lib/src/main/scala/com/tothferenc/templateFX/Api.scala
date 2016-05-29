@@ -4,8 +4,8 @@ import javafx.scene.Node
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 
-import com.tothferenc.templateFX.attribute.Attribute
-import com.tothferenc.templateFX.attribute.SettableFeature
+import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.SettableFeature
 import com.tothferenc.templateFX.collectionaccess._
 import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.specs._

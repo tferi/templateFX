@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.attribute
+package com.tothferenc.templateFX.base
 
 import com.sun.net.httpserver.Authenticator.Success
 

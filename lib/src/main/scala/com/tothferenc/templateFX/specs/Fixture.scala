@@ -1,7 +1,7 @@
 package com.tothferenc.templateFX.specs
 
 import com.tothferenc.templateFX._
-import com.tothferenc.templateFX.attribute.SettableFeature
+import com.tothferenc.templateFX.base.SettableFeature
 import com.tothferenc.templateFX.specs.base.Template
 
 import scala.language.existentials
@@ -26,12 +26,4 @@ abstract class Fixture[-Container, FixedItem] extends SettableFeature[Container,
         List(SetFixture(container, this, specOption))
     }
   }
-}
-
-final case class ParameterizedFixture[Container, FixedItem](fixture: Fixture[Container, FixedItem], template: Option[Template[FixedItem]]) {
-  def reconcile(container: Container): List[Change] = fixture.reconcile(container, template)
-}
-
-object ParameterizedFixture {
-  type For[C] = ParameterizedFixture[C, _]
 }

@@ -7,7 +7,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.layout.BorderPane
 
-import com.tothferenc.templateFX.attribute.Attribute
+import com.tothferenc.templateFX.base.Attribute
 
 object Border {
 

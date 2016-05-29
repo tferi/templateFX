@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import com.tothferenc.templateFX.attribute.RemovableFeature
+import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.specs.Fixture
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._

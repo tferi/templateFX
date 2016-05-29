@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.attributes
 
 import java.lang
 
-import com.tothferenc.templateFX.attribute.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.base.{ Attribute, SettableFeature }
 import javafx.css.Styleable
 import javafx.event.{ ActionEvent, EventHandler }
 import javafx.scene.Node

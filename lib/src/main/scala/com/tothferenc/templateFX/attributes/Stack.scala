@@ -4,7 +4,7 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.layout.StackPane
 
-import com.tothferenc.templateFX.attribute.Attribute
+import com.tothferenc.templateFX.base.Attribute
 
 object Stack {
 
