@@ -11,6 +11,7 @@ import javafx.scene.control._
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Api._
+import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.examples.todo._

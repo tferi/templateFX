@@ -11,27 +11,15 @@ import com.tothferenc.templateFX.base.Fixture
 
 package object fixtures {
 
-  case object ControlContextMenu extends Fixture[Control, ContextMenu] {
-    override def set(container: Control, fixed: ContextMenu): Unit = container.setContextMenu(fixed)
-    override def read(container: Control): ContextMenu = container.getContextMenu
-    override def remove(item: Control): Unit = set(item, null)
-  }
+  implicit val contextMenu = Fixture.simple[Control, ContextMenu]("ContextMenu", null)
 
-  case object ScrollPaneContent extends Fixture[ScrollPane, Node] {
-    override def read(container: ScrollPane): Node = container.getContent
-    override def set(container: ScrollPane, node: Node): Unit = container.setContent(node)
-    override def remove(item: ScrollPane): Unit = set(item, null)
-  }
+  implicit val scrollPaneContent = Fixture.simple[ScrollPane, Node]("Content", null)
 
-  case object TabContent extends Fixture[Tab, Node] {
-    override def read(container: Tab): Node = container.getContent
-    override def set(container: Tab, node: Node): Unit = container.setContent(node)
-    override def remove(item: Tab): Unit = set(item, null)
-  }
+  implicit val tabContent = Fixture.simple[Tab, Node]("Content", null)
 
-  case object BorderTop extends Fixture[BorderPane, Node] {
-    override def remove(item: BorderPane): Unit = set(item, null)
-    override def set(container: BorderPane, fixed: Node): Unit = container.setTop(fixed)
-    override def read(container: BorderPane): Node = container.getTop
-  }
+  implicit val borderTop = Fixture.simple[BorderPane, Node]("Top", null)
+  implicit val borderRight = Fixture.simple[BorderPane, Node]("Right", null)
+  implicit val borderBottom = Fixture.simple[BorderPane, Node]("Bottom", null)
+  implicit val borderLeft = Fixture.simple[BorderPane, Node]("Left", null)
+  implicit val borderCenter = Fixture.simple[BorderPane, Node]("Center", null)
 }

@@ -15,11 +15,6 @@ import scala.reflect.ClassTag
 
 object Api {
 
-  // Fixtures
-  implicit val tabContent = TabContent
-  implicit val scrollPaneContent = ScrollPaneContent
-  implicit val controlContextMenu = ControlContextMenu
-
   // Children Accessors
   implicit val paneChildrenAccess = new PaneNodesAccess
   implicit val tabPaneChildrenAccess = new TabPaneTabsAccess
