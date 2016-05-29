@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX.specs
 
-import com.tothferenc.templateFX.Change
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.specs.base.Template
 
 final case class ParameterizedFixture[Container, FixedItem](fixture: Fixture[Container, FixedItem], template: Option[Template[FixedItem]]) {

@@ -1,7 +1,7 @@
 package com.tothferenc.templateFX.specs
 
-import com.tothferenc.templateFX.Change
 import com.tothferenc.templateFX.Constraint
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.specs.base.ReflectiveSpec
 import com.tothferenc.templateFX.userdata.UserDataAccess
 

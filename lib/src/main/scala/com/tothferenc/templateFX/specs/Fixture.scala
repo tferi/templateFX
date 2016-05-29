@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX.specs
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.SettableFeature
 import com.tothferenc.templateFX.specs.base.Template
 

@@ -1,28 +1,14 @@
 package com.tothferenc.templateFX
 
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.specs.Fixture
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
+
 import scala.collection.convert.decorateAsJava._
-
-object Change {
-  lazy val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
-
-  val debug: Boolean = java.lang.Boolean.getBoolean("tfx-debug")
-}
-
-sealed abstract class Change extends Product with Serializable {
-
-  def execute(): Unit = {
-    if (Change.debug) Change.logger.debug(this.toString)
-    exec()
-  }
-
-  protected def exec(): Unit
-}
 
 final case class SetFixture[Container, FixedItem](container: Container, fixture: Fixture[Container, FixedItem], spec: Option[Template[FixedItem]]) extends Change {
   override protected def exec(): Unit = spec match {

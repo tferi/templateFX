@@ -1,5 +1,6 @@
 package com.tothferenc.templateFX
 
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserData
 import com.tothferenc.templateFX.userdata.UserDataAccess
