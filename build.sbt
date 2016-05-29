@@ -25,14 +25,14 @@ val commonSettings = Seq(
 	addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 )
 
-val macros = (project in file("macros"))
+val base = (project in file("base"))
   .settings(commonSettings)
   .settings(
 	  libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
   )
 
 val lib = (project in file("lib"))
-	.dependsOn(macros)
+	.dependsOn(base)
   .settings(commonSettings)
 
 val examples = (project in file("examples"))
@@ -40,8 +40,8 @@ val examples = (project in file("examples"))
 	.dependsOn(lib)
 
 val root = (project in file("."))
-  .dependsOn(macros, lib, examples)
-	.aggregate(macros, lib, examples)
+  .dependsOn(base, lib, examples)
+	.aggregate(base, lib, examples)
 	.settings(commonSettings)
 	.settings(Seq(
 		name := "templateFx"
