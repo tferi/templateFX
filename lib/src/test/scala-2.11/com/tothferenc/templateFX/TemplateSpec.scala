@@ -10,8 +10,8 @@ import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
+import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.specs.base.ClassAwareSpec
-import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 

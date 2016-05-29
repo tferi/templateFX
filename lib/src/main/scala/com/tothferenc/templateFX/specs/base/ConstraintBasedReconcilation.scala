@@ -3,6 +3,7 @@ package com.tothferenc.templateFX.specs.base
 import com.tothferenc.templateFX.Constraint
 import com.tothferenc.templateFX.Mutation
 import com.tothferenc.templateFX.base.Change
+import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata.ManagedAttributes
 import com.tothferenc.templateFX.userdata.UserDataAccess
 

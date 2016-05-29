@@ -7,10 +7,10 @@ import javafx.scene.control.TabPane
 import com.tothferenc.templateFX.base.Attribute
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.SettableFeature
+import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.collectionaccess._
 import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.specs._
-import com.tothferenc.templateFX.specs.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions

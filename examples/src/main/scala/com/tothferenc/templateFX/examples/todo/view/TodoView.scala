@@ -12,9 +12,9 @@ import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
+import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
-import com.tothferenc.templateFX.specs.base.Template
 
 object TodoView {
   val checkboxConstraintsInGrid: ColumnConstraints = new ColumnConstraints(10, 50, 100, Priority.SOMETIMES, HPos.RIGHT, true)
