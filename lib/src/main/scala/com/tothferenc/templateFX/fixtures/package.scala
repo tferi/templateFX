@@ -7,7 +7,7 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.Tab
 import javafx.scene.layout.BorderPane
 
-import com.tothferenc.templateFX.specs.Fixture
+import com.tothferenc.templateFX.base.Fixture
 
 package object fixtures {
 

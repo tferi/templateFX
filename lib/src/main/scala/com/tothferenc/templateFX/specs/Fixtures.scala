@@ -1,7 +1,7 @@
 package com.tothferenc.templateFX.specs
 
-import com.tothferenc.templateFX._
 import com.tothferenc.templateFX.base.Change
+import com.tothferenc.templateFX.base.SetFixture
 import com.tothferenc.templateFX.specs.base.ReflectiveSpec
 
 abstract class Fixtures[T] extends ReflectiveSpec[T] {

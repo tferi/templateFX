@@ -1,10 +1,6 @@
 package com.tothferenc.templateFX
 
-import com.tothferenc.templateFX.base.Attribute
-import com.tothferenc.templateFX.base.RemovableFeature
-import com.tothferenc.templateFX.base.SettableFeature
-import com.tothferenc.templateFX.base.Template
-import com.tothferenc.templateFX.specs.Fixture
+import com.tothferenc.templateFX.base._
 
 abstract class FeatureSetter[-Item] {
   def feature: RemovableFeature[Item]
