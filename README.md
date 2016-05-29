@@ -6,10 +6,7 @@ templateFX
 Coming soon!
 
 Laundry list:
+  * Architecture overview
   * Investigate macro-based instantiation instead of using reflection.
-  * Bring NodeFixtures and Attributes closer together.
-  * Scale NodeFixtures up for use in GridPane.
-  * Performance optimization.
-  * Extensive tests.
-  * Set-once properties.
-  * Another example application.
+  * Performance tests and optimization.
+  * Extensive testing.
