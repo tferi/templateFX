@@ -60,7 +60,7 @@ class TodoView {
     }
 
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
-    fixture[ScrollPane, Node](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED) {
+    leaf[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, scrollPaneContent ~~ {
       if (shown.nonEmpty) {
         branchL[GridPane](Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid), Grid.alignment ~ Pos.TOP_LEFT) {
           unordered[String] {
@@ -83,7 +83,7 @@ class TodoView {
       } else {
         leaf[Label](text ~ "Completed items are not shown.")
       }
-    }
+    })
   }
 
   def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
