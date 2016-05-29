@@ -40,16 +40,8 @@ object Fixture {
   def simpleImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterSetterName: c.Expr[String], default: c.Expr[Value]): c.Expr[Fixture[Attr, Value]] = {
     import c.universe._
 
-    val attrType = weakTypeTag[Attr].tpe
+    val (getter, setter, attrType, valType, name) = MacroHelper.prepare[Attr, Value](c)(getterSetterName)
 
-    val Literal(Constant(getset: String)) = getterSetterName.tree
-    val name = {
-      val (firstChar, rest) = getset.splitAt(1)
-      firstChar.toLowerCase + rest
-    }
-    val valType = weakTypeTag[Value].tpe
-    val getter = TermName("get" + getset)
-    val setter = TermName("set" + getset)
     val expr =
       q"""new Fixture[$attrType, $valType]{
 					override def read(src: $attrType): $valType = src.$getter()

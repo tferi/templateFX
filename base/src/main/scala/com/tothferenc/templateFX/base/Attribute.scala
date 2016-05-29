@@ -65,15 +65,8 @@ object Attribute {
   def listImpl[Attr: c.WeakTypeTag, Value: c.WeakTypeTag](c: Context)(getterName: c.Expr[String]): c.Expr[Attribute[Attr, List[Value]]] = {
     import c.universe._
 
-    val attrType = weakTypeTag[Attr].tpe
+    val (getter, _, attrType, valType, name) = MacroHelper.prepare[Attr, Value](c)(getterName)
 
-    val Literal(Constant(getset: String)) = getterName.tree
-    val name = {
-      val (firstChar, rest) = getset.splitAt(1)
-      firstChar.toLowerCase + rest
-    }
-    val valType = weakTypeTag[Value].tpe
-    val getter = TermName("get" + getset)
     val expr =
       q"""new Attribute[$attrType, List[$valType]]{
 					override def read(src: $attrType): List[$valType] = src.$getter.toList
@@ -119,16 +112,8 @@ object Attribute {
 
     val holderCompanion = weakTypeTag[Holder].tpe.typeSymbol.companion.name.toTermName
 
-    val attrType = weakTypeTag[Attr].tpe
+    val (getter, setter, attrType, valType, name) = MacroHelper.prepare[Attr, Value](c)(getterSetterName)
 
-    val Literal(Constant(getset: String)) = getterSetterName.tree
-    val name = {
-      val (firstChar, rest) = getset.splitAt(1)
-      firstChar.toLowerCase + rest
-    }
-    val valType = weakTypeTag[Value].tpe
-    val getter = TermName("get" + getset)
-    val setter = TermName("set" + getset)
     val expr =
       q"""new Attribute[$attrType, $valType] {
 					override def read(src: $attrType): $valType = $holderCompanion.$getter(src)
