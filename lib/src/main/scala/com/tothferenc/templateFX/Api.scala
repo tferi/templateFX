@@ -38,11 +38,15 @@ object Api {
     def reconcile(container: Container): Unit = changes(container).foreach(_.execute())
   }
 
-  implicit class AttributeAssigner[FXType, Attr](attribute: Attribute[FXType, Attr]) {
+  implicit class AttributeBinder[FXType, Attr](attribute: Attribute[FXType, Attr]) {
     def ~(value: Attr) = Binding(attribute, value, maintained = true)
   }
 
-  implicit class SettableAssigner[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
+  implicit class FixtureBinder[FXType, T](fixture: Fixture[FXType, T]) {
+    def ~~(template: Template[T]) = FixtureBinding(fixture, template, maintained = true)
+  }
+
+  implicit class AttributeEnforcer[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
     def <<(value: Attr) = Enforcement(attribute, value, maintained = true)
     def onInit(value: Attr) = Enforcement(attribute, value, maintained = false)
   }

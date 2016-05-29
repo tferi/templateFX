@@ -50,17 +50,13 @@ class TodoView {
 
     def textFieldIfEditing(reactor: Reactor[Intent], scene: Scene, editedItemKey: Long, todoItem: TodoItem): Template[Control] = {
       if (todoItem.id == editedItemKey)
-        editingTextField(reactor, scene, todoItem.id, todoItem.name)
+        leaf[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
       else
         itemNameLabel(reactor, todoItem)
     }
 
     def itemNameLabel(reactor: Reactor[Intent], todoItem: TodoItem): Template[Label] = {
       leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
-    }
-
-    def editingTextField(reactor: Reactor[Intent], scene: Scene, todoItemId: Long, txt: String): Template[TextField] = {
-      leaf[TextField](id ~ "edited-field", inputText onInit txt, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItemId))
     }
 
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
