@@ -25,9 +25,10 @@ final case class Reconcile[-Item, Value](
   override def set(item: Item): Unit = feature.reconcile(item, Some(template)).foreach(_.execute())
 }
 
-abstract class Constraint[-T] extends (T => Option[FeatureSetter[T]]) {
+abstract class Constraint[-T] {
   def feature: RemovableFeature[T]
   def maintained: Boolean
+  def apply(item: T): Option[FeatureSetter[T]]
 }
 
 final case class FixtureBinding[Item, Attr](feature: Fixture[Item, Attr], template: Template[Attr], maintained: Boolean) extends Constraint[Item] {
