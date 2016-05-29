@@ -25,7 +25,10 @@ sealed abstract class Change extends Product with Serializable {
 }
 
 final case class SetFixture[Container, FixedItem](container: Container, fixture: Fixture[Container, FixedItem], spec: Option[Template[FixedItem]]) extends Change {
-  override protected def exec(): Unit = fixture.set(container, spec.map(_.build()).getOrElse(fixture.default))
+  override protected def exec(): Unit = spec match {
+    case Some(template) => fixture.set(container, template.build())
+    case _ => fixture.remove(container)
+  }
 }
 
 final case class RemoveNode[Container, Item](container: Container, item: Item)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
