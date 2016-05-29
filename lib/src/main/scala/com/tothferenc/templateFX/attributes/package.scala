@@ -166,4 +166,8 @@ package object attributes {
   val textTab = Attribute.simple[Tab, String]("Text", null)
 
   val tabClosingPolicy = Attribute.simple[TabPane, TabClosingPolicy]("TabClosingPolicy", null)
+
+  val textMenuItem = Attribute.simple[MenuItem, String]("Text", null)
+
+  val graphicMenuItem = Attribute.simple[MenuItem, Node]("Graphic", null)
 }

@@ -28,7 +28,7 @@ class TodoView {
     List(
       controlsTemplate(reactor, scene, showCompleted),
       if (items.nonEmpty) {
-        branch[TabPane, Tab](Vbox.vGrow ~ Priority.ALWAYS, tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE)(
+        branch[TabPane, Tab](Vbox.vGrow ~ Priority.ALWAYS, tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE, contextMenu ~~ branch[ContextMenu, MenuItem]()(leaf[MenuItem](textMenuItem ~ "Here's a ContextMenu")))(
           fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted, editing)),
           fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
         )

@@ -1,9 +1,5 @@
 package com.tothferenc.templateFX.userdata
 
-import javafx.scene.Node
-
-import scala.collection.mutable
-
 object UserData {
 
   def get[Container: UserDataAccess, ExpectedType](container: Container, key: String): Option[ExpectedType] = {
