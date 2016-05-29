@@ -12,12 +12,12 @@ abstract class Fixture[-Container, FixedItem] extends RemovableFeature[Container
 
   def default: FixedItem
 
-  def read(container: Container): Option[FixedItem]
+  def read(container: Container): FixedItem
 
   def set(container: Container, fixed: FixedItem): Unit
 
   def reconcile(container: Container, specOption: Option[Template[FixedItem]]): List[Change] = {
-    read(container) -> specOption match {
+    Option(read(container)) -> specOption match {
       case (Some(existing), Some(specified)) =>
         specified.reconcilationSteps(existing).getOrElse(List(SetFixture(container, this, specOption)))
 
