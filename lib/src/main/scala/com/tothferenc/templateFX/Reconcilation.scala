@@ -30,12 +30,6 @@ abstract class CollectionAccess[-Container, Item] {
   def getCollection(container: Container): java.util.List[Item]
 }
 
-case object Ignore extends CollectionSpec[Any, Nothing] {
-  override def requiredChangesIn(collection: JList[Nothing]): List[Change] = Nil
-
-  override def build(): List[Nothing] = Nil
-}
-
 final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
   override def requiredChangesIn(collection: JList[Item]): List[Change] = {
