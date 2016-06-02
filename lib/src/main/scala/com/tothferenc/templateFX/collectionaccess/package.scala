@@ -9,6 +9,8 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.layout.Pane
 
+import com.tothferenc.templateFX.specs.collection.CollectionAccess
+
 package object collectionaccess {
 
   class PaneNodesAccess extends CollectionAccess[Pane, Node] {

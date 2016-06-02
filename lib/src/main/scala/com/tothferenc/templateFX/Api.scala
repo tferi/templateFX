@@ -8,6 +8,7 @@ import com.tothferenc.templateFX.base._
 import com.tothferenc.templateFX.collectionaccess._
 import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.specs._
+import com.tothferenc.templateFX.specs.collection._
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions

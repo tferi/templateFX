@@ -3,6 +3,8 @@ package com.tothferenc.templateFX.specs
 import com.tothferenc.templateFX._
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.specs.base.ReflectiveSpec
+import com.tothferenc.templateFX.specs.collection.CollectionAccess
+import com.tothferenc.templateFX.specs.collection.CollectionSpec
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.reflect._

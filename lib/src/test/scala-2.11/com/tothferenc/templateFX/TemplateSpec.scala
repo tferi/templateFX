@@ -12,6 +12,8 @@ import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.specs.base.ClassAwareSpec
+import com.tothferenc.templateFX.specs.collection.CollectionSpec
+import com.tothferenc.templateFX.specs.collection.OrderedSpecs
 import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
