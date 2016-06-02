@@ -26,8 +26,8 @@ object Api {
   implicit def tabs2ordered(tabs: List[Template[Tab]]): CollectionSpec[TabPane, Tab] = OrderedSpecs(tabs)
   implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Attribute[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
 
-  implicit class ReconcilationSyntax[Container](reconcilableGroup: CollectionSpec[Container, Node]) {
-    def changes(container: Container): List[Change] = reconcilableGroup.requiredChangesIn(container)
+  implicit class ReconcilationSyntax[Container](reconcilableGroup: CollectionSpec[Container, Node])(implicit collectionAccess: CollectionAccess[Container, Node]) {
+    def changes(container: Container): List[Change] = reconcilableGroup.requiredChangesIn(collectionAccess.getCollection(container))
     def reconcile(container: Container): Unit = changes(container).foreach(_.execute())
   }
 

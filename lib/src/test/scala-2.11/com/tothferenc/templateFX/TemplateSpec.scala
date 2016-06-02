@@ -63,13 +63,13 @@ class TemplateSpec extends Specification {
       val pane = paneWithHello.build()
       val changes: List[Change] = List(
         leaf[Label](text ~ "world")
-      ).requiredChangesIn(pane)
+      ).requiredChangesIn(pane.getChildren)
       changes.length === 1
     }
 
     "be reconciled as expected when an element needs to be replaced with another type" in {
       val pane = paneWithHello.build()
-      List(leaf[PieChart]()).reconcile(pane)
+      List(leaf[PieChart]()).reconcile(pane.getChildren)
       pane.getChildren.get(0) should beAnInstanceOf[PieChart]
     }
 
@@ -77,7 +77,7 @@ class TemplateSpec extends Specification {
       val pane = paneWithHello.build()
       val newDef: Template[Label] = leaf[Label](text ~ "world")
       val newTemplate = helloWorld
-      val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
+      val changes: Seq[Change] = newTemplate.requiredChangesIn(pane.getChildren)
       changes.length === 1
       val insertNode: Insert[TFXParent, Label] = changes.head.asInstanceOf[Insert[TFXParent, Label]]
       insertNode.collection === pane.getChildren
@@ -96,7 +96,7 @@ class TemplateSpec extends Specification {
       val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
-      keyedHelloWorld.reverse.requiredChangesIn(pane) === List(MoveNode(pane.getChildren, child1, 0), MoveNode(pane.getChildren, child0, 1))
+      keyedHelloWorld.reverse.requiredChangesIn(pane.getChildren) === List(MoveNode(pane.getChildren, child1, 0), MoveNode(pane.getChildren, child0, 1))
     }
 
     "be able to do a simple reconcilation with an insertion and replacements by key" in {
@@ -109,7 +109,7 @@ class TemplateSpec extends Specification {
       val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
-      val changes = helloDearWorld.requiredChangesIn(pane)
+      val changes = helloDearWorld.requiredChangesIn(pane.getChildren)
       changes(0) === InsertWithKey(pane.getChildren, hello, 0, 3)
       changes(1) === MoveNode(pane.getChildren, child1, 1)
       changes(3) === MoveNode(pane.getChildren, child0, 2)
@@ -130,7 +130,7 @@ class TemplateSpec extends Specification {
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       val child2 = child(2, pane)
-      val changes = List(1 -> hello).requiredChangesIn(pane)
+      val changes = List(1 -> hello).requiredChangesIn(pane.getChildren)
       val change = changes(0).asInstanceOf[RemoveNodes[TFXParent, Node]]
       change.nodes should contain(child1)
       change.nodes should contain(child2)
@@ -143,7 +143,7 @@ class TemplateSpec extends Specification {
 
     "be able to remove sequence of elements" in {
       val pane = paneWith(helloWorld).build()
-      val changes: List[Change] = List(hello).requiredChangesIn(pane)
+      val changes: List[Change] = List(hello).requiredChangesIn(pane.getChildren)
       changes === List(RemoveSeq(pane.getChildren, 1, 2))
       changes.foreach(_.execute())
       pane.getChildren.size === 1
@@ -158,7 +158,7 @@ class TemplateSpec extends Specification {
       val label = getLabel
       val attributes = ManagedAttributes.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
       attributes === List(text)
-      val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane)
+      val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane.getChildren)
       changes.exists(_.isInstanceOf[Mutation[_]]) === true
       changes.foreach(_.execute())
       val newAttr = ManagedAttributes.get(label)

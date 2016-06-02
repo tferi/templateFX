@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import java.util
+import java.util.{ List => JList }
 
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
@@ -11,11 +11,19 @@ import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
-abstract class CollectionSpec[-Container, +Item] extends Template[List[Item]] {
-  def reconcilationSteps(other: Any): Option[List[Change]] = None
-  def requiredChangesIn(container: Container): List[Change]
+abstract class CollectionSpec[-Container, Item] extends Template[List[Item]] {
+
+  def reconcilationSteps(other: Any): Option[List[Change]] = {
+    other match {
+      case expected: JList[Item] @unchecked =>
+        Some(requiredChangesIn(expected))
+      case _ =>
+        None
+    }
+  }
+  def requiredChangesIn(collection: JList[Item]): List[Change]
   def build(): List[Item]
-  def reconcile(container: Container): Unit = requiredChangesIn(container).foreach(_.execute())
+  def reconcile(collection: JList[Item]): Unit = requiredChangesIn(collection).foreach(_.execute())
 }
 
 abstract class CollectionAccess[-Container, Item] {
@@ -23,16 +31,15 @@ abstract class CollectionAccess[-Container, Item] {
 }
 
 case object Ignore extends CollectionSpec[Any, Nothing] {
-  override def requiredChangesIn(container: Any): List[Change] = Nil
+  override def requiredChangesIn(collection: JList[Nothing]): List[Change] = Nil
 
   override def build(): List[Nothing] = Nil
 }
 
 final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def requiredChangesIn(container: Container): List[Change] = {
-    val existingChildren: java.util.List[Item] = collectionAccess.getCollection(container)
-    val existingNodesByKey = existingChildren.groupBy { item =>
+  override def requiredChangesIn(collection: JList[Item]): List[Change] = {
+    val existingNodesByKey = collection.groupBy { item =>
       userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
@@ -46,12 +53,12 @@ final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[I
     val mutationsInsertions: List[Change] = specs.flatMap {
       case (key, spec) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcilationSteps(node).getOrElse(List(Replace(existingChildren, spec, existingChildren.indexOf(node))))
+          spec.reconcilationSteps(node).getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
         case _ =>
-          List(InsertWithKey(existingChildren, spec, 0, key))
+          List(InsertWithKey(collection, spec, 0, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals.toSeq))) ::: mutationsInsertions
   }
 
   override def build(): List[Item] = specs.map {
@@ -70,9 +77,8 @@ object SpecsWithKeys {
 
 final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def requiredChangesIn(container: Container): List[Change] = {
-    val existingChildren: java.util.List[Item] = collectionAccess.getCollection(container)
-    val existingNodesByKey = existingChildren.groupBy { item =>
+  override def requiredChangesIn(collection: JList[Item]): List[Change] = {
+    val existingNodesByKey = collection.groupBy { item =>
       userDataAccess.get(item).orNull
         .get(SpecsWithKeys.TFX_KEY)
         .map(_.asInstanceOf[Key])
@@ -86,13 +92,13 @@ final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(
     val mutationsMovesInsertions = specsWithKeys.zipWithIndex.flatMap {
       case ((key, spec), desiredPosition) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcilationSteps(node).map(MoveNode(existingChildren, node, desiredPosition) :: _)
-            .getOrElse(List(Replace(existingChildren, spec, existingChildren.indexOf(node))))
+          spec.reconcilationSteps(node).map(MoveNode(collection, node, desiredPosition) :: _)
+            .getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
         case _ =>
-          List(InsertWithKey(existingChildren, spec, desiredPosition, key))
+          List(InsertWithKey(collection, spec, desiredPosition, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsMovesInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals.toSeq))) ::: mutationsMovesInsertions
   }
 
   override def build(): List[Item] = specsWithKeys.map {
@@ -104,9 +110,7 @@ final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(impl
 
   override def build(): List[Item] = specs.map(_.build())
 
-  private def reconcileInHierarchy(container: Container, position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
-
-    val collection: util.List[Item] = collectionAccess.getCollection(container)
+  private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
     nodeO match {
       case Some(node) =>
         spec.reconcilationSteps(node).getOrElse(List(Replace(collection, spec, position)))
@@ -116,19 +120,18 @@ final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(impl
     }
   }
 
-  override def requiredChangesIn(container: Container): List[Change] = {
-    val childrenOnSceneGraph = collectionAccess.getCollection(container)
-    val numChildrenOnSceneGraph: Int = childrenOnSceneGraph.size()
+  override def requiredChangesIn(collection: JList[Item]): List[Change] = {
+    val numChildrenOnSceneGraph: Int = collection.size()
     val numChildrenSpecs: Int = specs.length
 
     @tailrec def reconcile(i: Int, acc: List[Change]): List[Change] =
       if (i < numChildrenSpecs)
-        reconcile(i + 1, acc ::: reconcileInHierarchy(container, i, childrenOnSceneGraph.lift(i), specs(i)))
+        reconcile(i + 1, acc ::: reconcileInHierarchy(collection, i, collection.lift(i), specs(i)))
       else
         acc
 
     if (numChildrenOnSceneGraph > numChildrenSpecs)
-      RemoveSeq(childrenOnSceneGraph, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
+      RemoveSeq(collection, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
     else
       reconcile(0, Nil)
   }

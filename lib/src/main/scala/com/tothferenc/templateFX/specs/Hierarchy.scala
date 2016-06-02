@@ -25,7 +25,7 @@ final case class Hierarchy[Parent, Children](
 
   override def reconcilationSteps(other: Any): Option[List[Change]] = {
     reconcilationStepsForThisNode(other).map {
-      _ ::: children.requiredChangesIn(other.asInstanceOf[Parent])
+      _ ::: children.requiredChangesIn(collectionAccess.getCollection(other.asInstanceOf[Parent]))
     }
   }
 
