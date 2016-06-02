@@ -24,7 +24,7 @@ object Api {
   implicit def specs2orderedWithIds[Key](specs: List[(Key, Template[Node])]): CollectionSpec[TFXParent, Node] = OrderedSpecsWithIds(specs)
   def unordered[Key](specs: List[(Key, Template[Node])]) = SpecsWithIds(specs)
   implicit def tabs2ordered(tabs: List[Template[Tab]]): CollectionSpec[TabPane, Tab] = OrderedSpecs(tabs)
-  implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Fixture[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
+  implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Attribute[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
 
   implicit class ReconcilationSyntax[Container](reconcilableGroup: CollectionSpec[Container, Node]) {
     def changes(container: Container): List[Change] = reconcilableGroup.requiredChangesIn(container)
@@ -35,7 +35,7 @@ object Api {
     def ~(value: Attr) = Binding(attribute, value, maintained = true)
   }
 
-  implicit class FixtureBinder[FXType, T](fixture: Fixture[FXType, T]) {
+  implicit class FixtureBinder[FXType, T](fixture: Attribute[FXType, T]) {
     def ~~(template: Template[T]) = FixtureBinding(fixture, template, maintained = true)
   }
 
@@ -65,7 +65,7 @@ object Api {
   def leaf[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, Nil)
 
-  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Fixture[F, C]): Template[F] =
+  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Attribute[F, C]): Template[F] =
     FixtureSpec[F](constraints, List(ParameterizedFixture(f, Some(content))))
 
   def fixtures[F](constraints: Constraint[F]*)(fixtures: ParameterizedFixture.For[F]*)(implicit ct: ClassTag[F], ud: UserDataAccess[F]): Template[F] =

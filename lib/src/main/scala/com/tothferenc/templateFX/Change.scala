@@ -1,12 +1,9 @@
 package com.tothferenc.templateFX
 
 import com.tothferenc.templateFX.base.Change
-import com.tothferenc.templateFX.base.Fixture
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata._
-import com.typesafe.scalalogging.Logger
-import org.slf4j.LoggerFactory
 
 import scala.collection.convert.decorateAsJava._
 

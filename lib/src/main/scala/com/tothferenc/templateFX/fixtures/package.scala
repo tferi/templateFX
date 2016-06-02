@@ -7,19 +7,19 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.Tab
 import javafx.scene.layout.BorderPane
 
-import com.tothferenc.templateFX.base.Fixture
+import com.tothferenc.templateFX.base.Attribute
 
 package object fixtures {
 
-  implicit val contextMenu = Fixture.simple[Control, ContextMenu]("ContextMenu", null)
+  implicit val contextMenu = Attribute.simple[Control, ContextMenu]("ContextMenu", null)
 
-  implicit val scrollPaneContent = Fixture.simple[ScrollPane, Node]("Content", null)
+  implicit val scrollPaneContent = Attribute.simple[ScrollPane, Node]("Content", null)
 
-  implicit val tabContent = Fixture.simple[Tab, Node]("Content", null)
+  implicit val tabContent = Attribute.simple[Tab, Node]("Content", null)
 
-  implicit val borderTop = Fixture.simple[BorderPane, Node]("Top", null)
-  implicit val borderRight = Fixture.simple[BorderPane, Node]("Right", null)
-  implicit val borderBottom = Fixture.simple[BorderPane, Node]("Bottom", null)
-  implicit val borderLeft = Fixture.simple[BorderPane, Node]("Left", null)
-  implicit val borderCenter = Fixture.simple[BorderPane, Node]("Center", null)
+  implicit val borderTop = Attribute.simple[BorderPane, Node]("Top", null)
+  implicit val borderRight = Attribute.simple[BorderPane, Node]("Right", null)
+  implicit val borderBottom = Attribute.simple[BorderPane, Node]("Bottom", null)
+  implicit val borderLeft = Attribute.simple[BorderPane, Node]("Left", null)
+  implicit val borderCenter = Attribute.simple[BorderPane, Node]("Center", null)
 }

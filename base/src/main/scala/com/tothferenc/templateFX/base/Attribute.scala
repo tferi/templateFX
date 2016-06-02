@@ -132,4 +132,17 @@ abstract class SettableFeature[-FXType, AttrType] extends RemovableFeature[FXTyp
 abstract class Attribute[-FXType, AttrType] extends SettableFeature[FXType, AttrType] {
   def read(src: FXType): AttrType
   def isEqual(item1: AttrType, item2: AttrType) = item1 == item2
+
+  def reconcile(container: FXType, specOption: Option[Template[AttrType]]): List[Change] = {
+    Option(read(container)) -> specOption match {
+      case (Some(existing), Some(specified)) =>
+        specified.reconcilationSteps(existing).getOrElse(List(Reconcilation(container, this, specOption)))
+
+      case (None, None) =>
+        Nil
+
+      case _ =>
+        List(Reconcilation(container, this, specOption))
+    }
+  }
 }
