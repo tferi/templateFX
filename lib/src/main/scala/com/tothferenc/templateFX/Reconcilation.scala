@@ -1,5 +1,7 @@
 package com.tothferenc.templateFX
 
+import java.util
+
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata.UserData
@@ -44,9 +46,9 @@ final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[I
     val mutationsInsertions: List[Change] = specs.flatMap {
       case (key, spec) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, existingChildren.indexOf(node))))
+          spec.reconcilationSteps(node).getOrElse(List(Replace(existingChildren, spec, existingChildren.indexOf(node))))
         case _ =>
-          List(InsertWithKey(container, spec, 0, key))
+          List(InsertWithKey(existingChildren, spec, 0, key))
       }
     }
     (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsInsertions
@@ -84,10 +86,10 @@ final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(
     val mutationsMovesInsertions = specsWithKeys.zipWithIndex.flatMap {
       case ((key, spec), desiredPosition) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcilationSteps(node).map(MoveNode(container, node, desiredPosition) :: _)
-            .getOrElse(List(Replace(container, spec, existingChildren.indexOf(node))))
+          spec.reconcilationSteps(node).map(MoveNode(existingChildren, node, desiredPosition) :: _)
+            .getOrElse(List(Replace(existingChildren, spec, existingChildren.indexOf(node))))
         case _ =>
-          List(InsertWithKey(container, spec, desiredPosition, key))
+          List(InsertWithKey(existingChildren, spec, desiredPosition, key))
       }
     }
     (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsMovesInsertions
@@ -102,12 +104,16 @@ final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(impl
 
   override def build(): List[Item] = specs.map(_.build())
 
-  private def reconcileInHierarchy(container: Container, position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = nodeO match {
-    case Some(node) =>
-      spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, position)))
+  private def reconcileInHierarchy(container: Container, position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
 
-    case None =>
-      List(Insert(collectionAccess.getCollection(container), spec, position))
+    val collection: util.List[Item] = collectionAccess.getCollection(container)
+    nodeO match {
+      case Some(node) =>
+        spec.reconcilationSteps(node).getOrElse(List(Replace(collection, spec, position)))
+
+      case None =>
+        List(Insert(collection, spec, position))
+    }
   }
 
   override def requiredChangesIn(container: Container): List[Change] = {

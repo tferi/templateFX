@@ -29,17 +29,16 @@ final case class Insert[Container, Item](collection: JList[Item], definition: Te
   override protected def exec(): Unit = collection.add(position, definition.build())
 }
 
-final case class InsertWithKey[Container, Item, Key](container: Container, definition: Template[Item], position: Int, key: Key)(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends Change {
-  override protected def exec(): Unit = collectionAccess.getCollection(container).add(position, SpecsWithKeys.setKeyOnItem(key, definition.build()))
+final case class InsertWithKey[Container, Item, Key](collection: JList[Item], definition: Template[Item], position: Int, key: Key)(implicit userDataAccess: UserDataAccess[Item]) extends Change {
+  override protected def exec(): Unit = collection.add(position, SpecsWithKeys.setKeyOnItem(key, definition.build()))
 }
 
-final case class Replace[Container, Item](container: Container, definition: Template[Item], position: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
-  override protected def exec(): Unit = collectionAccess.getCollection(container).set(position, definition.build())
+final case class Replace[Container, Item](collection: JList[Item], definition: Template[Item], position: Int) extends Change {
+  override protected def exec(): Unit = collection.set(position, definition.build())
 }
 
-final case class MoveNode[Container, Item](container: Container, item: Item, targetPosition: Int)(implicit collectionAccess: CollectionAccess[Container, Item]) extends Change {
+final case class MoveNode[Container, Item](collection: JList[Item], item: Item, targetPosition: Int) extends Change {
   override protected def exec(): Unit = {
-    val collection = collectionAccess.getCollection(container)
     val currentPosition = collection.indexOf(item)
     if (currentPosition != targetPosition) {
       collection.remove(item)
