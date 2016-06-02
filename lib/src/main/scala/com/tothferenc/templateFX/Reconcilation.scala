@@ -9,9 +9,10 @@ import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
-abstract class CollectionSpec[-Container, +Item] {
+abstract class CollectionSpec[-Container, +Item] extends Template[List[Item]] {
+  def reconcilationSteps(other: Any): Option[List[Change]] = None
   def requiredChangesIn(container: Container): List[Change]
-  def materializeAll(): List[Item]
+  def build(): List[Item]
   def reconcile(container: Container): Unit = requiredChangesIn(container).foreach(_.execute())
 }
 
@@ -22,7 +23,7 @@ abstract class CollectionAccess[-Container, Item] {
 case object Ignore extends CollectionSpec[Any, Nothing] {
   override def requiredChangesIn(container: Any): List[Change] = Nil
 
-  override def materializeAll(): List[Nothing] = Nil
+  override def build(): List[Nothing] = Nil
 }
 
 final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
@@ -48,10 +49,10 @@ final case class SpecsWithIds[Key, Container, Item](specs: List[(Key, Template[I
           List(InsertWithKey(container, spec, 0, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsInsertions
   }
 
-  override def materializeAll(): List[Item] = specs.map {
+  override def build(): List[Item] = specs.map {
     case (key, spec) => SpecsWithKeys.setKeyOnItem(key, spec.build())
   }
 }
@@ -89,24 +90,24 @@ final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(
           List(InsertWithKey(container, spec, desiredPosition, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(container, removals.toSeq))) ::: mutationsMovesInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(existingChildren, removals.toSeq))) ::: mutationsMovesInsertions
   }
 
-  override def materializeAll(): List[Item] = specsWithKeys.map {
+  override def build(): List[Item] = specsWithKeys.map {
     case (key, spec) => SpecsWithKeys.setKeyOnItem(key, spec.build())
   }
 }
 
 final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def materializeAll(): List[Item] = specs.map(_.build())
+  override def build(): List[Item] = specs.map(_.build())
 
   private def reconcileInHierarchy(container: Container, position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = nodeO match {
     case Some(node) =>
       spec.reconcilationSteps(node).getOrElse(List(Replace(container, spec, position)))
 
     case None =>
-      List(Insert(container, spec, position))
+      List(Insert(collectionAccess.getCollection(container), spec, position))
   }
 
   override def requiredChangesIn(container: Container): List[Change] = {
@@ -121,7 +122,7 @@ final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(impl
         acc
 
     if (numChildrenOnSceneGraph > numChildrenSpecs)
-      RemoveSeq(container, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
+      RemoveSeq(childrenOnSceneGraph, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
     else
       reconcile(0, Nil)
   }

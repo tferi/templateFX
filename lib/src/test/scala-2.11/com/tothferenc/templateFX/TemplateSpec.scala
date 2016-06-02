@@ -80,7 +80,7 @@ class TemplateSpec extends Specification {
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane)
       changes.length === 1
       val insertNode: Insert[TFXParent, Label] = changes.head.asInstanceOf[Insert[TFXParent, Label]]
-      insertNode.container === pane
+      insertNode.collection === pane.getChildren
       changes.foreach(_.execute())
       pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
       pane.getChildren.get(1).asInstanceOf[Label].getText === "world"
@@ -144,7 +144,7 @@ class TemplateSpec extends Specification {
     "be able to remove sequence of elements" in {
       val pane = paneWith(helloWorld).build()
       val changes: List[Change] = List(hello).requiredChangesIn(pane)
-      changes === List(RemoveSeq(pane, 1, 2))
+      changes === List(RemoveSeq(pane.getChildren, 1, 2))
       changes.foreach(_.execute())
       pane.getChildren.size === 1
       pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
