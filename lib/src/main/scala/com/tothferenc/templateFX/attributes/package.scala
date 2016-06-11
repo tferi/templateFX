@@ -4,9 +4,9 @@ import java.lang
 import java.util
 import javafx.collections.ObservableList
 
-import com.tothferenc.templateFX.base.{Attribute, SettableFeature}
+import com.tothferenc.templateFX.base.{ Attribute, SettableFeature }
 import javafx.css.Styleable
-import javafx.event.{ActionEvent, EventHandler}
+import javafx.event.{ ActionEvent, EventHandler }
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
@@ -22,7 +22,7 @@ import javafx.scene.text.TextAlignment
 
 import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
-import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
+import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
 import com.sun.javafx.sg.prism.NGNode
 import com.tothferenc.templateFX.userdata.UserData
 
@@ -30,7 +30,6 @@ import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
 package object attributes {
-
 
   implicit val contextMenu = Attribute.simple[Control, ContextMenu]("ContextMenu", null)
 

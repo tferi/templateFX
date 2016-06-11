@@ -6,7 +6,6 @@ import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 
 import com.tothferenc.templateFX.attributes._
-import com.tothferenc.templateFX.fixtures._
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.base.Attribute
 import com.tothferenc.templateFX.base.Template
