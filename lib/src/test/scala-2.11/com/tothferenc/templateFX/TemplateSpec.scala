@@ -40,7 +40,7 @@ class TemplateSpec extends Specification {
     node[Label](text ~ "world")
   )
 
-  val keyedHelloWorld = List(
+  val keyedHelloWorld: List[(Int, Template[Node])] = List(
     1 -> node[Label](text ~ "hello"),
     2 -> node[Label](text ~ "world")
   )

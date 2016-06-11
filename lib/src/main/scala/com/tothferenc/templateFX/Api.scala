@@ -1,7 +1,6 @@
 package com.tothferenc.templateFX
 
-import java.util.{List => JList}
-import javafx.scene.Node
+import java.util.{ List => JList }
 import javafx.scene.control.Tab
 
 import com.tothferenc.templateFX.base._
@@ -15,9 +14,8 @@ import scala.reflect.ClassTag
 object Api {
 
   implicit def specs2ordered[Container, T: UserDataAccess](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
-  implicit def specs2orderedWithIds[Key](specs: List[(Key, Template[Node])]): CollectionSpec[Node] = OrderedSpecsWithIds(specs)
-  def unordered[Key](specs: List[(Key, Template[Node])]) = SpecsWithIds(specs)
-  implicit def tabs2ordered(tabs: List[Template[Tab]]): CollectionSpec[Tab] = OrderedSpecs(tabs)
+  implicit def specs2orderedWithIds[Key, T: UserDataAccess](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
+  def unordered[Key, T: UserDataAccess](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
   implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Attribute[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
 
   implicit class ReconcilationSyntax[T](reconcilableGroup: CollectionSpec[T]) {

@@ -60,7 +60,7 @@ class TodoView {
         node[GridPane](
           Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid),
           Grid.alignment ~ Pos.TOP_LEFT,
-          children ~~ unordered[String] {
+          children ~~ unordered {
             val renderItemName: TodoItem => Template[Node] = editing match {
               case Some(editedItemKey) =>
                 todoItem =>
