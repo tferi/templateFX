@@ -23,15 +23,15 @@ object Api {
   }
 
   implicit class AttributeBinder[FXType, T](attribute: Attribute[FXType, T]) {
-    def ~(value: T) = Binding(attribute, value, maintained = true)
+    def ~(value: T) = SimpleBinding(attribute, value, maintained = true)
   }
 
   implicit class ListFixtureBinder[FXType, T](fixture: Attribute[FXType, List[T]]) {
-    def ~~(template: Template[List[T]]) = FixtureBinding(fixture, template, maintained = true)
+    def ~~(template: Template[List[T]]) = ReconcilationBinding(fixture, template, maintained = true)
   }
 
   implicit class FixtureBinder[FXType, T](fixture: Attribute[FXType, T]) {
-    def ~~(template: Template[T]) = FixtureBinding(fixture, template, maintained = true)
+    def ~~(template: Template[T]) = ReconcilationBinding(fixture, template, maintained = true)
   }
 
   implicit class AttributeEnforcer[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
