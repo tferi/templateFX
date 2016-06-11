@@ -39,10 +39,10 @@ object Api {
     def onInit(value: Attr) = Enforcement(attribute, value, maintained = false)
   }
 
-  def nodeC[N: ClassTag: UserDataAccess](constructorParams: Any*)(constraints: Constraint[N]*): Template[N] =
-    Leaf[N](constraints, constructorParams)
+  def nodeC[N: ClassTag: UserDataAccess](constructorParams: AnyRef*)(constraints: Constraint[N]*): Template[N] =
+    TemplateNode[N](constraints, constructorParams)
 
   def node[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
-    Leaf[N](constraints, Nil)
+    TemplateNode[N](constraints, Nil)
 
 }

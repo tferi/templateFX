@@ -5,8 +5,8 @@ import java.lang.reflect.Constructor
 class NoConstructorForParams(clazz: Class[_], params: Seq[Any])
   extends Exception(s"No ${clazz.getSimpleName} constructor was found for parameters: ${params.mkString(", ")}")
 
-private object UniversalConstructor {
-  def instantiate[Expected](constructorParams: Seq[Any])(implicit clazz: Class[Expected]): Expected = {
+private[specs] object UniversalConstructor {
+  def instantiate[Expected](clazz: Class[Expected], constructorParams: Seq[Object]): Expected = {
     val constructor: Constructor[Expected] =
       clazz.getConstructors.find { constructor =>
         constructor.getParameterCount == constructorParams.length && constructorParams.zipWithIndex.forall {
@@ -14,7 +14,7 @@ private object UniversalConstructor {
         }
       }.getOrElse(throw new NoConstructorForParams(clazz, constructorParams)).asInstanceOf[Constructor[Expected]]
     try {
-      constructor.newInstance()
+      constructor.newInstance(constructorParams: _*)
     } catch {
       case instantiation: InstantiationException => throw new Exception("Unable to instantiate abstract class: " + clazz.getSimpleName, instantiation)
     }

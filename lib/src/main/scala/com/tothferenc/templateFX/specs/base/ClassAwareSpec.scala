@@ -4,7 +4,7 @@ import com.tothferenc.templateFX.base.Change
 
 abstract class ClassAwareSpec[T] extends ConstraintBasedReconcilation[T] {
 
-  implicit def specifiedClass: Class[T]
+  def specifiedClass: Class[T]
 
   protected def reconcilationStepsForThisNode(other: Any): Option[List[Change]] = {
     other match {

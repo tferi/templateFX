@@ -7,9 +7,9 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.reflect.ClassTag
 
-final case class Leaf[T](
+final case class TemplateNode[T](
     constraints: Seq[Constraint[T]],
-    protected val constructorParams: Seq[Any]
+    protected val constructorParams: Seq[AnyRef]
 )(
     implicit
     classTag: ClassTag[T],
