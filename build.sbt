@@ -31,17 +31,17 @@ val base = (project in file("base"))
 	  libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
   )
 
-val lib = (project in file("lib"))
+val javafx = (project in file("javafx"))
 	.dependsOn(base)
   .settings(commonSettings)
 
 val examples = (project in file("examples"))
   .settings(commonSettings)
-	.dependsOn(lib)
+	.dependsOn(javafx)
 
 val root = (project in file("."))
-  .dependsOn(base, lib, examples)
-	.aggregate(base, lib, examples)
+  .dependsOn(base, javafx, examples)
+	.aggregate(base, javafx, examples)
 	.settings(commonSettings)
 	.settings(Seq(
 		name := "templateFx"

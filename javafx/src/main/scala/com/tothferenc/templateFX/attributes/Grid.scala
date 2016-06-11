@@ -11,8 +11,6 @@ import javafx.scene.layout.Priority
 
 import com.tothferenc.templateFX.base.Attribute
 
-import scala.collection.convert.wrapAsScala._
-
 object Grid {
 
   val alignment = Attribute.simple[GridPane, Pos]("Alignment", null)

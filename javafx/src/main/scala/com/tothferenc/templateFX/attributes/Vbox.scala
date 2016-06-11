@@ -1,9 +1,7 @@
 package com.tothferenc.templateFX.attributes
 
-import java.lang
 import javafx.geometry.Insets
 import javafx.scene.Node
-import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 

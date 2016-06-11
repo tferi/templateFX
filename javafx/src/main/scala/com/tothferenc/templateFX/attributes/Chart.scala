@@ -6,8 +6,6 @@ import javafx.scene.chart.PieChart
 
 import com.tothferenc.templateFX.base.Attribute
 
-import scala.collection.convert.wrapAsScala._
-
 object Chart {
 
   val title = Attribute.simple[javafx.scene.chart.Chart, String]("Title", null)

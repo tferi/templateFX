@@ -1,7 +1,5 @@
 package com.tothferenc.templateFX.attributes
 
-import java.lang
-
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
