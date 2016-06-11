@@ -18,25 +18,22 @@ import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
+import scala.collection.convert.wrapAsJava._
 
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
   private val hello: Template[Node] = leaf[Label](text ~ "hello")
 
-  private def paneWith(specGroup: CollectionSpec[TFXParent, Node]) = branchL[AnchorPane]() {
-    specGroup
-  }
+  private def paneWith(specGroup: CollectionSpec[TFXParent, Node]) = leaf[AnchorPane](children ~~ specGroup)
 
   def child(i: Int, container: TFXParent) = container.getChildren.get(i)
 
-  val paneWithHello: Template[AnchorPane] = branch[AnchorPane, Node]() {
-    hello
-  }
+  val paneWithHello: Template[AnchorPane] = leaf[AnchorPane](children ~~ List(hello))
 
-  val paneWithHelloChildrenSpec = OrderedSpecs[Pane, Node](List(paneWithHello))(paneChildrenAccess, nodeUserDataAccess)
+  val paneWithHelloChildrenSpec = OrderedSpecs[Pane, Node](List(paneWithHello))(nodeUserDataAccess)
 
-  val labelInTwoPanes = branch[AnchorPane, Node]()(paneWithHello)
+  val labelInTwoPanes = leaf[AnchorPane](children ~~ List(paneWithHello))
 
   val helloWorld: List[Template[Node]] = List(
     hello,
@@ -54,16 +51,14 @@ class TemplateSpec extends Specification {
     }
 
     "have their constraints applied to inheritors" in {
-      val container: TFXParent = branch[AnchorPane, Node]() {
-        leaf[PieChart](com.tothferenc.templateFX.attributes.title ~ "well")
-      }.build()
+      val container: TFXParent = leaf[AnchorPane](children ~~ List(leaf[PieChart](com.tothferenc.templateFX.attributes.title ~ "well"))).build()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
       chart.getTitle === "well"
     }
 
     "be reconciled as expected when a single mutation is needed" in {
       val pane = paneWithHello.build()
-      val changes: List[Change] = List(
+      val changes: List[Change] = List.apply[Template[Node]](
         leaf[Label](text ~ "world")
       ).requiredChangesIn(pane.getChildren)
       changes.length === 1
@@ -71,7 +66,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be replaced with another type" in {
       val pane = paneWithHello.build()
-      List(leaf[PieChart]()).reconcile(pane.getChildren)
+      List.apply[Template[Node]](leaf[PieChart]()).reconcile(pane.getChildren)
       pane.getChildren.get(0) should beAnInstanceOf[PieChart]
     }
 
@@ -160,7 +155,7 @@ class TemplateSpec extends Specification {
       val label = getLabel
       val attributes = ManagedAttributes.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
       attributes === List(text)
-      val changes = List(leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane.getChildren)
+      val changes = List.apply[Template[Node]](leaf[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane.getChildren)
       changes.exists(_.isInstanceOf[Mutation[_]]) === true
       changes.foreach(_.execute())
       val newAttr = ManagedAttributes.get(label)

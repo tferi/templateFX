@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX
 
 import java.lang
+import java.util
 import javafx.collections.ObservableList
 
 import com.tothferenc.templateFX.base.{ Attribute, SettableFeature }
@@ -39,6 +40,22 @@ package object attributes {
     override def set(target: TFXParent, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
 
     override def remove(item: TFXParent): Unit = item.getChildren.clear()
+  }
+
+  val tabs = new Attribute[TabPane, java.util.List[Tab]] {
+    override def read(src: TabPane): util.List[Tab] = src.getTabs
+
+    override def set(target: TabPane, value: util.List[Tab]): Unit = target.getTabs.setAll(value)
+
+    override def remove(item: TabPane): Unit = item.getTabs.clear()
+  }
+
+  val menuItems = new Attribute[ContextMenu, java.util.List[MenuItem]] {
+    override def read(src: ContextMenu): util.List[MenuItem] = src.getItems
+
+    override def set(target: ContextMenu, value: util.List[MenuItem]): Unit = target.getItems.setAll(value)
+
+    override def remove(item: ContextMenu): Unit = item.getItems.clear()
   }
 
   val selected = Attribute.simple[CheckBox, Boolean]("Selected", false)
