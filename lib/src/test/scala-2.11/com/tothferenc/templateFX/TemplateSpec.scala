@@ -26,7 +26,7 @@ class TemplateSpec extends Specification {
 
   private def paneWith(specGroup: CollectionSpec[Node]) = node[AnchorPane](children ~~ specGroup)
 
-  def child(i: Int, container: TFXParent) = container.getChildren.get(i)
+  def child(i: Int, container: Pane) = container.getChildren.get(i)
 
   val paneWithHello: Template[AnchorPane] = node[AnchorPane](children ~~ List(hello))
 
@@ -50,7 +50,7 @@ class TemplateSpec extends Specification {
     }
 
     "have their constraints applied to inheritors" in {
-      val container: TFXParent = node[AnchorPane](children ~~ List(node[PieChart](com.tothferenc.templateFX.attributes.title ~ "well"))).build()
+      val container: Pane = node[AnchorPane](children ~~ List(node[PieChart](com.tothferenc.templateFX.attributes.title ~ "well"))).build()
       val chart: PieChart = container.getChildren.get(0).asInstanceOf[PieChart]
       chart.getTitle === "well"
     }
@@ -75,7 +75,7 @@ class TemplateSpec extends Specification {
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane.getChildren)
       changes.length === 1
-      val insertNode: Insert[TFXParent, Label] = changes.head.asInstanceOf[Insert[TFXParent, Label]]
+      val insertNode: Insert[Pane, Label] = changes.head.asInstanceOf[Insert[Pane, Label]]
       insertNode.collection === pane.getChildren
       changes.foreach(_.execute())
       pane.getChildren.get(0).asInstanceOf[Label].getText === "hello"
@@ -127,7 +127,7 @@ class TemplateSpec extends Specification {
       val child1 = child(1, pane)
       val child2 = child(2, pane)
       val changes = List(1 -> hello).requiredChangesIn(pane.getChildren)
-      val change = changes(0).asInstanceOf[RemoveNodes[TFXParent, Node]]
+      val change = changes(0).asInstanceOf[RemoveNodes[Pane, Node]]
       change.nodes should contain(child1)
       change.nodes should contain(child2)
       change.nodes.length === 2

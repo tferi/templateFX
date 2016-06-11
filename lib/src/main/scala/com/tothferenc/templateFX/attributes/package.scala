@@ -36,11 +36,11 @@ package object attributes {
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
   val children = new Attribute[Pane, java.util.List[Node]] {
-    override def read(src: TFXParent): ObservableList[Node] = src.getChildren
+    override def read(src: Pane): ObservableList[Node] = src.getChildren
 
-    override def set(target: TFXParent, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
+    override def set(target: Pane, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
 
-    override def remove(item: TFXParent): Unit = item.getChildren.clear()
+    override def remove(item: Pane): Unit = item.getChildren.clear()
   }
 
   val tabs = new Attribute[TabPane, java.util.List[Tab]] {
