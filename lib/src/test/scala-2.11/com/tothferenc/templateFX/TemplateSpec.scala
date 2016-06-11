@@ -4,21 +4,20 @@ import javafx.embed.swing.JFXPanel
 import javafx.scene.Node
 import javafx.scene.chart.PieChart
 import javafx.scene.control.Label
-import javafx.scene.layout.{ AnchorPane, Pane }
+import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
-import com.tothferenc.templateFX.specs.base.ClassAwareSpec
 import com.tothferenc.templateFX.specs.collection.CollectionSpec
 import com.tothferenc.templateFX.specs.collection.OrderedSpecs
 import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
-import scala.collection.convert.wrapAsJava._
 
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
