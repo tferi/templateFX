@@ -16,7 +16,6 @@ object Api {
   implicit def specs2ordered[Container, T: UserDataAccess](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
   implicit def specs2orderedWithIds[Key, T: UserDataAccess](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
   def unordered[Key, T: UserDataAccess](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
-  implicit def tuple2ParameterizedFixtures[C, I](tuples: List[(Attribute[C, I], Template[I])]): List[ParameterizedFixture.For[C]] = tuples.map(t => ParameterizedFixture.apply(t._1, Some(t._2)))
 
   implicit class ReconcilationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
     def changes(items: JList[T]): List[Change] = reconcilableGroup.requiredChangesIn(items)
@@ -45,11 +44,5 @@ object Api {
 
   def node[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
     Leaf[N](constraints, Nil)
-
-  def fixture[F, C](constraints: Constraint[F]*)(content: Template[C])(implicit ct: ClassTag[F], ud: UserDataAccess[F], f: Attribute[F, C]): Template[F] =
-    FixtureSpec[F](constraints, List(ParameterizedFixture(f, Some(content))))
-
-  def fixtures[F](constraints: Constraint[F]*)(fixtures: ParameterizedFixture.For[F]*)(implicit ct: ClassTag[F], ud: UserDataAccess[F]): Template[F] =
-    FixtureSpec[F](constraints, fixtures.toList)
 
 }

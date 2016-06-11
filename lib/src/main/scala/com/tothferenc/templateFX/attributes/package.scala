@@ -4,9 +4,9 @@ import java.lang
 import java.util
 import javafx.collections.ObservableList
 
-import com.tothferenc.templateFX.base.{ Attribute, SettableFeature }
+import com.tothferenc.templateFX.base.{Attribute, SettableFeature}
 import javafx.css.Styleable
-import javafx.event.{ ActionEvent, EventHandler }
+import javafx.event.{ActionEvent, EventHandler}
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
@@ -15,15 +15,14 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.TabPane.TabClosingPolicy
 import javafx.scene.control._
 import javafx.scene.input._
-import javafx.scene.layout.Pane
-import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
+import javafx.scene.layout._
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
 import com.sun.javafx.geom.BaseBounds
 import com.sun.javafx.geom.transform.BaseTransform
-import com.sun.javafx.jmx.{ MXNodeAlgorithm, MXNodeAlgorithmContext }
+import com.sun.javafx.jmx.{MXNodeAlgorithm, MXNodeAlgorithmContext}
 import com.sun.javafx.sg.prism.NGNode
 import com.tothferenc.templateFX.userdata.UserData
 
@@ -31,6 +30,19 @@ import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
 package object attributes {
+
+
+  implicit val contextMenu = Attribute.simple[Control, ContextMenu]("ContextMenu", null)
+
+  implicit val scrollPaneContent = Attribute.simple[ScrollPane, Node]("Content", null)
+
+  implicit val tabContent = Attribute.simple[Tab, Node]("Content", null)
+
+  implicit val borderTop = Attribute.simple[BorderPane, Node]("Top", null)
+  implicit val borderRight = Attribute.simple[BorderPane, Node]("Right", null)
+  implicit val borderBottom = Attribute.simple[BorderPane, Node]("Bottom", null)
+  implicit val borderLeft = Attribute.simple[BorderPane, Node]("Left", null)
+  implicit val borderCenter = Attribute.simple[BorderPane, Node]("Center", null)
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 

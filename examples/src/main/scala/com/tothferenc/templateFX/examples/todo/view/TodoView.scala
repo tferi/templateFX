@@ -11,7 +11,7 @@ import javafx.scene.control._
 import javafx.scene.layout._
 
 import com.tothferenc.templateFX.Api._
-import com.tothferenc.templateFX.fixtures._
+import com.tothferenc.templateFX.userdata._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.examples.todo._
@@ -33,8 +33,8 @@ class TodoView {
           tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE,
           contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](textMenuItem ~ "Here's a ContextMenu"))),
           tabs ~~ List(
-            fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted, editing)),
-            fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
+            node[Tab](textTab ~ "Items", tabContent ~~ itemsTab(reactor, scene, items, showCompleted, editing)),
+            node[Tab](textTab ~ "Chart", tabContent ~~ chartTab(items))
           )
         )
       } else {
