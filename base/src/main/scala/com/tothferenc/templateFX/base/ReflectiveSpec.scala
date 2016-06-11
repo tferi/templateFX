@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.specs.base
+package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX._
 import com.tothferenc.templateFX.specs.UniversalConstructor

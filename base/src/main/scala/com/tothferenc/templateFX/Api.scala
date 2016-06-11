@@ -1,11 +1,12 @@
 package com.tothferenc.templateFX
 
-import java.util.{ List => JList }
-import javafx.scene.control.Tab
+import java.util.{List => JList}
 
 import com.tothferenc.templateFX.base._
-import com.tothferenc.templateFX.specs._
-import com.tothferenc.templateFX.specs.collection._
+import com.tothferenc.templateFX.collection.CollectionSpec
+import com.tothferenc.templateFX.collection.OrderedSpecs
+import com.tothferenc.templateFX.collection.OrderedSpecsWithIds
+import com.tothferenc.templateFX.collection.SpecsWithIds
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions

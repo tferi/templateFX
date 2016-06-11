@@ -1,6 +1,6 @@
-package com.tothferenc.templateFX.specs.collection
+package com.tothferenc.templateFX.collection
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
 import com.tothferenc.templateFX.InsertWithKey
 import com.tothferenc.templateFX.RemoveNodes
@@ -9,8 +9,8 @@ import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
-import scala.collection.convert.wrapAsScala._
 import scala.collection.convert.wrapAsJava._
+import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
 
 final case class SpecsWithIds[Key, Item](specs: List[(Key, Template[Item])])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Item] {

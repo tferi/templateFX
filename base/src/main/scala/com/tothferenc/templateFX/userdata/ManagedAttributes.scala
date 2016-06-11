@@ -4,7 +4,6 @@ import com.tothferenc.templateFX.base.Attribute
 import com.tothferenc.templateFX.base.RemovableFeature
 
 import scala.collection.mutable
-import scala.reflect.ClassTag
 
 object ManagedAttributes {
 

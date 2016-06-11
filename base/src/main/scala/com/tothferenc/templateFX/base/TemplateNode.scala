@@ -1,8 +1,6 @@
-package com.tothferenc.templateFX.specs
+package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX.Constraint
-import com.tothferenc.templateFX.base.Change
-import com.tothferenc.templateFX.specs.base.ReflectiveSpec
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.reflect.ClassTag

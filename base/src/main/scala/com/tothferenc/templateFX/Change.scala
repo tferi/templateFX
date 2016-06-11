@@ -1,12 +1,13 @@
 package com.tothferenc.templateFX
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
-import com.tothferenc.templateFX.specs.collection.SpecsWithKeys
-import com.tothferenc.templateFX.userdata._
+import com.tothferenc.templateFX.collection.SpecsWithKeys
+import com.tothferenc.templateFX.userdata.ManagedAttributes
+import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.collection.convert.decorateAsJava._
 import scala.language.existentials

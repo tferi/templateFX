@@ -1,6 +1,6 @@
-package com.tothferenc.templateFX.specs.collection
+package com.tothferenc.templateFX.collection
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
 import com.tothferenc.templateFX.Insert
 import com.tothferenc.templateFX.RemoveSeq
@@ -10,8 +10,8 @@ import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.annotation.tailrec
-import scala.collection.convert.wrapAsScala._
 import scala.collection.convert.wrapAsJava._
+import scala.collection.convert.wrapAsScala._
 
 final case class OrderedSpecs[Item](specs: List[Template[Item]])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Item] {
 

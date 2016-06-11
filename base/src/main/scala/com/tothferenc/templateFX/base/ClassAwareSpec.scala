@@ -1,6 +1,4 @@
-package com.tothferenc.templateFX.specs.base
-
-import com.tothferenc.templateFX.base.Change
+package com.tothferenc.templateFX.base
 
 abstract class ClassAwareSpec[T] extends ConstraintBasedReconcilation[T] {
 

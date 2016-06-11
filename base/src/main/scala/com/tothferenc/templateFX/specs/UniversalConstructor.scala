@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor
 class NoConstructorForParams(clazz: Class[_], params: Seq[Any])
   extends Exception(s"No ${clazz.getSimpleName} constructor was found for parameters: ${params.mkString(", ")}")
 
-private[specs] object UniversalConstructor {
+object UniversalConstructor {
   def instantiate[Expected](clazz: Class[Expected], constructorParams: Seq[Object]): Expected = {
     val constructor: Constructor[Expected] =
       clazz.getConstructors.find { constructor =>

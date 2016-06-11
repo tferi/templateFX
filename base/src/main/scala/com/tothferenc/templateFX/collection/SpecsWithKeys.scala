@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.specs.collection
+package com.tothferenc.templateFX.collection
 
 import com.tothferenc.templateFX.userdata.UserData
 import com.tothferenc.templateFX.userdata.UserDataAccess

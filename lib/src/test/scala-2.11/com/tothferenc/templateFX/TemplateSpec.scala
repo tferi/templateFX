@@ -12,8 +12,8 @@ import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
-import com.tothferenc.templateFX.specs.collection.CollectionSpec
-import com.tothferenc.templateFX.specs.collection.OrderedSpecs
+import com.tothferenc.templateFX.collection.CollectionSpec
+import com.tothferenc.templateFX.collection.OrderedSpecs
 import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
@@ -30,7 +30,7 @@ class TemplateSpec extends Specification {
 
   val paneWithHello: Template[AnchorPane] = node[AnchorPane](children ~~ List(hello))
 
-  val paneWithHelloChildrenSpec = OrderedSpecs[Node](List(paneWithHello))(nodeUserDataAccess)
+  val paneWithHelloChildrenSpec = OrderedSpecs[Node](List(paneWithHello))
 
   val labelInTwoPanes = node[AnchorPane](children ~~ List(paneWithHello))
 
@@ -106,7 +106,7 @@ class TemplateSpec extends Specification {
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       val changes = helloDearWorld.requiredChangesIn(pane.getChildren)
-      changes(0) === InsertWithKey(pane.getChildren, hello, 0, 3)
+      changes.head === InsertWithKey(pane.getChildren, hello, 0, 3)
       changes(1) === MoveNode(pane.getChildren, child1, 1)
       changes(3) === MoveNode(pane.getChildren, child0, 2)
       changes.foreach(_.execute())
@@ -127,7 +127,7 @@ class TemplateSpec extends Specification {
       val child1 = child(1, pane)
       val child2 = child(2, pane)
       val changes = List(1 -> hello).requiredChangesIn(pane.getChildren)
-      val change = changes(0).asInstanceOf[RemoveNodes[Pane, Node]]
+      val change = changes.head.asInstanceOf[RemoveNodes[Pane, Node]]
       change.nodes should contain(child1)
       change.nodes should contain(child2)
       change.nodes.length === 2
