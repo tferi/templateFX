@@ -17,9 +17,11 @@ import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
 import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.SettableFeature
 import com.tothferenc.templateFX.userdata.UserData
 
 import scala.collection.mutable
+import scala.collection.convert.wrapAsScala._
 
 package object attributes {
 
