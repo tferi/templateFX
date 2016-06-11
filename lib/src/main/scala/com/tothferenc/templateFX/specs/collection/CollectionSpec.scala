@@ -5,7 +5,7 @@ import java.util.{ List => JList }
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
 
-abstract class CollectionSpec[-Container, Item] extends Template[List[Item]] {
+abstract class CollectionSpec[-Container, Item] extends Template[JList[Item]] {
 
   def reconcilationSteps(other: Any): Option[List[Change]] = {
     other match {
@@ -16,6 +16,6 @@ abstract class CollectionSpec[-Container, Item] extends Template[List[Item]] {
     }
   }
   def requiredChangesIn(collection: JList[Item]): List[Change]
-  def build(): List[Item]
+  def build(): JList[Item]
   def reconcile(collection: JList[Item]): Unit = requiredChangesIn(collection).foreach(_.execute())
 }

@@ -23,7 +23,7 @@ final case class Hierarchy[Parent, Children](
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[Parent]]
 
-  override def initNodesBelow(instance: Parent): Unit = collectionAccess.getCollection(instance).addAll(children.build().asJavaCollection)
+  override def initNodesBelow(instance: Parent): Unit = collectionAccess.getCollection(instance).addAll(children.build())
 
   override def reconcilationSteps(other: Any): Option[List[Change]] = {
     reconcilationStepsForThisNode(other).map {

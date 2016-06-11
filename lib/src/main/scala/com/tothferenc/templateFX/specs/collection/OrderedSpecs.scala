@@ -11,10 +11,11 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
+import scala.collection.convert.wrapAsJava._
 
 final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
 
-  override def build(): List[Item] = specs.map(_.build())
+  override def build(): JList[Item] = specs.map(_.build())
 
   private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
     nodeO match {

@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX
 
 import java.lang
+import javafx.collections.ObservableList
 
 import com.tothferenc.templateFX.base.{ Attribute, SettableFeature }
 import javafx.css.Styleable
@@ -13,6 +14,7 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control.TabPane.TabClosingPolicy
 import javafx.scene.control._
 import javafx.scene.input._
+import javafx.scene.layout.Pane
 import javafx.scene.layout.{ AnchorPane, ColumnConstraints, GridPane }
 import javafx.scene.paint.Paint
 import javafx.scene.text.Font
@@ -30,6 +32,14 @@ import scala.collection.mutable
 package object attributes {
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
+
+  val children = new Attribute[Pane, java.util.List[Node]] {
+    override def read(src: TFXParent): ObservableList[Node] = src.getChildren
+
+    override def set(target: TFXParent, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
+
+    override def remove(item: TFXParent): Unit = item.getChildren.clear()
+  }
 
   val selected = Attribute.simple[CheckBox, Boolean]("Selected", false)
 

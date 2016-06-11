@@ -32,8 +32,12 @@ object Api {
     def reconcile(container: Container): Unit = changes(container).foreach(_.execute())
   }
 
-  implicit class AttributeBinder[FXType, Attr](attribute: Attribute[FXType, Attr]) {
-    def ~(value: Attr) = Binding(attribute, value, maintained = true)
+  implicit class AttributeBinder[FXType, T](attribute: Attribute[FXType, T]) {
+    def ~(value: T) = Binding(attribute, value, maintained = true)
+  }
+
+  implicit class ListFixtureBinder[FXType, T](fixture: Attribute[FXType, List[T]]) {
+    def ~~(template: Template[List[T]]) = FixtureBinding(fixture, template, maintained = true)
   }
 
   implicit class FixtureBinder[FXType, T](fixture: Attribute[FXType, T]) {

@@ -11,6 +11,7 @@ import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.collection.convert.wrapAsScala._
+import scala.collection.convert.wrapAsJava._
 import scala.collection.mutable
 
 final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
@@ -39,7 +40,7 @@ final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(
     (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals.toSeq))) ::: mutationsMovesInsertions
   }
 
-  override def build(): List[Item] = specsWithKeys.map {
+  override def build(): JList[Item] = specsWithKeys.map {
     case (key, spec) => SpecsWithKeys.setKeyOnItem(key, spec.build())
   }
 }

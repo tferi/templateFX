@@ -33,8 +33,9 @@ class TodoView {
           fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
         )
       } else {
-        branch[StackPane, Node](Vbox.vGrow ~ Priority.ALWAYS)(
-          leaf[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls.")
+        leaf[StackPane](
+          Vbox.vGrow ~ Priority.ALWAYS,
+          children ~~ List(leaf[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
         )
       }
     )
@@ -84,12 +85,12 @@ class TodoView {
 
   def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
     branch[VBox, Node]()(
-      branch[HBox, Node]()(
+      leaf[HBox](children ~~ List(
         leaf[Label](text ~ "New item name:"),
         leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
         leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
         leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
-      ),
+      )),
       branch[HBox, Node]()(
         leaf[Label](text ~ "New item position:"),
         leaf[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
