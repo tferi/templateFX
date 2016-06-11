@@ -14,7 +14,7 @@ import scala.collection.convert.wrapAsScala._
 import scala.collection.convert.wrapAsJava._
 import scala.collection.mutable
 
-final case class OrderedSpecsWithIds[Key, Container, Item](specsWithKeys: List[(Key, Template[Item])])(implicit collectionAccess: CollectionAccess[Container, Item], userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
+final case class OrderedSpecsWithIds[Key, Item](specsWithKeys: List[(Key, Template[Item])])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Item] {
 
   override def requiredChangesIn(collection: JList[Item]): List[Change] = {
     val existingNodesByKey = collection.groupBy { item =>

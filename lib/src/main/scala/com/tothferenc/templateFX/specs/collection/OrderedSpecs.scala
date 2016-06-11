@@ -13,7 +13,7 @@ import scala.annotation.tailrec
 import scala.collection.convert.wrapAsScala._
 import scala.collection.convert.wrapAsJava._
 
-final case class OrderedSpecs[Container, Item](specs: List[Template[Item]])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Container, Item] {
+final case class OrderedSpecs[Item](specs: List[Template[Item]])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Item] {
 
   override def build(): JList[Item] = specs.map(_.build())
 

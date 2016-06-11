@@ -18,20 +18,20 @@ class FixtureSpec extends Specification {
 
   new JFXPanel()
 
-  def lt(s: String): Template[Label] = leaf[Label](text ~ s)
+  def lt(s: String): Template[Label] = node[Label](text ~ s)
 
   def bind(fixture: Attribute[BorderPane, Node]) = fixture ~~ lt(fixture.toString)
 
   "BorderPane" should {
     "be instantiated with a node in the requested place" in {
-      val bp: BorderPane = leaf[BorderPane](bind(borderLeft)).build()
+      val bp: BorderPane = node[BorderPane](bind(borderLeft)).build()
       bp.getLeft.asInstanceOf[Label].getText === "left"
       fixtures.filterNot(_ == borderLeft).forall(_.read(bp) === null)
     }
 
     "have the requested nodes added when reconciled" in {
-      val bp: BorderPane = leaf[BorderPane](bind(borderRight)).build()
-      leaf[BorderPane](bind(borderLeft)).reconcilationSteps(bp).foreach(_.foreach(_.execute()))
+      val bp: BorderPane = node[BorderPane](bind(borderRight)).build()
+      node[BorderPane](bind(borderLeft)).reconcilationSteps(bp).foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
       fixtures.filterNot(_ == borderLeft).forall(_.read(bp) === null)
     }

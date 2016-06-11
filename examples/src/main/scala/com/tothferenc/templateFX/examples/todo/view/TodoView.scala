@@ -28,26 +28,26 @@ class TodoView {
     List(
       controlsTemplate(reactor, scene, showCompleted),
       if (items.nonEmpty) {
-        leaf[TabPane](
+        node[TabPane](
           Vbox.vGrow ~ Priority.ALWAYS,
           tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE,
-          contextMenu ~~ leaf[ContextMenu](menuItems ~~ List(leaf[MenuItem](textMenuItem ~ "Here's a ContextMenu"))),
+          contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](textMenuItem ~ "Here's a ContextMenu"))),
           tabs ~~ List(
             fixture[Tab, Node](textTab ~ "Items")(itemsTab(reactor, scene, items, showCompleted, editing)),
             fixture[Tab, Node](textTab ~ "Chart")(chartTab(items))
           )
         )
       } else {
-        leaf[StackPane](
+        node[StackPane](
           Vbox.vGrow ~ Priority.ALWAYS,
-          children ~~ List(leaf[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
+          children ~~ List(node[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
         )
       }
     )
   }
 
   def chartTab(items: List[TodoItem]): Template[PieChart] = {
-    leaf[PieChart](Chart.title ~ "Completed vs Pending Items", Chart.animated ~ false, Chart.Pie.data ~ {
+    node[PieChart](Chart.title ~ "Completed vs Pending Items", Chart.animated ~ false, Chart.Pie.data ~ {
       val (completed, pending) = items.partition(_.completed)
       List(new PieChart.Data("Completed", completed.length), new PieChart.Data("Pending", pending.length))
     })
@@ -55,9 +55,9 @@ class TodoView {
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[ScrollPane] = {
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
-    leaf[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, scrollPaneContent ~~ {
+    node[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, scrollPaneContent ~~ {
       if (shown.nonEmpty) {
-        leaf[GridPane](
+        node[GridPane](
           Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid),
           Grid.alignment ~ Pos.TOP_LEFT,
           children ~~ unordered[String] {
@@ -65,23 +65,23 @@ class TodoView {
               case Some(editedItemKey) =>
                 todoItem =>
                   if (todoItem.id == editedItemKey)
-                    leaf[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
+                    node[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
                   else
-                    leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+                    node[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
               case _ =>
                 todoItem =>
-                  leaf[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+                  node[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
             }
             shown.zipWithIndex.flatMap {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
                 List(
-                  todoItemId + "-checkbox" -> leaf[CheckBox](
+                  todoItemId + "-checkbox" -> node[CheckBox](
                     selected ~ done,
                     Grid.row ~ indexInView,
                     Grid.column ~ 0,
                     onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)
                   ),
-                  todoItemId.toString -> leaf[HBox](
+                  todoItemId.toString -> node[HBox](
                     Grid.row ~ indexInView,
                     Grid.column ~ 1,
                     Hbox.hGrow ~ Priority.ALWAYS,
@@ -93,7 +93,7 @@ class TodoView {
                     onMouseExited ~ SetCursorToDefault(scene),
                     children ~~ List(renderItemName(todoItem))
                   ),
-                  todoItemId + "-button" -> leaf[Button](
+                  todoItemId + "-button" -> node[Button](
                     text ~ "Delete",
                     Grid.row ~ indexInView,
                     Grid.column ~ 2,
@@ -104,24 +104,24 @@ class TodoView {
           }
         )
       } else {
-        leaf[Label](text ~ "Completed items are not shown.")
+        node[Label](text ~ "Completed items are not shown.")
       }
     })
   }
 
   def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
-    leaf[VBox](children ~~ List(
-      leaf[HBox](children ~~ List(
-        leaf[Label](text ~ "New item name:"),
-        leaf[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
-        leaf[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
-        leaf[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
+    node[VBox](children ~~ List(
+      node[HBox](children ~~ List(
+        node[Label](text ~ "New item name:"),
+        node[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
+        node[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
+        node[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
       )),
-      leaf[HBox](children ~~ List(
-        leaf[Label](text ~ "New item position:"),
-        leaf[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
-        leaf[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
-        leaf[CheckBox](text ~ "Show completed", onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
+      node[HBox](children ~~ List(
+        node[Label](text ~ "New item position:"),
+        node[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
+        node[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
+        node[CheckBox](text ~ "Show completed", onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
       ))
     ))
   }
