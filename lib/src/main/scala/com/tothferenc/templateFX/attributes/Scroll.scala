@@ -26,4 +26,6 @@ object Scroll {
   val hBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("HbarPolicy", null)
 
   val vBar = Attribute.simple[ScrollPane, ScrollBarPolicy]("VbarPolicy", null)
+
+  val content = Attribute.simple[ScrollPane, Node]("Content", null)
 }

@@ -13,7 +13,7 @@ import org.specs2.mutable.Specification
 
 class FixtureSpec extends Specification {
 
-  val fixtures = List(borderTop, borderRight, borderBottom, borderLeft, borderCenter)
+  val fixtures = List(Border.top, Border.right, Border.bottom, Border.left, Border.center)
 
   new JFXPanel()
 
@@ -23,16 +23,16 @@ class FixtureSpec extends Specification {
 
   "BorderPane" should {
     "be instantiated with a node in the requested place" in {
-      val bp: BorderPane = node[BorderPane](bind(borderLeft)).build()
+      val bp: BorderPane = node[BorderPane](bind(Border.left)).build()
       bp.getLeft.asInstanceOf[Label].getText === "left"
-      fixtures.filterNot(_ == borderLeft).forall(_.read(bp) === null)
+      fixtures.filterNot(_ == Border.left).forall(_.read(bp) === null)
     }
 
     "have the requested nodes added when reconciled" in {
-      val bp: BorderPane = node[BorderPane](bind(borderRight)).build()
-      node[BorderPane](bind(borderLeft)).reconcilationSteps(bp).foreach(_.foreach(_.execute()))
+      val bp: BorderPane = node[BorderPane](bind(Border.right)).build()
+      node[BorderPane](bind(Border.left)).reconcilationSteps(bp).foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
-      fixtures.filterNot(_ == borderLeft).forall(_.read(bp) === null)
+      fixtures.filterNot(_ == Border.left).forall(_.read(bp) === null)
     }
   }
 }

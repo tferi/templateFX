@@ -31,10 +31,10 @@ class TodoView {
         node[TabPane](
           Vbox.vGrow ~ Priority.ALWAYS,
           tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE,
-          contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](textMenuItem ~ "Here's a ContextMenu"))),
+          contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](MenuItemAttr.text ~ "Here's a ContextMenu"))),
           tabs ~~ List(
-            node[Tab](textTab ~ "Items", tabContent ~~ itemsTab(reactor, scene, items, showCompleted, editing)),
-            node[Tab](textTab ~ "Chart", tabContent ~~ chartTab(items))
+            node[Tab](TabAttr.text ~ "Items", TabAttr.content ~~ itemsTab(reactor, scene, items, showCompleted, editing)),
+            node[Tab](TabAttr.text ~ "Chart", TabAttr.content ~~ chartTab(items))
           )
         )
       } else {
@@ -55,7 +55,7 @@ class TodoView {
 
   def itemsTab(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[ScrollPane] = {
     val shown = if (showCompleted) items.zipWithIndex else items.zipWithIndex.filterNot(_._1.completed)
-    node[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, scrollPaneContent ~~ {
+    node[ScrollPane](Scroll.fitToHeight onInit true, Scroll.fitToWidth onInit true, Scroll.hBar ~ ScrollBarPolicy.NEVER, Scroll.vBar ~ ScrollBarPolicy.AS_NEEDED, Scroll.content ~~ {
       if (shown.nonEmpty) {
         node[GridPane](
           Grid.columnConstraints ~ List(TodoView.checkboxConstraintsInGrid, TodoView.textConstrainsInGrid, TodoView.buttonConstraintsInGrid),
@@ -76,7 +76,7 @@ class TodoView {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
                 List(
                   todoItemId + "-checkbox" -> node[CheckBox](
-                    selected ~ done,
+                    CheckboxAttr.selected ~ done,
                     Grid.row ~ indexInView,
                     Grid.column ~ 0,
                     onMouseClicked ~ CompleteItemEh(reactor, todoItemId, !done)

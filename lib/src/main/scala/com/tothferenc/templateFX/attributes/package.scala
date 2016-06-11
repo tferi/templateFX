@@ -31,17 +31,7 @@ import scala.collection.mutable
 
 package object attributes {
 
-  implicit val contextMenu = Attribute.simple[Control, ContextMenu]("ContextMenu", null)
-
-  implicit val scrollPaneContent = Attribute.simple[ScrollPane, Node]("Content", null)
-
-  implicit val tabContent = Attribute.simple[Tab, Node]("Content", null)
-
-  implicit val borderTop = Attribute.simple[BorderPane, Node]("Top", null)
-  implicit val borderRight = Attribute.simple[BorderPane, Node]("Right", null)
-  implicit val borderBottom = Attribute.simple[BorderPane, Node]("Bottom", null)
-  implicit val borderLeft = Attribute.simple[BorderPane, Node]("Left", null)
-  implicit val borderCenter = Attribute.simple[BorderPane, Node]("Center", null)
+  val contextMenu = Attribute.simple[javafx.scene.control.Control, ContextMenu]("ContextMenu", null)
 
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
 
@@ -68,10 +58,6 @@ package object attributes {
 
     override def remove(item: ContextMenu): Unit = item.getItems.clear()
   }
-
-  val selected = Attribute.simple[CheckBox, Boolean]("Selected", false)
-
-  val indeterminate = Attribute.simple[CheckBox, Boolean]("Indeterminate", false)
 
   val text = Attribute.simple[Labeled, String]("Text", null)
 
@@ -201,11 +187,5 @@ package object attributes {
 
   val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary", null)
 
-  val textTab = Attribute.simple[Tab, String]("Text", null)
-
   val tabClosingPolicy = Attribute.simple[TabPane, TabClosingPolicy]("TabClosingPolicy", null)
-
-  val textMenuItem = Attribute.simple[MenuItem, String]("Text", null)
-
-  val graphicMenuItem = Attribute.simple[MenuItem, Node]("Graphic", null)
 }
