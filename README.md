@@ -11,4 +11,17 @@ This capability allows the library's users to describe the desired state of the 
 
 To see how it works in practice, see the [example application](examples/src/main/scala/com/tothferenc/templateFX/examples/todo)!
 
+Project structure
+-----------------
+The project consists of the following modules:
+
+### Base
+The base module is made up of classes which are concerned with template descriptions and reconcilation methods. This module is (and is meant to be kept) UI technology independent, which means that it does not depend on JavaFX classes.
+
+### JavaFX
+The JavaFX module defines attributes and feature storage methods for JavaFX classes.
+
+### Example
+The example module contains an application which renders its UI with the Base and JavaFX modules.
+
 Coming soon!
