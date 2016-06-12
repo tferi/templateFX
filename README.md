@@ -3,7 +3,7 @@ templateFX
 
 [![Build Status](https://travis-ci.org/tferi/templateFX.svg?branch=master)](https://travis-ci.org/tferi/templateFX)
 
-TemplateFX is a JavaFX UI definition and reconcilation library, written in Scala. It's aimed to become React.js for the JVM. The library is in a proof-of-concept phase.
+TemplateFX is a JavaFX UI definition and reconcilation library, written in Scala. It is a proof of concept for bringing React.js-like functionality to the JVM.
 
 TemplateFX allows its users to define arbitrary object graph templates with its functional API. These templates may be reconciled with another object graph, meaning that the library will make changes to the target until it conforms to the template.
 
