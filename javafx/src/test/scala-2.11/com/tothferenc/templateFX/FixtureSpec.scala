@@ -30,7 +30,7 @@ class FixtureSpec extends Specification {
 
     "have the requested nodes added when reconciled" in {
       val bp: BorderPane = node[BorderPane](bind(Border.right)).build()
-      node[BorderPane](bind(Border.left)).reconcilationSteps(bp).foreach(_.foreach(_.execute()))
+      node[BorderPane](bind(Border.left)).reconciliationSteps(bp).foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
       fixtures.filterNot(_ == Border.left).forall(_.read(bp) === null)
     }

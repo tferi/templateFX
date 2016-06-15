@@ -5,7 +5,7 @@ import com.tothferenc.templateFX.Mutation
 import com.tothferenc.templateFX.userdata.ManagedAttributes
 import com.tothferenc.templateFX.userdata.UserDataAccess
 
-abstract class ConstraintBasedReconcilation[T] extends Template[T] {
+abstract class ConstraintBasedReconciliation[T] extends Template[T] {
 
   implicit protected def userDataAccess: UserDataAccess[T]
 

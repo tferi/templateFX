@@ -18,7 +18,7 @@ object Api {
   implicit def specs2orderedWithIds[Key, T: UserDataAccess](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
   def unordered[Key, T: UserDataAccess](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
 
-  implicit class ReconcilationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
+  implicit class ReconciliationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
     def changes(items: JList[T]): List[Change] = reconcilableGroup.requiredChangesIn(items)
     def reconcile(items: JList[T]): Unit = changes(items).foreach(_.execute())
   }
@@ -28,11 +28,11 @@ object Api {
   }
 
   implicit class ListFixtureBinder[FXType, T](fixture: Attribute[FXType, List[T]]) {
-    def ~~(template: Template[List[T]]) = ReconcilationBinding(fixture, template, maintained = true)
+    def ~~(template: Template[List[T]]) = ReconciliationBinding(fixture, template, maintained = true)
   }
 
   implicit class FixtureBinder[FXType, T](fixture: Attribute[FXType, T]) {
-    def ~~(template: Template[T]) = ReconcilationBinding(fixture, template, maintained = true)
+    def ~~(template: Template[T]) = ReconciliationBinding(fixture, template, maintained = true)
   }
 
   implicit class AttributeEnforcer[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {

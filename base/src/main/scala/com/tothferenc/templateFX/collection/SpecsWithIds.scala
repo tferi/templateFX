@@ -30,7 +30,7 @@ final case class SpecsWithIds[Key, Item](specs: List[(Key, Template[Item])])(imp
     val mutationsInsertions: List[Change] = specs.flatMap {
       case (key, spec) => existingNodesByKey.get(Some(key)) match {
         case Some(mutable.Buffer(node)) =>
-          spec.reconcilationSteps(node).getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
+          spec.reconciliationSteps(node).getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
         case _ =>
           List(InsertWithKey(collection, spec, 0, key))
       }

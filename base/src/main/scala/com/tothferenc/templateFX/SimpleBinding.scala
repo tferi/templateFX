@@ -3,7 +3,7 @@ package com.tothferenc.templateFX
 import com.tothferenc.templateFX.base._
 
 /**
- * Instances of this class are used to make changes to the object graph during the reconcilation process.
+ * Instances of this class are used to make changes to the object graph during the reconciliation process.
  */
 abstract class FeatureSetter[-Item] {
   def feature: RemovableFeature[Item]
@@ -21,7 +21,7 @@ final case class SimpleSetting[-Item, Value](
 }
 
 /**
- * Makes the [[feature]] conform to the [[template]] via a reconcilation process.
+ * Makes the [[feature]] conform to the [[template]] via a reconciliation process.
  */
 final case class Reconcile[-Item, Value](
     feature: Attribute[Item, Value],
@@ -45,7 +45,7 @@ abstract class Constraint[-T] {
   def feature: RemovableFeature[T]
 
   /**
-   * If this is true, this [[Constraint]] will be applied on the target object on every reconcilation.
+   * If this is true, this [[Constraint]] will be applied on the target object on every reconciliation.
    * If it's false, then the [[Constraint]] will be applied once, after the object is instantiated.
    * @return
    */
@@ -58,9 +58,9 @@ abstract class Constraint[-T] {
 }
 
 /**
- * This kind of [[Constraint]] should be set up when the user wants to run a full reconcilation on the [[feature]].
+ * This kind of [[Constraint]] should be set up when the user wants to run a full reconciliation on the [[feature]].
  */
-final case class ReconcilationBinding[Item, Attr](feature: Attribute[Item, Attr], template: Template[Attr], maintained: Boolean) extends Constraint[Item] {
+final case class ReconciliationBinding[Item, Attr](feature: Attribute[Item, Attr], template: Template[Attr], maintained: Boolean) extends Constraint[Item] {
   override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(Reconcile(feature, template))
 }
 

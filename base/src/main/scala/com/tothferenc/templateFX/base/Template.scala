@@ -13,5 +13,5 @@ abstract class Template[+T] {
    * @return None if the template can't reconcile this item (it's not an instance of [[T]]),
    *         otherwise Some[List] of [[Change]]s which need to be executed to make the parameter conform to this [[Template]].
    */
-  def reconcilationSteps(target: Any): Option[List[Change]]
+  def reconciliationSteps(target: Any): Option[List[Change]]
 }

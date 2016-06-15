@@ -20,7 +20,7 @@ final case class OrderedSpecs[Item](specs: List[Template[Item]])(implicit userDa
   private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
     nodeO match {
       case Some(node) =>
-        spec.reconcilationSteps(node).getOrElse(List(Replace(collection, spec, position)))
+        spec.reconciliationSteps(node).getOrElse(List(Replace(collection, spec, position)))
 
       case None =>
         List(Insert(collection, spec, position))

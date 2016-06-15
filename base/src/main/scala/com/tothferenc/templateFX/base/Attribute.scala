@@ -136,13 +136,13 @@ abstract class Attribute[-FXType, AttrType] extends SettableFeature[FXType, Attr
   def reconcile(container: FXType, specOption: Option[Template[AttrType]]): List[Change] = {
     Option(read(container)) -> specOption match {
       case (Some(existing), Some(specified)) =>
-        specified.reconcilationSteps(existing).getOrElse(List(Reconcilation(container, this, specOption)))
+        specified.reconciliationSteps(existing).getOrElse(List(Reconciliation(container, this, specOption)))
 
       case (None, None) =>
         Nil
 
       case _ =>
-        List(Reconcilation(container, this, specOption))
+        List(Reconciliation(container, this, specOption))
     }
   }
 }

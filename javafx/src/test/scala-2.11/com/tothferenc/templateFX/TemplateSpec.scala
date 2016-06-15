@@ -88,14 +88,14 @@ class TemplateSpec extends Specification {
       pane.getChildren.get(0).asInstanceOf[Pane].getChildren.get(0).asInstanceOf[Label].getText === "hello"
     }
 
-    "be able to do a simple reconcilation with replacements by key" in {
+    "be able to do a simple reconciliation with replacements by key" in {
       val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
       keyedHelloWorld.reverse.requiredChangesIn(pane.getChildren) === List(MoveNode(pane.getChildren, child1, 0), MoveNode(pane.getChildren, child0, 1))
     }
 
-    "be able to do a simple reconcilation with an insertion and replacements by key" in {
+    "be able to do a simple reconciliation with an insertion and replacements by key" in {
 
       val helloDearWorld = List(
         3 -> hello,
@@ -115,7 +115,7 @@ class TemplateSpec extends Specification {
       } === List("hello", "dear", "world")
     }
 
-    "be able to do a simple reconcilation with deletions by key" in {
+    "be able to do a simple reconciliation with deletions by key" in {
 
       val helloDearWorld = List(
         1 -> hello,
