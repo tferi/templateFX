@@ -14,7 +14,6 @@ import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.collection.CollectionSpec
 import com.tothferenc.templateFX.collection.OrderedSpecs
-import com.tothferenc.templateFX.userdata._
 import org.specs2.mutable.Specification
 
 import scala.collection.convert.wrapAsScala._
