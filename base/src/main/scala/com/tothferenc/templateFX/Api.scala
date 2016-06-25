@@ -7,7 +7,6 @@ import com.tothferenc.templateFX.collection.CollectionSpec
 import com.tothferenc.templateFX.collection.OrderedSpecs
 import com.tothferenc.templateFX.collection.OrderedSpecsWithIds
 import com.tothferenc.templateFX.collection.SpecsWithIds
-import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -40,10 +39,10 @@ object Api {
     def onInit(value: Attr) = Enforcement(attribute, value, maintained = false)
   }
 
-  def nodeC[N: ClassTag: UserDataAccess](constructorParams: AnyRef*)(constraints: Constraint[N]*): Template[N] =
+  def nodeC[N: ClassTag](constructorParams: AnyRef*)(constraints: Constraint[N]*): Template[N] =
     TemplateNode[N](constraints, constructorParams)
 
-  def node[N: ClassTag: UserDataAccess](constraints: Constraint[N]*): Template[N] =
+  def node[N: ClassTag](constraints: Constraint[N]*): Template[N] =
     TemplateNode[N](constraints, Nil)
 
 }

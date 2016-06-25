@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.userdata
+package com.tothferenc.templateFX
 
 import com.tothferenc.templateFX.base.RemovableFeature
 

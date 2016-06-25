@@ -6,8 +6,6 @@ import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.collection.SpecsWithKeys
-import com.tothferenc.templateFX.userdata.ManagedAttributes
-import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.collection.convert.decorateAsJava._
 import scala.language.existentials
@@ -50,7 +48,7 @@ final case class MoveNode[Container, Item](collection: JList[Item], item: Item, 
   }
 }
 
-final case class Mutation[Item: UserDataAccess](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
+final case class Mutation[Item](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val managedAttributes = ManagedAttributes.getOrInit(item)
 

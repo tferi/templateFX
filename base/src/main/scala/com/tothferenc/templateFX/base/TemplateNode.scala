@@ -1,7 +1,6 @@
 package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX.Constraint
-import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.reflect.ClassTag
 
@@ -10,8 +9,7 @@ final case class TemplateNode[T](
     protected val constructorParams: Seq[AnyRef]
 )(
     implicit
-    classTag: ClassTag[T],
-    protected val userDataAccess: UserDataAccess[T]
+    classTag: ClassTag[T]
 ) extends ReflectiveSpec[T] {
 
   implicit val specifiedClass = classTag.runtimeClass.asInstanceOf[Class[T]]

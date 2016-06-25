@@ -7,7 +7,6 @@ import com.tothferenc.templateFX.RemoveNodes
 import com.tothferenc.templateFX.Replace
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
-import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.collection.convert.wrapAsJava._
 import scala.collection.convert.wrapAsScala._

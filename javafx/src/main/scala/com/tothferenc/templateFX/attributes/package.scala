@@ -17,8 +17,6 @@ import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
 import com.tothferenc.templateFX.base.Attribute
-import com.tothferenc.templateFX.base.SettableFeature
-import com.tothferenc.templateFX.userdata.UserData
 
 import scala.collection.mutable
 import scala.collection.convert.wrapAsScala._
@@ -82,14 +80,6 @@ package object attributes {
   val font = Attribute.simple[Labeled, Font]("Font", null)
 
   val title = Attribute.simple[Chart, String]("Title", null)
-
-  final case class user(key: String) extends Attribute[Node, Any] {
-    override def read(src: Node): Any = UserData.get[Node, Any](src, key).orNull
-
-    override def set(target: Node, value: Any): Unit = UserData.set(target, key, value)
-
-    override def remove(target: Node): Unit = target.asInstanceOf[mutable.Map[String, Any]].remove(key)
-  }
 
   val styleClasses = Attribute.list[Styleable, String]("StyleClass")
 
