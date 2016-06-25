@@ -1,25 +1,26 @@
 package com.tothferenc.templateFX.userdata
 
-import com.tothferenc.templateFX.base.Attribute
 import com.tothferenc.templateFX.base.RemovableFeature
 
 import scala.collection.mutable
 
 object ManagedAttributes {
 
-  def getOrInit[Container: UserDataAccess](node: Container): mutable.Set[RemovableFeature[Container]] = {
-    get(node).getOrElse {
-      val set = new mutable.HashSet[RemovableFeature[Container]]
-      ManagedAttributes.set(node, set)
-      set
-    }
+  private type Features[Item] = mutable.Set[RemovableFeature[Item]]
+
+  private type FeaturesImpl[Item] = mutable.HashSet[RemovableFeature[Item]]
+
+  private val featuresByItem: mutable.WeakHashMap[Any, Any] = mutable.WeakHashMap.empty
+
+  def getOrInit[Item](node: Item): Features[Item] = {
+    featuresByItem.getOrElseUpdate(node, new FeaturesImpl[Item]).asInstanceOf[FeaturesImpl[Item]]
   }
 
-  def get[Container: UserDataAccess](node: Container): Option[mutable.Set[RemovableFeature[Container]]] = {
-    UserData.get[Container, mutable.Set[RemovableFeature[Container]]](node, Attribute.key)
+  def get[Item](node: Item): Option[Features[Item]] = {
+    featuresByItem.get(node).asInstanceOf[Option[FeaturesImpl[Item]]]
   }
 
-  def set[Container: UserDataAccess](node: Container, attributes: mutable.Set[RemovableFeature[Container]]): Unit = {
-    UserData.set(node, Attribute.key, attributes)
+  def set[Item](node: Item, attributes: Features[Item]): Unit = {
+    featuresByItem += node -> attributes
   }
 }
