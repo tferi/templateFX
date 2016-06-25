@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX.collection
 
-import java.util.{List => JList}
+import java.util.{ List => JList }
 
 import com.tothferenc.templateFX.InsertWithKey
 import com.tothferenc.templateFX.RemoveNodes
@@ -12,15 +12,12 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 import scala.collection.convert.wrapAsJava._
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
+import scala.reflect.ClassTag
 
-final case class SpecsWithIds[Key, Item](specs: List[(Key, Template[Item])])(implicit userDataAccess: UserDataAccess[Item]) extends CollectionSpec[Item] {
+final case class SpecsWithIds[Key: ClassTag, Item](specs: List[(Key, Template[Item])]) extends CollectionSpec[Item] {
 
   override def requiredChangesIn(collection: JList[Item]): List[Change] = {
-    val existingNodesByKey = collection.groupBy { item =>
-      userDataAccess.get(item).orNull
-        .get(SpecsWithKeys.TFX_KEY)
-        .map(_.asInstanceOf[Key])
-    }
+    val existingNodesByKey = collection.groupBy(SpecsWithKeys.getItemKey[Key])
     val specKeySet = specs.map(_._1)
     val removals = for {
       (key, nodes) <- existingNodesByKey if key.isEmpty || !specKeySet.contains(key.get)

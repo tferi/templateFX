@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX.collection
 
-import java.util.{List => JList}
+import java.util.{ List => JList }
 
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template

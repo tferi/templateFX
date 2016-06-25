@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import java.util.{List => JList}
+import java.util.{ List => JList }
 
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.RemovableFeature
@@ -11,6 +11,7 @@ import com.tothferenc.templateFX.userdata.UserDataAccess
 
 import scala.collection.convert.decorateAsJava._
 import scala.language.existentials
+import scala.reflect.ClassTag
 
 final case class RemoveNode[Container, Item](collection: JList[Item], item: Item) extends Change {
   override protected def exec(): Unit = collection.remove(item)
@@ -31,7 +32,7 @@ final case class Insert[Container, Item](collection: JList[Item], definition: Te
   override protected def exec(): Unit = collection.add(position, definition.build())
 }
 
-final case class InsertWithKey[Container, Item, Key](collection: JList[Item], definition: Template[Item], position: Int, key: Key)(implicit userDataAccess: UserDataAccess[Item]) extends Change {
+final case class InsertWithKey[Container, Item, Key: ClassTag](collection: JList[Item], definition: Template[Item], position: Int, key: Key) extends Change {
   override protected def exec(): Unit = collection.add(position, SpecsWithKeys.setKeyOnItem(key, definition.build()))
 }
 

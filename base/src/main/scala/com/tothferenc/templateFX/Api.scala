@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import java.util.{List => JList}
+import java.util.{ List => JList }
 
 import com.tothferenc.templateFX.base._
 import com.tothferenc.templateFX.collection.CollectionSpec
@@ -14,9 +14,9 @@ import scala.reflect.ClassTag
 
 object Api {
 
-  implicit def specs2ordered[Container, T: UserDataAccess](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
-  implicit def specs2orderedWithIds[Key, T: UserDataAccess](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
-  def unordered[Key, T: UserDataAccess](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
+  implicit def specs2ordered[Container, T](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
+  implicit def specs2orderedWithIds[Key: ClassTag, T](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
+  def unordered[Key: ClassTag, T](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
 
   implicit class ReconciliationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
     def changes(items: JList[T]): List[Change] = reconcilableGroup.requiredChangesIn(items)

@@ -1,13 +1,18 @@
 package com.tothferenc.templateFX.collection
 
-import com.tothferenc.templateFX.userdata.UserData
-import com.tothferenc.templateFX.userdata.UserDataAccess
+import scala.collection.mutable
+import scala.reflect.ClassTag
 
 object SpecsWithKeys {
-  val TFX_KEY = "tfx_key"
 
-  private[templateFX] def setKeyOnItem[Item, Key](key: Key, item: Item)(implicit userDataAccess: UserDataAccess[Item]): Item = {
-    UserData.set(item, TFX_KEY, key)
+  private val keys: mutable.WeakHashMap[Any, (ClassTag[_], Any)] = mutable.WeakHashMap.empty
+
+  def setKeyOnItem[Item, Key: ClassTag](key: Key, item: Item): Item = {
+    keys += item -> (implicitly[ClassTag[Key]], key)
     item
+  }
+
+  def getItemKey[Key: ClassTag](item: Any): Option[Key] = keys.get(item).collect {
+    case (storedKeyClassTag, storedKey) if implicitly[ClassTag[Key]] == storedKeyClassTag => storedKey.asInstanceOf[Key]
   }
 }
