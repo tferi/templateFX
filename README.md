@@ -1,6 +1,8 @@
 templateFX
 ==========
 
+[![Join the chat at https://gitter.im/tferi/templateFX](https://badges.gitter.im/tferi/templateFX.svg)](https://gitter.im/tferi/templateFX?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/tferi/templateFX.svg?branch=master)](https://travis-ci.org/tferi/templateFX)
 
 TemplateFX is a JavaFX UI definition and reconciliation library, written in Scala. It is a proof of concept for bringing React.js-like functionality to the JVM.
