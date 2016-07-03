@@ -5,8 +5,6 @@ import sbt._
 val commonSettings = Seq(
 	version := "1.0",
 
-	useGpg := true,
-
 	scalaVersion := "2.11.7",
 
 	organization := "com.tothferenc",
