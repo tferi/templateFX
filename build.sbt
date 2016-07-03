@@ -11,15 +11,28 @@ val commonSettings = Seq(
 
 	version := "0.1-SNAPSHOT",
 
-	libraryDependencies ++= Seq(
-		"ch.qos.logback" %  "logback-classic" % "1.1.7",
-		"org.specs2" %% "specs2-core" % "3.7.2" % "test"),
+	libraryDependencies ++= {
+
+		val depsForQuasiQuotes = CrossVersion.partialVersion(scalaVersion.value) match {
+			// if scala 2.11+ is used, quasiquotes are merged into scala-reflect
+			case Some((2, scalaMajor)) if scalaMajor >= 11 =>
+				libraryDependencies.value
+			// in Scala 2.10, quasiquotes are provided by macro paradise
+			case Some((2, 10)) =>
+				libraryDependencies.value ++ Seq(
+					compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+					"org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
+		}
+
+		Seq(
+			"ch.qos.logback" %  "logback-classic" % "1.1.7",
+			"org.specs2" %% "specs2-core" % "3.7.2" % "test"
+		) ++ depsForQuasiQuotes
+	},
 
 	scalacOptions in Test ++= Seq(
 		"-Yrangepos"
 	),
-
-	crossScalaVersions := Seq("2.10.6, 2.11.8"),
 
 	scalacOptions ++= Seq(
 		"-Xfatal-warnings",
@@ -39,9 +52,7 @@ val commonSettings = Seq(
 
 	licenses := Seq("GNU GPL v3" -> url("https://www.gnu.org/licenses/gpl-3.0.html")),
 
-	homepage := Some(url("https://github.com/tferi/templateFX")),
-
-	addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+	homepage := Some(url("https://github.com/tferi/templateFX"))
 )
 
 val base = (project in file("base"))
