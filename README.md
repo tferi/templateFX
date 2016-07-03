@@ -6,6 +6,22 @@ templateFX
 
 TemplateFX is a JavaFX UI definition and reconciliation library, written in Scala. It brings React.js-like functionality to the JVM.
 
+The library offers a declarative, typesafe interface for describing UI fragments. To render a vertical list of Strings or a placeholder if the list is empty, we could write:
+```
+def vlist(items: List[String]): Template[Node] = items match {
+    case Nil =>
+      node[Label](text ~ "The list is empty.", styleClasses ~ List("list-placeholder"))
+    case nonEmpty => node[VBox](
+      children ~~ nonEmpty.map { str =>
+        node[Label](text ~ str)
+      }
+    )
+  }
+```
+The output of this function is a lightweight template which may be used to either instantiate the defined objects, or to change the properties of existing ones until the desired state is reached.
+
+These templates may be reconstructed and applied to the scene graph after every change in the application model. This way, the application View is kept in sync with the Model without low-level property bindings and procedural updates, making development simpler and safer.
+
 To try the current snapshot, add the following to your build.sbt:
 ```
 resolvers ++= Seq(
