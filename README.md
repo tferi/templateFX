@@ -12,7 +12,8 @@ resolvers ++= Seq(
 	"Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 libraryDependencies ++= Seq(
-    "com.tothferenc" % "templatefx-base_2.11" % "0.1-SNAPSHOT"
+	"com.tothferenc" % "templatefx-base_2.11" % "0.1-SNAPSHOT",
+	"com.tothferenc" % "templatefx-javafx_2.11" % "0.1-SNAPSHOT"
 )
 ```
 
