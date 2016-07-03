@@ -38,7 +38,7 @@ abstract class Constraint[-T] {
 
   /**
    * The [[feature]] this constraint is set for.
-   * It is stored here to be used if this constraint will be lifted from the [[T]] instance.
+   * It is stored here to be used if this constraint will be lifted from the T instance.
    * When the constraint is lifted, the [[feature]] will be restored to its default state.
    * @return
    */
