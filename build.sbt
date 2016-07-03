@@ -5,20 +5,21 @@ import sbt._
 val commonSettings = Seq(
 	version := "1.0",
 
-	scalaVersion := "2.11.7",
+	scalaVersion := "2.11.8",
 
 	organization := "com.tothferenc",
 
 	version := "0.1-SNAPSHOT",
 
 	libraryDependencies ++= Seq(
-		"ch.qos.logback" %  "logback-classic" % "1.1.7", // Needed by scala-logging
-		"com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
+		"ch.qos.logback" %  "logback-classic" % "1.1.7",
 		"org.specs2" %% "specs2-core" % "3.7.2" % "test"),
 
 	scalacOptions in Test ++= Seq(
 		"-Yrangepos"
 	),
+
+	crossScalaVersions := Seq("2.10.6, 2.11.8"),
 
 	scalacOptions ++= Seq(
 		"-Xfatal-warnings",

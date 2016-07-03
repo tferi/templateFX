@@ -1,6 +1,5 @@
 package com.tothferenc.templateFX.base
 
-import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 
 abstract class Change {
@@ -14,7 +13,7 @@ abstract class Change {
 }
 
 object Change {
-  lazy val logger = Logger(LoggerFactory.getLogger("CHANGELOG"))
+  lazy val logger = LoggerFactory.getLogger("CHANGELOG")
 
   val debug: Boolean = java.lang.Boolean.getBoolean("tfx-debug")
 }

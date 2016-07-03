@@ -2,9 +2,10 @@ package com.tothferenc.templateFX.examples.todo
 
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 import com.tothferenc.templateFX.examples.todo.model.TodoModel
-import com.typesafe.scalalogging.LazyLogging
+import org.slf4j.LoggerFactory
 
-class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[TodoModel]) extends Reactor[Intent] with LazyLogging {
+class Component(appModel: TodoModel, protoRenderer: Reactor[Intent] => Renderer[TodoModel]) extends Reactor[Intent] {
+  private lazy val logger = LoggerFactory.getLogger("Component")
   private def nextId = System.currentTimeMillis()
 
   private val renderer = protoRenderer(this)
