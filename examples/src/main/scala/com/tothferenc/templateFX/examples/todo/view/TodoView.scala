@@ -26,23 +26,27 @@ class TodoView {
   def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): List[Template[Node]] = {
     List(
       controlsTemplate(reactor, scene, showCompleted),
-      if (items.nonEmpty) {
-        node[TabPane](
-          Vbox.vGrow ~ Priority.ALWAYS,
-          tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE,
-          contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](MenuItemAttr.text ~ "Here's a ContextMenu"))),
-          tabs ~~ List(
-            node[Tab](TabAttr.text ~ "Items", TabAttr.content ~~ itemsTab(reactor, scene, items, showCompleted, editing)),
-            node[Tab](TabAttr.text ~ "Chart", TabAttr.content ~~ chartTab(items))
-          )
-        )
-      } else {
-        node[StackPane](
-          Vbox.vGrow ~ Priority.ALWAYS,
-          children ~~ List(node[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
-        )
-      }
+      itemsTemplate(reactor, scene, items, showCompleted, editing)
     )
+  }
+
+  def itemsTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): Template[Region] = {
+    if (items.nonEmpty) {
+      node[TabPane](
+        Vbox.vGrow ~ Priority.ALWAYS,
+        tabClosingPolicy ~ TabClosingPolicy.UNAVAILABLE,
+        contextMenu ~~ node[ContextMenu](menuItems ~~ List(node[MenuItem](MenuItemAttr.text ~ "Here's a ContextMenu"))),
+        tabs ~~ List(
+          node[Tab](TabAttr.text ~ "Items", TabAttr.content ~~ itemsTab(reactor, scene, items, showCompleted, editing)),
+          node[Tab](TabAttr.text ~ "Chart", TabAttr.content ~~ chartTab(items))
+        )
+      )
+    } else {
+      node[StackPane](
+        Vbox.vGrow ~ Priority.ALWAYS,
+        children ~~ List(node[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
+      )
+    }
   }
 
   def chartTab(items: List[TodoItem]): Template[PieChart] = {
