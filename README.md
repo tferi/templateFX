@@ -44,7 +44,7 @@ Project structure
 The project consists of the following modules:
 
 ### Base
-The base module is made up of classes which are concerned with template descriptions and reconcilation methods. This module is (and is meant to be kept) UI technology independent, which means that it does not depend on JavaFX classes.
+The base module is made up of classes which are concerned with template descriptions and reconciliation methods. This module is (and is meant to be kept) UI technology independent, which means that it does not depend on JavaFX classes.
 
 ### JavaFX
 The JavaFX module defines attributes and feature storage methods for JavaFX classes.
