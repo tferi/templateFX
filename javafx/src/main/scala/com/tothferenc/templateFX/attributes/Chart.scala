@@ -3,8 +3,10 @@ package com.tothferenc.templateFX.attributes
 import java.lang
 import javafx.geometry.Side
 import javafx.scene.chart.PieChart
+import javafx.scene.chart.PieChart.Data
 
 import com.tothferenc.templateFX.base.Attribute
+
 import scala.collection.convert.wrapAsScala._
 
 object Chart {

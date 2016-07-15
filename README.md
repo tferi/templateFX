@@ -6,7 +6,9 @@ templateFX
 
 TemplateFX is a JavaFX UI definition and reconciliation library, written in Scala. It brings React.js-like functionality to the JVM.
 
-The library offers a declarative, typesafe interface for describing UI fragments. To render a vertical list of Strings or a placeholder if the list is empty, we could write:
+The library offers a declarative, typesafe interface for describing UI fragments. It's a typesafe FXML alternative which allows its users to define templates as the function of some input.
+
+To render a vertical list of Strings or a placeholder if the list is empty, we could write:
 ```
 def vlist(items: List[String]): Template[Node] = items match {
     case Nil =>
@@ -38,6 +40,28 @@ TemplateFX allows its users to define arbitrary view templates with its API. The
 This capability allows the library's users to describe the desired state of the UI in a declarative, typesafe manner. The template language is easy to use, and it allows users to effectively decouple UI-specific code from the business logic of the application.
 
 To see how it works in practice, see the [example application](examples/src/main/scala/com/tothferenc/templateFX/examples/todo), or check out its [view definition](examples/src/main/scala/com/tothferenc/templateFX/examples/todo/view/TodoView.scala)!
+
+Attributes
+----------
+This library reconciles object graphs in a typesafe manner, so it needs to know about the properties of the objects the user wants it to generate/synchronize.
+For each type `T`, the user may define any number of `Attribute[T,U]` values which represent ways in which the object may change (the text of a Label, the list of Tabs in a TabPane, etc).
+After they are defined, these `Attribute[T,U]` instances may be used in `Template[T]` specifications, and they may be bound to a value of type `U`.
+Templates constructed this way may be diffed to objects of type `T`, resulting in the list of `Change` objects necessary to make all of the template's `Attribute`s conform to the `Template`.
+
+The library offers an ever-growing list of JavaFX attributes (although not all - pull requests are welcome!), along with convenience macros for helping users define their own.
+For instance, a `Label`'s text may be defined as follows:
+```
+val text = Attribute.simple[Labeled, String]("Text", null)
+```
+
+In order to work as expected, the library needs to be able to check deep equality between instances of the `U` type in `Attribute[T,U]`.
+For those cases when changing the equals method of the class is not possible/desired, the library offers a way to supply a deep equality method like this:
+```
+private val dataEquality: ((PieChart.Data, PieChart.Data)) => Boolean =
+  { case (d1, d2) => d1.getName == d2.getName && d1.getPieValue == d2.getPieValue }
+
+val data: Attribute[PieChart, List[Data]] = Attribute.listCustomEquals[PieChart, PieChart.Data]("Data", dataEquality)
+```
 
 Project structure
 -----------------
