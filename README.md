@@ -14,7 +14,7 @@ This means that the library will ensure that the state of the UI conforms to the
 
 To see how it works in practice, see the [example application](examples/src/main/scala/com/tothferenc/templateFX/examples/todo), or just check out its [view definition](examples/src/main/scala/com/tothferenc/templateFX/examples/todo/view/TodoView.scala)!
 
-To render a vertical list of Strings or a placeholder if the list is empty, we could write:
+To define a vertical list of Strings or a placeholder if the list is empty, we could write:
 ```
 def vlist(items: List[String]): Template[Node] = items match {
     case Nil =>
