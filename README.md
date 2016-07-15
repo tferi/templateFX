@@ -6,7 +6,13 @@ templateFX
 
 TemplateFX is a JavaFX UI definition and reconciliation library, written in Scala. It brings React.js-like functionality to the JVM.
 
-The library offers a declarative, typesafe interface for describing UI fragments. It's a typesafe FXML alternative which allows its users to define templates as the function of some input.
+The library offers a declarative, typesafe interface for describing UI fragments.
+It's a typesafe FXML alternative which allows its users to define templates as the function of some input.
+The template language is easy to use, and it allows users to effectively decouple UI-specific code from the business logic of the application.
+Users also gain the ability to regenerate the templates based on different input, and reconcile the result with the scene graph.
+This means that the library will ensure that the state of the UI conforms to the specification in the template.
+
+To see how it works in practice, see the [example application](examples/src/main/scala/com/tothferenc/templateFX/examples/todo), or just check out its [view definition](examples/src/main/scala/com/tothferenc/templateFX/examples/todo/view/TodoView.scala)!
 
 To render a vertical list of Strings or a placeholder if the list is empty, we could write:
 ```
@@ -24,6 +30,9 @@ The output of this function is a lightweight template which may be used to eithe
 
 These templates may be reconstructed and applied to the scene graph after every change in the application model. This way, the application View is kept in sync with the Model without low-level property bindings and procedural updates, making development simpler and safer.
 
+Try it!
+-------
+
 To try the current snapshot, add the following to your build.sbt:
 ```
 resolvers ++= Seq(
@@ -34,12 +43,6 @@ libraryDependencies ++= Seq(
 	"com.tothferenc" % "templatefx-javafx_2.11" % "0.1-SNAPSHOT"
 )
 ```
-
-TemplateFX allows its users to define arbitrary view templates with its API. These templates may be reconciled with another object graph, meaning that the library will make changes to the target until it conforms to the template.
-
-This capability allows the library's users to describe the desired state of the UI in a declarative, typesafe manner. The template language is easy to use, and it allows users to effectively decouple UI-specific code from the business logic of the application.
-
-To see how it works in practice, see the [example application](examples/src/main/scala/com/tothferenc/templateFX/examples/todo), or check out its [view definition](examples/src/main/scala/com/tothferenc/templateFX/examples/todo/view/TodoView.scala)!
 
 Attributes
 ----------
