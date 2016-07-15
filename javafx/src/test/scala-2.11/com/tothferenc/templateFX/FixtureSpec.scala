@@ -13,7 +13,7 @@ import org.specs2.mutable.Specification
 
 class FixtureSpec extends Specification {
 
-  val fixtures = List(Border.top, Border.right, Border.bottom, Border.left, Border.center)
+  val attributes = List(Border.top, Border.right, Border.bottom, Border.left, Border.center)
 
   new JFXPanel()
 
@@ -25,14 +25,16 @@ class FixtureSpec extends Specification {
     "be instantiated with a node in the requested place" in {
       val bp: BorderPane = node[BorderPane](bind(Border.left)).build()
       bp.getLeft.asInstanceOf[Label].getText === "left"
-      fixtures.filterNot(_ == Border.left).forall(_.read(bp) === null)
+      val attributeValues = attributes.filterNot(_ == Border.left).map(_.read(bp))
+      attributeValues.forall(_ === null)
     }
 
-    "have the requested nodes added when reconciled" in {
+    "have only the requested nodes added when reconciled" in {
       val bp: BorderPane = node[BorderPane](bind(Border.right)).build()
       node[BorderPane](bind(Border.left)).reconciliationSteps(bp).foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
-      fixtures.filterNot(_ == Border.left).forall(_.read(bp) === null)
+      val attributeValues = attributes.filterNot(_ == Border.left).map(_.read(bp))
+      attributeValues.forall(_ === null)
     }
   }
 }
