@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
 import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
 import org.specs2.mutable.Specification
 
@@ -31,7 +32,8 @@ class FixtureSpec extends Specification {
 
     "have only the requested nodes added when reconciled" in {
       val bp: BorderPane = node[BorderPane](bind(attributes.right)).build()
-      node[BorderPane](bind(attributes.left)).reconciliationSteps(bp).foreach(_.foreach(_.execute()))
+      val steps: Option[List[Change]] = node[BorderPane](bind(attributes.left)).reconciliationSteps(bp)
+      steps.foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
       val attributeValues = attr.filterNot(_ == attributes.left).map(_.read(bp))
       attributeValues.forall(_ === null)
