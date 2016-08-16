@@ -1,18 +1,22 @@
 package com.tothferenc.templateFX
 
+import java.lang
 import java.util
 import javafx.collections.ObservableList
 import javafx.css.Styleable
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.Parent
 import javafx.scene.chart.Chart
 import javafx.scene.control.TabPane.TabClosingPolicy
 import javafx.scene.control._
 import javafx.scene.input._
 import javafx.scene.layout._
 import javafx.scene.paint.Paint
+import javafx.scene.shape.Shape
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
@@ -23,17 +27,7 @@ import scala.collection.convert.wrapAsScala._
 
 package object attributes {
 
-  val contextMenu = Attribute.simple[javafx.scene.control.Control, ContextMenu]("ContextMenu", null)
-
   private type SuperHandler[Whatever] = EventHandler[_ >: Whatever]
-
-  val children = new Attribute[Pane, java.util.List[Node]] {
-    override def read(src: Pane): ObservableList[Node] = src.getChildren
-
-    override def set(target: Pane, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
-
-    override def remove(item: Pane): Unit = item.getChildren.clear()
-  }
 
   val tabs = new Attribute[TabPane, java.util.List[Tab]] {
     override def read(src: TabPane): util.List[Tab] = src.getTabs
@@ -55,7 +49,10 @@ package object attributes {
 
   val alignment = Attribute.simple[Labeled, Pos]("Alignment", null)
 
-  val textAlignment = Attribute.simple[Labeled, TextAlignment]("TextAlignment", null)
+  val textAlignment = new {
+    val borderPane = Attribute.remote[BorderPane, Node, Pos]("Alignment")
+    val labeled = Attribute.simple[Labeled, TextAlignment]("TextAlignment", null)
+  }
 
   val textOverrun = Attribute.simple[Labeled, OverrunStyle]("TextOverrun", null)
 
@@ -172,4 +169,68 @@ package object attributes {
   val onTouchStationary = Attribute.simple[Node, SuperHandler[TouchEvent]]("OnTouchStationary", null)
 
   val tabClosingPolicy = Attribute.simple[TabPane, TabClosingPolicy]("TabClosingPolicy", null)
+
+  // Pane
+
+  val children = new Attribute[Pane, java.util.List[Node]] {
+    override def read(src: Pane): ObservableList[Node] = src.getChildren
+
+    override def set(target: Pane, value: java.util.List[Node]): Unit = target.getChildren.setAll(value)
+
+    override def remove(item: Pane): Unit = item.getChildren.clear()
+  }
+
+  // BorderPane
+
+  val margin = Attribute.remote[BorderPane, Node, Insets]("Margin")
+
+  val top = Attribute.simple[BorderPane, Node]("Top", null)
+
+  val right = Attribute.simple[BorderPane, Node]("Right", null)
+
+  val bottom = Attribute.simple[BorderPane, Node]("Bottom", null)
+
+  val left = Attribute.simple[BorderPane, Node]("Left", null)
+
+  val center = Attribute.simple[BorderPane, Node]("Center", null)
+
+  // Region
+
+  val background = Attribute.simple[Region, Background]("Background", null)
+
+  val border = Attribute.simple[Region, Border]("Border", null)
+
+  val minWidth = Attribute.simple[Region, Double]("MinWidth", 0.0)
+
+  val minHeight = Attribute.simple[Region, Double]("MinHeight", 0.0)
+
+  val prefWidth = Attribute.simple[Region, Double]("PrefWidth", 0.0)
+
+  val prefHeight = Attribute.simple[Region, Double]("PrefHeight", 0.0)
+
+  val maxWidth = Attribute.simple[Region, Double]("MaxWidth", 0.0)
+
+  val maxHeight = Attribute.simple[Region, Double]("MaxHeight", 0.0)
+
+  val cacheShape = Attribute.simple[Region, Boolean]("CacheShape", true)
+
+  val centerShape = Attribute.simple[Region, Boolean]("CenterShape", true)
+
+  val scaleShape = Attribute.simple[Region, Boolean]("ScaleShape", true)
+
+  val padding = Attribute.simple[Region, Insets]("Padding", null)
+
+  val opaqueInsets = Attribute.simple[Region, Insets]("OpaqueInsets", null)
+
+  val snapToPixel = Attribute.simple[Region, Boolean]("SnapToPixel", true)
+
+  val shape = Attribute.simple[Region, Shape]("Shape", null)
+
+  // Control
+
+  val contextMenu = Attribute.simple[Control, ContextMenu]("ContextMenu", null)
+
+  val skin = Attribute.simple[Control, Skin[_]]("Skin", null)
+
+  val tooltip = Attribute.simple[Control, Tooltip]("Tooltip", null)
 }
