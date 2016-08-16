@@ -18,7 +18,7 @@ class FixtureSpec extends Specification {
 
   new JFXPanel()
 
-  def lt(s: String): Template[Label] = node[Label](text ~ s)
+  def lt(s: String): Template[Label] = node[Label](text.label ~ s)
 
   def bind(fixture: Attribute[BorderPane, Node]) = fixture ~~ lt(fixture.toString)
 

@@ -45,11 +45,14 @@ package object attributes {
     override def remove(item: ContextMenu): Unit = item.getItems.clear()
   }
 
-  val text = Attribute.simple[Labeled, String]("Text", null)
+  object text {
+    val label = Attribute.simple[Labeled, String]("Text", null)
+    val inputControl = Attribute.simple[TextInputControl, String]("Text", null)
+  }
 
   val alignment = Attribute.simple[Labeled, Pos]("Alignment", null)
 
-  val textAlignment = new {
+  object textAlignment {
     val borderPane = Attribute.remote[BorderPane, Node, Pos]("Alignment")
     val labeled = Attribute.simple[Labeled, TextAlignment]("TextAlignment", null)
   }
@@ -74,13 +77,14 @@ package object attributes {
 
   val textFill = Attribute.simple[Labeled, Paint]("TextFill", null)
 
-  val font = Attribute.simple[Labeled, Font]("Font", null)
+  object font {
+    val labeled = Attribute.simple[Labeled, Font]("Font", null)
+    val textInputControl = Attribute.simple[TextInputControl, Font]("Font", null)
+  }
 
   val title = Attribute.simple[Chart, String]("Title", null)
 
   val styleClasses = Attribute.list[Styleable, String]("StyleClass")
-
-  val inputText = Attribute.simple[TextInputControl, String]("Text", null)
 
   val onActionText = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction", null)
 
@@ -233,4 +237,10 @@ package object attributes {
   val skin = Attribute.simple[Control, Skin[_]]("Skin", null)
 
   val tooltip = Attribute.simple[Control, Tooltip]("Tooltip", null)
+
+  // TextInputControl
+
+  val editable = Attribute.simple[TextInputControl, Boolean]("Editable", true)
+
+  val textFormatter = Attribute.simple[TextInputControl, TextFormatter[_]]("TextFormatter", null)
 }

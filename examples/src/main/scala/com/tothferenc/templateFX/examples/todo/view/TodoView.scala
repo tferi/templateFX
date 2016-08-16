@@ -44,7 +44,7 @@ class TodoView {
     } else {
       node[StackPane](
         Vbox.vGrow ~ Priority.ALWAYS,
-        children ~~ List(node[Label](Stack.alignment ~ Pos.CENTER, text ~ "The list is empty. you may add items with the controls."))
+        children ~~ List(node[Label](Stack.alignment ~ Pos.CENTER, text.label ~ "The list is empty. you may add items with the controls."))
       )
     }
   }
@@ -68,12 +68,12 @@ class TodoView {
               case Some(editedItemKey) =>
                 todoItem =>
                   if (todoItem.id == editedItemKey)
-                    node[TextField](id ~ "edited-field", inputText onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
+                    node[TextField](id ~ "edited-field", text.inputControl onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
                   else
-                    node[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+                    node[Label](text.label ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
               case _ =>
                 todoItem =>
-                  node[Label](text ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
+                  node[Label](text.label ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
             }
             shown.zipWithIndex.flatMap {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
@@ -97,7 +97,7 @@ class TodoView {
                     children ~~ List(renderItemName(todoItem))
                   ),
                   todoItemId + "-button" -> node[Button](
-                    text ~ "Delete",
+                    text.label ~ "Delete",
                     Grid.row ~ indexInView,
                     Grid.column ~ 2,
                     onActionButton ~ DeleteEh(reactor, todoItemId)
@@ -107,7 +107,7 @@ class TodoView {
           }
         )
       } else {
-        node[Label](text ~ "Completed items are not shown.")
+        node[Label](text.label ~ "Completed items are not shown.")
       }
     })
   }
@@ -115,16 +115,16 @@ class TodoView {
   def controlsTemplate(reactor: Reactor[Intent], scene: Scene, showCompleted: Boolean): Template[VBox] = {
     node[VBox](children ~~ List(
       node[HBox](children ~~ List(
-        node[Label](text ~ "New item name:"),
+        node[Label](text.label ~ "New item name:"),
         node[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
-        node[Button](id ~ "prependButton", text ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
-        node[Button](id ~ "appendButton", text ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
+        node[Button](id ~ "prependButton", text.label ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
+        node[Button](id ~ "appendButton", text.label ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
       )),
       node[HBox](children ~~ List(
-        node[Label](text ~ "New item position:"),
+        node[Label](text.label ~ "New item position:"),
         node[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
-        node[Button](id ~ "insertButton", text ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
-        node[CheckBox](text ~ "Show completed", onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
+        node[Button](id ~ "insertButton", text.label ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
+        node[CheckBox](text.label ~ "Show completed", onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
       ))
     ))
   }

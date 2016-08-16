@@ -21,7 +21,7 @@ import scala.collection.convert.wrapAsScala._
 class TemplateSpec extends Specification {
   val _ = new JFXPanel()
 
-  private val hello: Template[Node] = node[Label](text ~ "hello")
+  private val hello: Template[Node] = node[Label](text.label ~ "hello")
 
   private def paneWith(specGroup: CollectionSpec[Node]) = node[AnchorPane](children ~~ specGroup)
 
@@ -35,12 +35,12 @@ class TemplateSpec extends Specification {
 
   val helloWorld: List[Template[Node]] = List(
     hello,
-    node[Label](text ~ "world")
+    node[Label](text.label ~ "world")
   )
 
   val keyedHelloWorld: List[(Int, Template[Node])] = List(
-    1 -> node[Label](text ~ "hello"),
-    2 -> node[Label](text ~ "world")
+    1 -> node[Label](text.label ~ "hello"),
+    2 -> node[Label](text.label ~ "world")
   )
 
   "Templates" should {
@@ -57,7 +57,7 @@ class TemplateSpec extends Specification {
     "be reconciled as expected when a single mutation is needed" in {
       val pane = paneWithHello.build()
       val changes: List[Change] = List.apply[Template[Node]](
-        node[Label](text ~ "world")
+        node[Label](text.label ~ "world")
       ).requiredChangesIn(pane.getChildren)
       changes.length === 1
     }
@@ -70,7 +70,7 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when an element needs to be inserted" in {
       val pane = paneWithHello.build()
-      val newDef: Template[Label] = node[Label](text ~ "world")
+      val newDef: Template[Label] = node[Label](text.label ~ "world")
       val newTemplate = helloWorld
       val changes: Seq[Change] = newTemplate.requiredChangesIn(pane.getChildren)
       changes.length === 1
@@ -98,8 +98,8 @@ class TemplateSpec extends Specification {
 
       val helloDearWorld = List(
         3 -> hello,
-        2 -> node[Label](text ~ "dear"),
-        1 -> node[Label](text ~ "world")
+        2 -> node[Label](text.label ~ "dear"),
+        1 -> node[Label](text.label ~ "world")
       )
       val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
@@ -118,8 +118,8 @@ class TemplateSpec extends Specification {
 
       val helloDearWorld = List(
         1 -> hello,
-        2 -> node[Label](text ~ "dear"),
-        3 -> node[Label](text ~ "world")
+        2 -> node[Label](text.label ~ "dear"),
+        3 -> node[Label](text.label ~ "world")
       )
       val pane = paneWith(helloDearWorld).build()
       val child0 = child(0, pane)

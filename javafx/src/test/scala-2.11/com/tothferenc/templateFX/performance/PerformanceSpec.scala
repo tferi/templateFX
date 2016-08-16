@@ -62,7 +62,7 @@ class PerformanceSpec extends Specification {
     for {
       idx <- if (reverse) list.reverse else list
     } yield {
-      node[Label](text ~ idx.toString)
+      node[Label](text.label ~ idx.toString)
     }
   }
 
@@ -71,7 +71,7 @@ class PerformanceSpec extends Specification {
     for {
       idx <- if (reverse) list.reverse else list
     } yield {
-      idx -> node[Label](text ~ idx.toString)
+      idx -> node[Label](text.label ~ idx.toString)
     }
   }
 }
