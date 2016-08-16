@@ -36,6 +36,7 @@ final case class Replace[Container, Item](collection: JList[Item], definition: T
 
 final case class MoveNode[Container, Item](collection: JList[Item], item: Item, targetPosition: Int) extends Change {
   override protected def exec(): Unit = {
+    // TODO that indexOf is bad.
     val currentPosition = collection.indexOf(item)
     if (currentPosition != targetPosition) {
       collection.remove(item)

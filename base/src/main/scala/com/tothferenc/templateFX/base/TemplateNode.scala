@@ -5,7 +5,7 @@ import com.tothferenc.templateFX.Constraint
 import scala.reflect.ClassTag
 
 final case class TemplateNode[T](
-    constraints: Seq[Constraint[T]],
+    constraintsToApply: Seq[Constraint[T]],
     protected val constructorParams: Seq[AnyRef]
 )(
     implicit
