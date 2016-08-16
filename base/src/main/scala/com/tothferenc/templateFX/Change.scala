@@ -11,11 +11,7 @@ import scala.collection.convert.decorateAsJava._
 import scala.language.existentials
 import scala.reflect.ClassTag
 
-final case class RemoveNode[Container, Item](collection: JList[Item], item: Item) extends Change {
-  override protected def exec(): Unit = collection.remove(item)
-}
-
-final case class RemoveNodes[Container, Item](collection: JList[Item], nodes: Seq[Item]) extends Change {
+final case class RemoveNodes[Container, Item](collection: JList[Item], nodes: Iterable[Item]) extends Change {
   override protected def exec(): Unit = collection.removeAll(nodes.asJavaCollection)
 }
 

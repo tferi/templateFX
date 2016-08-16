@@ -33,7 +33,7 @@ final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: List[(K
           List(InsertWithKey(collection, spec, desiredPosition, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals.toSeq))) ::: mutationsMovesInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals))) ::: mutationsMovesInsertions
   }
 
   override def build(): JList[Item] = specsWithKeys.map {

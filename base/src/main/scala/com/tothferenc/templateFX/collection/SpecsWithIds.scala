@@ -31,7 +31,7 @@ final case class SpecsWithIds[Key: ClassTag, Item](specs: List[(Key, Template[It
           List(InsertWithKey(collection, spec, 0, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals.toSeq))) ::: mutationsInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals))) ::: mutationsInsertions
   }
 
   override def build(): JList[Item] = specs.map {

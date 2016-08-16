@@ -129,7 +129,7 @@ class TemplateSpec extends Specification {
       val change = changes.head.asInstanceOf[RemoveNodes[Pane, Node]]
       change.nodes should contain(child1)
       change.nodes should contain(child2)
-      change.nodes.length === 2
+      change.nodes.toList.length === 2
       changes.foreach(_.execute())
       pane.getChildren.collect {
         case l: Label => l.getText

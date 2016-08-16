@@ -18,10 +18,10 @@ class PerformanceSpec extends Specification {
 
   new JFXPanel()
 
-  "TemplateFX" should {
+  val count = 1000
+  val limit = 1000L
 
-    val count = 1000
-    val limit = 1000L
+  "TemplateFX" should {
 
     s"be able to reconcile large object lists of $count " in {
       performanceTest(count, limit, false)
