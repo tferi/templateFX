@@ -19,8 +19,9 @@ class PerformanceSpec extends Specification {
   "TemplateFX" should {
 
     val count = 1000
+    val limit = 1000L
 
-    s"be able to reconcile large object lists of $count under a 200 ms" in {
+    s"be able to reconcile large object lists of $count under a $limit ms" in {
       val start = System.currentTimeMillis()
 
       val labelTemplates: List[Template[Label]] = for {
@@ -45,7 +46,7 @@ class PerformanceSpec extends Specification {
 
       val total = reconciled - start
       println(s"Total time was $total ms for $count items")
-      total must beLessThan(200L)
+      total must beLessThan(limit)
     }
   }
 }
