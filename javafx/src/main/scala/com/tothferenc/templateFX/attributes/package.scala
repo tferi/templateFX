@@ -64,7 +64,10 @@ package object attributes {
 
   val ellipsisString = Attribute.simple[Labeled, String]("EllipsisString", null)
 
-  val wrapText = Attribute.simple[Labeled, Boolean]("WrapText", false)
+  object wrapText {
+    val label = Attribute.simple[Labeled, Boolean]("WrapText", false)
+    val textArea = Attribute.simple[TextArea, Boolean]("WrapText", false)
+  }
 
   val graphic = Attribute.simple[Labeled, Node]("Graphic", null)
 
@@ -254,5 +257,15 @@ package object attributes {
 
   // TextField
 
-  val prefColumnCount = Attribute.simple[TextField, Int]("PrefColumnCount", 12)
+  object prefColumnCount {
+    val textField = Attribute.simple[TextField, Int]("PrefColumnCount", 12)
+    val textArea = Attribute.simple[TextArea, Int]("PrefColumnCount", 40)
+  }
+
+  // TextArea
+  val scrollLeft = Attribute.simple[TextArea, Double]("ScrollLeft", 0)
+  val scrollTop = Attribute.simple[TextArea, Double]("ScrollTop", 0)
+
+  val prefRowCount = Attribute.simple[TextArea, Int]("PrefRowCount", 12)
+
 }
