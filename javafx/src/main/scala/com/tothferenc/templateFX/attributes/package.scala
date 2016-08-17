@@ -50,7 +50,10 @@ package object attributes {
     val inputControl = Attribute.simple[TextInputControl, String]("Text", null)
   }
 
-  val alignment = Attribute.simple[Labeled, Pos]("Alignment", null)
+  object alignment {
+    val label = Attribute.simple[Labeled, Pos]("Alignment", null)
+    val textField = Attribute.simple[TextField, Pos]("Alignment", Pos.CENTER_LEFT)
+  }
 
   object textAlignment {
     val borderPane = Attribute.remote[BorderPane, Node, Pos]("Alignment")
@@ -86,9 +89,14 @@ package object attributes {
 
   val styleClasses = Attribute.list[Styleable, String]("StyleClass")
 
-  val onActionText = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction", null)
+  object onAction {
 
-  val onActionButton = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction", null)
+    val text = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction", null)
+
+    val button = Attribute.simple[ButtonBase, EventHandler[ActionEvent]]("OnAction", null)
+
+    val textField = Attribute.simple[TextField, EventHandler[ActionEvent]]("OnAction", null)
+  }
 
   val id = Attribute.simple[Node, String]("Id", null)
 
@@ -243,4 +251,8 @@ package object attributes {
   val editable = Attribute.simple[TextInputControl, Boolean]("Editable", true)
 
   // val textFormatter = Attribute.simple[TextInputControl, TextFormatter[_]]("TextFormatter", null)
+
+  // TextField
+
+  val prefColumnCount = Attribute.simple[TextField, Int]("PrefColumnCount", 12)
 }

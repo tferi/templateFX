@@ -68,7 +68,7 @@ class TodoView {
               case Some(editedItemKey) =>
                 todoItem =>
                   if (todoItem.id == editedItemKey)
-                    node[TextField](id ~ "edited-field", text.inputControl onInit todoItem.name, onActionText ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
+                    node[TextField](id ~ "edited-field", text.inputControl onInit todoItem.name, onAction.text ~ EditInputTextApprovedEh(reactor, scene, todoItem.id))
                   else
                     node[Label](text.label ~ todoItem.name, onMouseClicked ~ TodoClickedEh(reactor, todoItem))
               case _ =>
@@ -100,7 +100,7 @@ class TodoView {
                     text.label ~ "Delete",
                     Grid.row ~ indexInView,
                     Grid.column ~ 2,
-                    onActionButton ~ DeleteEh(reactor, todoItemId)
+                    onAction.button ~ DeleteEh(reactor, todoItemId)
                   )
                 )
             }
@@ -116,14 +116,14 @@ class TodoView {
     node[VBox](children ~~ List(
       node[HBox](children ~~ List(
         node[Label](text.label ~ "New item name:"),
-        node[TextField](id ~ "textInput", onActionText ~ InsertEh(reactor, scene)),
-        node[Button](id ~ "prependButton", text.label ~ "Prepend this item!", onActionButton ~ PrependEH(reactor, scene)),
-        node[Button](id ~ "appendButton", text.label ~ "Append this item!", onActionButton ~ AppendEH(reactor, scene))
+        node[TextField](id ~ "textInput", onAction.textField ~ InsertEh(reactor, scene)),
+        node[Button](id ~ "prependButton", text.label ~ "Prepend this item!", onAction.button ~ PrependEH(reactor, scene)),
+        node[Button](id ~ "appendButton", text.label ~ "Append this item!", onAction.button ~ AppendEH(reactor, scene))
       )),
       node[HBox](children ~~ List(
         node[Label](text.label ~ "New item position:"),
-        node[TextField](id ~ "positionInput", onActionText ~ InsertEh(reactor, scene)),
-        node[Button](id ~ "insertButton", text.label ~ "Insert this item!", onActionButton ~ InsertEh(reactor, scene)),
+        node[TextField](id ~ "positionInput", onAction.text ~ InsertEh(reactor, scene)),
+        node[Button](id ~ "insertButton", text.label ~ "Insert this item!", onAction.button ~ InsertEh(reactor, scene)),
         node[CheckBox](text.label ~ "Show completed", onMouseClicked ~ ToggleShowCompletedEh(reactor, !showCompleted))
       ))
     ))
