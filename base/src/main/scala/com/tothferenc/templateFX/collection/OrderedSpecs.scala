@@ -16,7 +16,7 @@ final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends Collect
 
   override def build(): JList[Item] = specs.map(_.build())
 
-  private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): List[Change] = {
+  private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): Iterable[Change] = {
     nodeO match {
       case Some(node) =>
         spec.reconciliationSteps(node).getOrElse(List(Replace(collection, spec, position)))
@@ -32,7 +32,7 @@ final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends Collect
 
     @tailrec def reconcile(i: Int, acc: List[Change]): List[Change] =
       if (i < numChildrenSpecs)
-        reconcile(i + 1, acc ::: reconcileInHierarchy(collection, i, collection.lift(i), specs(i)))
+        reconcile(i + 1, acc ++ reconcileInHierarchy(collection, i, collection.lift(i), specs(i)))
       else
         acc
 

@@ -18,7 +18,7 @@ object Api {
   def unordered[Key: ClassTag, T](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
 
   implicit class ReconciliationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
-    def changes(items: JList[T]): List[Change] = reconcilableGroup.requiredChangesIn(items)
+    def changes(items: JList[T]): Iterable[Change] = reconcilableGroup.requiredChangesIn(items)
     def reconcile(items: JList[T]): Unit = changes(items).foreach(_.execute())
   }
 

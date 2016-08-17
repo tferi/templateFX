@@ -7,7 +7,7 @@ import com.tothferenc.templateFX.base.Template
 
 abstract class CollectionSpec[Item] extends Template[JList[Item]] {
 
-  def reconciliationSteps(other: Any): Option[List[Change]] = {
+  def reconciliationSteps(other: Any): Option[Iterable[Change]] = {
     other match {
       case expected: JList[Item] @unchecked =>
         Some(requiredChangesIn(expected))
@@ -15,7 +15,7 @@ abstract class CollectionSpec[Item] extends Template[JList[Item]] {
         None
     }
   }
-  def requiredChangesIn(collection: JList[Item]): List[Change]
+  def requiredChangesIn(collection: JList[Item]): Iterable[Change]
   def build(): JList[Item]
   def reconcile(collection: JList[Item]): Unit = requiredChangesIn(collection).foreach(_.execute())
 }

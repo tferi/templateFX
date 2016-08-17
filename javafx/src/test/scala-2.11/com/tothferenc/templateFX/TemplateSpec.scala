@@ -56,10 +56,10 @@ class TemplateSpec extends Specification {
 
     "be reconciled as expected when a single mutation is needed" in {
       val pane = paneWithHello.build()
-      val changes: List[Change] = List.apply[Template[Node]](
+      val changes = List.apply[Template[Node]](
         node[Label](text.label ~ "world")
       ).requiredChangesIn(pane.getChildren)
-      changes.length === 1
+      changes.toSeq.length === 1
     }
 
     "be reconciled as expected when an element needs to be replaced with another type" in {
@@ -72,8 +72,8 @@ class TemplateSpec extends Specification {
       val pane = paneWithHello.build()
       val newDef: Template[Label] = node[Label](text.label ~ "world")
       val newTemplate = helloWorld
-      val changes: Seq[Change] = newTemplate.requiredChangesIn(pane.getChildren)
-      changes.length === 1
+      val changes = newTemplate.requiredChangesIn(pane.getChildren)
+      changes.toSeq.length === 1
       val insertNode: Insert[Pane, Label] = changes.head.asInstanceOf[Insert[Pane, Label]]
       insertNode.collection === pane.getChildren
       changes.foreach(_.execute())
@@ -104,7 +104,7 @@ class TemplateSpec extends Specification {
       val pane = paneWith(keyedHelloWorld).build()
       val child0 = child(0, pane)
       val child1 = child(1, pane)
-      val changes = helloDearWorld.requiredChangesIn(pane.getChildren)
+      val changes = helloDearWorld.requiredChangesIn(pane.getChildren).toSeq
       changes.head === InsertWithKey(pane.getChildren, hello, 0, 3)
       changes(1) === MoveNode(pane.getChildren, child1, 1)
       changes(3) === MoveNode(pane.getChildren, child0, 2)
@@ -138,7 +138,7 @@ class TemplateSpec extends Specification {
 
     "be able to remove sequence of elements" in {
       val pane = paneWith(helloWorld).build()
-      val changes: List[Change] = List(hello).requiredChangesIn(pane.getChildren)
+      val changes: List[Change] = List(hello).requiredChangesIn(pane.getChildren).toList
       changes === List(RemoveSeq(pane.getChildren, 1, 2))
       changes.foreach(_.execute())
       pane.getChildren.size === 1

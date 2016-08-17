@@ -32,7 +32,7 @@ class FixtureSpec extends Specification {
 
     "have only the requested nodes added when reconciled" in {
       val bp: BorderPane = node[BorderPane](bind(attributes.right)).build()
-      val steps: Option[List[Change]] = node[BorderPane](bind(attributes.left)).reconciliationSteps(bp)
+      val steps = node[BorderPane](bind(attributes.left)).reconciliationSteps(bp)
       steps.foreach(_.foreach(_.execute()))
       bp.getLeft.asInstanceOf[Label].getText === "left"
       val attributeValues = attr.filterNot(_ == attributes.left).map(_.read(bp))

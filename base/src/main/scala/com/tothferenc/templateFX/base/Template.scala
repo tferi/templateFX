@@ -10,5 +10,5 @@ abstract class Template[+T] {
    * @return None if the template can't reconcile this item,
    *         otherwise a List of Changes which need to be executed to make the parameter conform to this instance.
    */
-  def reconciliationSteps(target: Any): Option[List[Change]]
+  def reconciliationSteps(target: Any): Option[Iterable[Change]]
 }
