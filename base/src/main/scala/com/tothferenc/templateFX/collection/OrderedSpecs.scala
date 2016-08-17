@@ -8,9 +8,9 @@ import com.tothferenc.templateFX.Replace
 import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
 
-import scala.annotation.tailrec
 import scala.collection.convert.wrapAsJava._
 import scala.collection.convert.wrapAsScala._
+import scala.collection.mutable
 
 final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends CollectionSpec[Item] {
 
@@ -26,19 +26,22 @@ final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends Collect
     }
   }
 
-  override def requiredChangesIn(collection: JList[Item]): List[Change] = {
+  override def requiredChangesIn(collection: JList[Item]): Iterable[Change] = {
     val numChildrenOnSceneGraph: Int = collection.size()
     val numChildrenSpecs: Int = specs.length
 
-    @tailrec def reconcile(i: Int, acc: List[Change]): List[Change] =
-      if (i < numChildrenSpecs)
-        reconcile(i + 1, acc ++ reconcileInHierarchy(collection, i, collection.lift(i), specs(i)))
-      else
-        acc
+    val buffer = new mutable.ArrayBuffer[Change]()
 
-    if (numChildrenOnSceneGraph > numChildrenSpecs)
-      RemoveSeq(collection, numChildrenSpecs, numChildrenOnSceneGraph) :: reconcile(0, Nil)
-    else
-      reconcile(0, Nil)
+    for {
+      i <- specs.indices
+    } {
+      buffer ++= reconcileInHierarchy(collection, i, collection.lift(i), specs(i))
+    }
+
+    if (numChildrenOnSceneGraph > numChildrenSpecs) {
+      buffer += RemoveSeq(collection, numChildrenSpecs, numChildrenOnSceneGraph)
+    }
+
+    buffer
   }
 }
