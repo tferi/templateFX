@@ -45,9 +45,9 @@ final case class MoveNode[Container, Item](collection: JList[Item], item: Item, 
   }
 }
 
-final case class Mutation[Item](item: Item, featureSetters: Seq[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
+final case class Mutation[Item](item: Item, featureSetters: Iterable[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
-    val managedAttributes = ManagedAttributes.getOrInit(item)
+    val managedAttributes = PresentFeatures.getOrInit(item)
 
     featuresToRemove.foreach { attribute =>
       attribute.remove(item)

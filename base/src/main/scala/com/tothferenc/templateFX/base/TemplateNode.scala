@@ -16,7 +16,7 @@ final case class TemplateNode[T](
 
   override def initNodesBelow(instance: T): Unit = ()
 
-  override def reconciliationSteps(other: Any): Option[List[Change]] = {
+  override def reconciliationSteps(other: Any): Option[Iterable[Change]] = {
     reconciliationStepsForThisNode(other)
   }
 

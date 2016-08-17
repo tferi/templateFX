@@ -11,7 +11,7 @@ abstract class ReflectiveSpec[T] extends ClassAwareSpec[T] {
 
   def build(): T = {
     val instance = UniversalConstructor.instantiate[T](specifiedClass, constructorParams)
-    Mutation(instance, constraintsToApply.flatMap(_(instance)), Nil).execute()
+    Mutation(instance, constraintsToApply.flatMap(constraint => constraint.apply(instance)), Nil).execute()
     initNodesBelow(instance)
     instance
   }

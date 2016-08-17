@@ -151,12 +151,12 @@ class TemplateSpec extends Specification {
         pane.getChildren.get(0).asInstanceOf[Label]
       }
       val label = getLabel
-      val attributes = ManagedAttributes.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
+      val attributes = PresentFeatures.get(label).fold(List.empty[RemovableFeature[_]])(_.toList)
       attributes === List(text.label)
       val changes = List.apply[Template[Node]](node[Label](styleClasses ~ List("nice"))).requiredChangesIn(pane.getChildren)
       changes.exists(_.isInstanceOf[Mutation[_]]) === true
       changes.foreach(_.execute())
-      val newAttr = ManagedAttributes.get(label)
+      val newAttr = PresentFeatures.get(label)
       newAttr.get.size === 1
       newAttr.get.contains(styleClasses)
 

@@ -4,7 +4,7 @@ import com.tothferenc.templateFX.base.RemovableFeature
 
 import scala.collection.mutable
 
-object ManagedAttributes {
+object PresentFeatures {
 
   private type Features[Item] = mutable.Set[RemovableFeature[Item]]
 
