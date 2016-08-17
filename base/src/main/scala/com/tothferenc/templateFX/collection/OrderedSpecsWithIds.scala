@@ -29,6 +29,8 @@ final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: List[(K
         case Some(mutable.Buffer(node)) =>
           spec.reconciliationSteps(node).map(List(MoveNode(collection, node, desiredPosition)) ++ _)
             .getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
+        case Some(buffer) if buffer.lengthCompare(1) > 0 =>
+          throw new Exception("Multiple elements in sequence with the same key")
         case _ =>
           List(InsertWithKey(collection, spec, desiredPosition, key))
       }
