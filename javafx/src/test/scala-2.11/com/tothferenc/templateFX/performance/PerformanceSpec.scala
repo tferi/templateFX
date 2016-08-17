@@ -27,9 +27,9 @@ class PerformanceSpec extends Specification {
       performanceTest(count, limit, false)
     }
 
-    s"be able to reconcile large object lists of $count with keys" in {
-      performanceTest(count, limit, true)
-    }
+    //    s"be able to reconcile large object lists of $count with keys" in {
+    //      performanceTest(count, limit, true)
+    //    }
   }
 
   def performanceTest(count: Int, limit: Long, useKeys: Boolean) = {
