@@ -242,5 +242,5 @@ package object attributes {
 
   val editable = Attribute.simple[TextInputControl, Boolean]("Editable", true)
 
-  val textFormatter = Attribute.simple[TextInputControl, TextFormatter[_]]("TextFormatter", null)
+  // val textFormatter = Attribute.simple[TextInputControl, TextFormatter[_]]("TextFormatter", null)
 }
