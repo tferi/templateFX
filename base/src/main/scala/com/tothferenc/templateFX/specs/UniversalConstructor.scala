@@ -9,7 +9,7 @@ object UniversalConstructor {
   def instantiate[Expected](clazz: Class[Expected], constructorParams: Seq[Object]): Expected = {
     val constructor: Constructor[Expected] =
       clazz.getConstructors.find { constructor =>
-        constructor.getParameterCount == constructorParams.length && constructorParams.zipWithIndex.forall {
+        constructor.getParameterCount == constructorParams.length && constructorParams.view.zipWithIndex.forall {
           case (param, index) => param.getClass == constructor.getParameterTypes()(index)
         }
       }.getOrElse(throw new NoConstructorForParams(clazz, constructorParams)).asInstanceOf[Constructor[Expected]]
