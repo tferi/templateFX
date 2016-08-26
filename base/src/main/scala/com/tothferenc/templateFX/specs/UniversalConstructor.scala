@@ -10,7 +10,7 @@ object UniversalConstructor {
     val constructor: Constructor[Expected] =
       clazz.getConstructors.find { constructor =>
         constructor.getParameterCount == constructorParams.length && constructorParams.view.zipWithIndex.forall {
-          case (param, index) => param.getClass == constructor.getParameterTypes()(index)
+          case (param, index) => constructor.getParameterTypes()(index).isAssignableFrom(param.getClass)
         }
       }.getOrElse(throw new NoConstructorForParams(clazz, constructorParams)).asInstanceOf[Constructor[Expected]]
     try {

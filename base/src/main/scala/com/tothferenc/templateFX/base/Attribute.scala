@@ -125,15 +125,15 @@ object Attribute {
   }
 }
 
-abstract class SettableFeature[-FXType, AttrType] extends RemovableFeature[FXType] {
-  def set(target: FXType, value: AttrType): Unit
+abstract class SettableFeature[-Holder, AttrType] extends RemovableFeature[Holder] {
+  def set(target: Holder, value: AttrType): Unit
 }
 
-abstract class Attribute[-FXType, AttrType] extends SettableFeature[FXType, AttrType] {
-  def read(src: FXType): AttrType
+abstract class Attribute[-Holder, AttrType] extends SettableFeature[Holder, AttrType] {
+  def read(src: Holder): AttrType
   def isEqual(item1: AttrType, item2: AttrType) = item1 == item2
 
-  def reconcile(container: FXType, specOption: Option[Template[AttrType]]): Iterable[Change] = {
+  def reconcile(container: Holder, specOption: Option[Template[AttrType]]): Iterable[Change] = {
     Option(read(container)) -> specOption match {
       case (Some(existing), Some(specified)) =>
         specified.reconciliationSteps(existing).getOrElse(List(Reconciliation(container, this, specOption)))

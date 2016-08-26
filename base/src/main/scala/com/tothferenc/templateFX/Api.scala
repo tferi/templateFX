@@ -22,16 +22,16 @@ object Api {
     def reconcile(items: JList[T]): Unit = changes(items).foreach(_.execute())
   }
 
-  implicit class AttributeBinder[FXType, T](attribute: Attribute[FXType, T]) {
+  implicit class AttributeBinder[Holder, T](attribute: Attribute[Holder, T]) {
     def ~(value: T) = SimpleBinding(attribute, value, maintained = true)
     def ~~(template: Template[T]) = ReconciliationBinding(attribute, template, maintained = true)
   }
 
-  implicit class ListFixtureBinder[FXType, T](fixture: Attribute[FXType, List[T]]) {
+  implicit class ListFixtureBinder[Holder, T](fixture: Attribute[Holder, List[T]]) {
     def ~~(template: Template[List[T]]) = ReconciliationBinding(fixture, template, maintained = true)
   }
 
-  implicit class AttributeEnforcer[FXType, Attr](attribute: SettableFeature[FXType, Attr]) {
+  implicit class AttributeEnforcer[Holder, Attr](attribute: SettableFeature[Holder, Attr]) {
     def <<(value: Attr) = Enforcement(attribute, value, maintained = true)
     def onInit(value: Attr) = Enforcement(attribute, value, maintained = false)
   }
