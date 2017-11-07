@@ -9,9 +9,15 @@ import javafx.scene.layout.Pane
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
-import com.tothferenc.templateFX.base.Change
-import com.tothferenc.templateFX.base.RemovableFeature
 import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.base.attribute.RemovableFeature
+import com.tothferenc.templateFX.change.Change
+import com.tothferenc.templateFX.change.Insert
+import com.tothferenc.templateFX.change.InsertWithKey
+import com.tothferenc.templateFX.change.MoveNode
+import com.tothferenc.templateFX.change.Mutation
+import com.tothferenc.templateFX.change.RemoveNodes
+import com.tothferenc.templateFX.change.RemoveSeq
 import com.tothferenc.templateFX.collection.CollectionSpec
 import com.tothferenc.templateFX.collection.OrderedSpecs
 import org.specs2.mutable.Specification

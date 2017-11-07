@@ -1,20 +1,24 @@
 package com.tothferenc.templateFX.collection
 
-import java.util.{ List => JList }
+import java.util
+import java.util.{List => JList}
 
-import com.tothferenc.templateFX.Insert
-import com.tothferenc.templateFX.RemoveSeq
-import com.tothferenc.templateFX.Replace
-import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.change.Change
+import com.tothferenc.templateFX.change.Insert
+import com.tothferenc.templateFX.change.RemoveSeq
+import com.tothferenc.templateFX.change.Replace
 
-import scala.collection.convert.wrapAsJava._
-import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
+import scala.collection.immutable
 
-final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends CollectionSpec[Item] {
+final case class OrderedSpecs[Item](specs: immutable.Seq[Template[Item]]) extends CollectionSpec[Item] {
 
-  override def build(): JList[Item] = specs.map(_.build())
+  override def build(): JList[Item] = {
+    val items = new util.ArrayList[Item]()
+    specs.foreach(template => items.add(template.build()))
+    items
+  }
 
   private def reconcileInHierarchy(collection: JList[Item], position: Int, nodeO: Option[Item], spec: Template[Item]): Iterable[Change] = {
     nodeO match {
@@ -35,7 +39,10 @@ final case class OrderedSpecs[Item](specs: List[Template[Item]]) extends Collect
     for {
       i <- specs.indices
     } {
-      buffer ++= reconcileInHierarchy(collection, i, collection.lift(i), specs(i))
+      buffer ++= {
+        val existing = if(i < collection.size()) Some(collection.get(i)) else None
+        reconcileInHierarchy(collection, i, existing, specs(i))
+      }
     }
 
     if (numChildrenOnSceneGraph > numChildrenSpecs) {

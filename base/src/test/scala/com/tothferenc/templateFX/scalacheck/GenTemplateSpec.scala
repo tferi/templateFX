@@ -3,8 +3,8 @@ package com.tothferenc.templateFX.scalacheck
 import com.tothferenc.templateFX.SimpleBinding
 import com.tothferenc.templateFX.StringAttribute
 import com.tothferenc.templateFX.TestNode
-import com.tothferenc.templateFX.base.Attribute
 import com.tothferenc.templateFX.base.TemplateNode
+import com.tothferenc.templateFX.base.attribute.Attribute
 import com.tothferenc.templateFX.generators._
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary

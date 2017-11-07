@@ -4,7 +4,7 @@ import java.lang
 import javafx.scene.Node
 import javafx.scene.layout.AnchorPane
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 object Anchor {
 

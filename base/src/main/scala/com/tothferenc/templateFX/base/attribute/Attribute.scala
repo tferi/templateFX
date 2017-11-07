@@ -1,4 +1,9 @@
-package com.tothferenc.templateFX.base
+package com.tothferenc.templateFX.base.attribute
+
+import com.tothferenc.templateFX.base.MacroHelper
+import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.change.Change
+import com.tothferenc.templateFX.change.ChangeAttribute
 
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox.Context
@@ -125,9 +130,7 @@ object Attribute {
   }
 }
 
-abstract class SettableFeature[-Holder, AttrType] extends RemovableFeature[Holder] {
-  def set(target: Holder, value: AttrType): Unit
-}
+
 
 abstract class Attribute[-Holder, AttrType] extends SettableFeature[Holder, AttrType] {
   def read(src: Holder): AttrType
@@ -136,13 +139,13 @@ abstract class Attribute[-Holder, AttrType] extends SettableFeature[Holder, Attr
   def reconcile(container: Holder, specOption: Option[Template[AttrType]]): Iterable[Change] = {
     Option(read(container)) -> specOption match {
       case (Some(existing), Some(specified)) =>
-        specified.reconciliationSteps(existing).getOrElse(List(Reconciliation(container, this, specOption)))
+        specified.reconciliationSteps(existing).getOrElse(List(ChangeAttribute(container, this, specOption)))
 
       case (None, None) =>
         Nil
 
       case _ =>
-        List(Reconciliation(container, this, specOption))
+        List(ChangeAttribute(container, this, specOption))
     }
   }
 }

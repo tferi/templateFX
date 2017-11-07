@@ -1,8 +1,11 @@
 package com.tothferenc.templateFX
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
 import com.tothferenc.templateFX.base._
+import com.tothferenc.templateFX.base.attribute.Attribute
+import com.tothferenc.templateFX.base.attribute.SettableFeature
+import com.tothferenc.templateFX.change.Change
 import com.tothferenc.templateFX.collection.CollectionSpec
 import com.tothferenc.templateFX.collection.OrderedSpecs
 import com.tothferenc.templateFX.collection.OrderedSpecsWithIds
@@ -13,7 +16,7 @@ import scala.reflect.ClassTag
 
 object Api {
 
-  implicit def specs2ordered[Container, T](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
+  implicit def specs2ordered[Container, T](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs.toList)
   implicit def specs2orderedWithIds[Key: ClassTag, T](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
   def unordered[Key: ClassTag, T](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
 

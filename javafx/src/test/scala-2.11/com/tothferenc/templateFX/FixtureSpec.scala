@@ -7,9 +7,9 @@ import javafx.scene.layout.BorderPane
 
 import com.tothferenc.templateFX.Api._
 import com.tothferenc.templateFX.attributes._
-import com.tothferenc.templateFX.base.Attribute
-import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.base.attribute.Attribute
+import com.tothferenc.templateFX.change.Change
 import org.specs2.mutable.Specification
 
 class FixtureSpec extends Specification {

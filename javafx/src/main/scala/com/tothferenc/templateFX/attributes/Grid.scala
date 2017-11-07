@@ -9,7 +9,8 @@ import javafx.scene.layout.ColumnConstraints
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.Priority
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
+
 import scala.collection.convert.wrapAsScala._
 
 object Grid {

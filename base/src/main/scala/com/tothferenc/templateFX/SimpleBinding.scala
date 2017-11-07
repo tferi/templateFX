@@ -1,6 +1,9 @@
 package com.tothferenc.templateFX
 
 import com.tothferenc.templateFX.base._
+import com.tothferenc.templateFX.base.attribute.Attribute
+import com.tothferenc.templateFX.base.attribute.RemovableFeature
+import com.tothferenc.templateFX.base.attribute.SettableFeature
 
 /**
  * Instances of this class are used to make changes to the object graph during the reconciliation process.

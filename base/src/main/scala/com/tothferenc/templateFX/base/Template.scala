@@ -1,5 +1,7 @@
 package com.tothferenc.templateFX.base
 
+import com.tothferenc.templateFX.change.Change
+
 abstract class Template[+T] {
 
   def build(): T

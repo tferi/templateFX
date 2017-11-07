@@ -20,7 +20,7 @@ import javafx.scene.shape.Shape
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 import scala.collection.mutable
 import scala.collection.convert.wrapAsScala._

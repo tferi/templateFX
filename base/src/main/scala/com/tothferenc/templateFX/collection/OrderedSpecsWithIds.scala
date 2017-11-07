@@ -1,13 +1,13 @@
 package com.tothferenc.templateFX.collection
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
-import com.tothferenc.templateFX.InsertWithKey
-import com.tothferenc.templateFX.MoveNode
-import com.tothferenc.templateFX.RemoveNodes
-import com.tothferenc.templateFX.Replace
-import com.tothferenc.templateFX.base.Change
 import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.change.Change
+import com.tothferenc.templateFX.change.InsertWithKey
+import com.tothferenc.templateFX.change.MoveNode
+import com.tothferenc.templateFX.change.RemoveNodes
+import com.tothferenc.templateFX.change.Replace
 
 import scala.collection.convert.wrapAsJava._
 import scala.collection.convert.wrapAsScala._

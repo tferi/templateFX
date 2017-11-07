@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX._
+import com.tothferenc.templateFX.change.Mutation
 import com.tothferenc.templateFX.specs.UniversalConstructor
 
 abstract class ReflectiveSpec[T] extends ClassAwareSpec[T] {

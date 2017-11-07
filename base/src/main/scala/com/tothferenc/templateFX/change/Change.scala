@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.base
+package com.tothferenc.templateFX.change
 
 import org.slf4j.LoggerFactory
 

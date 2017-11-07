@@ -1,10 +1,12 @@
-package com.tothferenc.templateFX
+package com.tothferenc.templateFX.change
 
-import java.util.{ List => JList }
+import java.util.{List => JList}
 
-import com.tothferenc.templateFX.base.Change
-import com.tothferenc.templateFX.base.RemovableFeature
+import com.tothferenc.templateFX.FeatureSetter
+import com.tothferenc.templateFX.PresentFeatures
 import com.tothferenc.templateFX.base.Template
+import com.tothferenc.templateFX.base.attribute.Attribute
+import com.tothferenc.templateFX.base.attribute.RemovableFeature
 import com.tothferenc.templateFX.collection.SpecsWithKeys
 
 import scala.collection.convert.decorateAsJava._
@@ -17,8 +19,7 @@ final case class RemoveNodes[Container, Item](collection: JList[Item], nodes: It
 
 final case class RemoveSeq[Container](collection: JList[_], fromInclusive: Int, toExclusive: Int) extends Change {
   override protected def exec(): Unit = {
-    val remove = collection.remove _
-    fromInclusive.until(toExclusive).foreach(remove)
+    fromInclusive.until(toExclusive).foreach(collection.remove)
   }
 }
 
@@ -58,5 +59,12 @@ final case class Mutation[Item](item: Item, featureSetters: Iterable[FeatureSett
       setter.set(item)
       managedAttributes += setter.feature
     }
+  }
+}
+
+final case class ChangeAttribute[Container, FixedItem](container: Container, fixture: Attribute[Container, FixedItem], spec: Option[Template[FixedItem]]) extends Change {
+  override protected def exec(): Unit = spec match {
+    case Some(template) => fixture.set(container, template.build())
+    case _ => fixture.remove(container)
   }
 }

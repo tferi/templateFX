@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.attributes
 
 import javafx.scene.Node
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 object TabAttr {
   val content = Attribute.simple[javafx.scene.control.Tab, Node]("Content", null)

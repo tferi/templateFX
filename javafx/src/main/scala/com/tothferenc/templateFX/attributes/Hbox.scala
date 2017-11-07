@@ -5,7 +5,7 @@ import javafx.scene.Node
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 object Hbox {
 

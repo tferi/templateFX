@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import com.tothferenc.templateFX.base.RemovableFeature
+import com.tothferenc.templateFX.base.attribute.RemovableFeature
 
 import scala.collection.mutable
 

@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.attributes
 
 import javafx.scene.control.CheckBox
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 object CheckboxAttr {
   val selected = Attribute.simple[CheckBox, Boolean]("Selected", false)

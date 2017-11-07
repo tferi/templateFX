@@ -2,7 +2,8 @@ package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX.Constraint
 import com.tothferenc.templateFX.PresentFeatures
-import com.tothferenc.templateFX.Mutation
+import com.tothferenc.templateFX.change.Change
+import com.tothferenc.templateFX.change.Mutation
 
 abstract class ConstraintBasedReconciliation[T] extends Template[T] {
 

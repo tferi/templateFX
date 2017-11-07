@@ -1,6 +1,7 @@
 package com.tothferenc.templateFX.base
 
 import com.tothferenc.templateFX.Constraint
+import com.tothferenc.templateFX.change.Change
 
 import scala.reflect.ClassTag
 

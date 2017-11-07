@@ -4,8 +4,8 @@ import javafx.scene.Node
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.control._
 
-import com.tothferenc.templateFX.base.Attribute
-import com.tothferenc.templateFX.base.SettableFeature
+import com.tothferenc.templateFX.base.attribute.SettableFeature
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 object Scroll {
   val fitToHeight = Attribute.writeOnly[ScrollPane, lang.Boolean]("FitToHeight", false)

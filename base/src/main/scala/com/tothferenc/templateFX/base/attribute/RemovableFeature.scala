@@ -1,4 +1,4 @@
-package com.tothferenc.templateFX.base
+package com.tothferenc.templateFX.base.attribute
 
 abstract class RemovableFeature[-Item] {
   def remove(item: Item): Unit

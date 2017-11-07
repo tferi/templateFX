@@ -5,7 +5,7 @@ import javafx.geometry.Side
 import javafx.scene.chart.PieChart
 import javafx.scene.chart.PieChart.Data
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 import scala.collection.convert.wrapAsScala._
 

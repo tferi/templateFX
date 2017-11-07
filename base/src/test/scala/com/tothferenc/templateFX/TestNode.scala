@@ -1,6 +1,6 @@
 package com.tothferenc.templateFX
 
-import com.tothferenc.templateFX.base.Attribute
+import com.tothferenc.templateFX.base.attribute.Attribute
 
 import scala.collection.mutable
 
