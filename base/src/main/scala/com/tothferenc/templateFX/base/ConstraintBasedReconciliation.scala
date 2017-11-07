@@ -21,7 +21,7 @@ abstract class ConstraintBasedReconciliation[T] extends Template[T] {
 
     val featureUpdates = for {
       constraint <- constraintsToApply if constraint.maintained
-      update <- constraint.apply(item)
+      update <- constraint.enforce(item)
     } yield update
 
     if (featureUpdates.nonEmpty || featuresToRemove.nonEmpty)

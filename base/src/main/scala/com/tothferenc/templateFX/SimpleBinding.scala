@@ -8,29 +8,29 @@ import com.tothferenc.templateFX.base.attribute.SettableFeature
 /**
  * Instances of this class are used to make changes to the object graph during the reconciliation process.
  */
-abstract class FeatureSetter[-Item] {
+abstract class FeatureUpdate[-Item] {
   def feature: RemovableFeature[Item]
-  def set(item: Item): Unit
+  def executeOn(item: Item): Unit
 }
 
 /**
  * Replaces the [[feature]]'s current value with the parameter [[value]].
  */
-final case class SimpleSetting[-Item, Value](
+final case class UpdateByReplacement[-Item, Value](
     feature: SettableFeature[Item, Value],
     value: Value
-) extends FeatureSetter[Item] {
-  override def set(item: Item): Unit = feature.set(item, value)
+) extends FeatureUpdate[Item] {
+  override def executeOn(item: Item): Unit = feature.set(item, value)
 }
 
 /**
  * Makes the [[feature]] conform to the [[template]] via a reconciliation process.
  */
-final case class Reconcile[-Item, Value](
+final case class UpdateByReconcilation[-Item, Value](
     feature: Attribute[Item, Value],
     template: Template[Value]
-) extends FeatureSetter[Item] {
-  override def set(item: Item): Unit = feature.reconcile(item, Some(template)).foreach(_.execute())
+) extends FeatureUpdate[Item] {
+  override def executeOn(item: Item): Unit = feature.reconcile(item, Some(template)).foreach(_.execute())
 }
 
 /**
@@ -55,32 +55,32 @@ abstract class Constraint[-T] {
   def maintained: Boolean
 
   /**
-   * @return A [[FeatureSetter ]]which may be used to set [[feature]]'s value in the parameter to a predefined value.
+   * @return A [[FeatureUpdate ]]which may be used to set [[feature]]'s value in the parameter to a predefined value.
    */
-  def apply(item: T): Option[FeatureSetter[T]]
+  def enforce(item: T): Option[FeatureUpdate[T]]
 }
 
 /**
  * This kind of [[Constraint]] should be set up when the user wants to run a full reconciliation on the [[feature]].
  */
 final case class ReconciliationBinding[Item, Attr](feature: Attribute[Item, Attr], template: Template[Attr], maintained: Boolean) extends Constraint[Item] {
-  override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(Reconcile(feature, template))
+  override def enforce(v1: Item): Option[FeatureUpdate[Item]] = Some(UpdateByReconcilation(feature, template))
 }
 
 /**
  * This kind of [[Constraint]] should be set up when the user wants to set [[feature]] to [[value]] regardless of its current state.
  */
 final case class Enforcement[Item, Attr](feature: SettableFeature[Item, Attr], value: Attr, maintained: Boolean) extends Constraint[Item] {
-  override def apply(v1: Item): Option[FeatureSetter[Item]] = Some(SimpleSetting(feature, value))
+  override def enforce(v1: Item): Option[FeatureUpdate[Item]] = Some(UpdateByReplacement(feature, value))
 }
 
 /**
  * This kind of [[Constraint]] should be set up when the user wants to set [[feature]] to [[value]] when their values do not match.
  */
 final case class SimpleBinding[Item, Attr](feature: Attribute[Item, Attr], value: Attr, maintained: Boolean) extends Constraint[Item] {
-  override def apply(item: Item): Option[FeatureSetter[Item]] =
+  override def enforce(item: Item): Option[FeatureUpdate[Item]] =
     if (Option(feature.read(item)).exists(existing => feature.isEqual(existing, value)))
       None
     else
-      Some(SimpleSetting(feature, value))
+      Some(UpdateByReplacement(feature, value))
 }

@@ -2,7 +2,7 @@ package com.tothferenc.templateFX.change
 
 import java.util.{List => JList}
 
-import com.tothferenc.templateFX.FeatureSetter
+import com.tothferenc.templateFX.FeatureUpdate
 import com.tothferenc.templateFX.PresentFeatures
 import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.base.attribute.Attribute
@@ -46,7 +46,7 @@ final case class MoveNode[Container, Item](collection: JList[Item], item: Item, 
   }
 }
 
-final case class Mutation[Item](item: Item, featureSetters: Iterable[FeatureSetter[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
+final case class Mutation[Item](item: Item, featureSetters: Iterable[FeatureUpdate[Item]], featuresToRemove: Iterable[RemovableFeature[Item]]) extends Change {
   override protected def exec(): Unit = {
     val managedAttributes = PresentFeatures.getOrInit(item)
 
@@ -56,7 +56,7 @@ final case class Mutation[Item](item: Item, featureSetters: Iterable[FeatureSett
     }
 
     featureSetters.foreach { setter =>
-      setter.set(item)
+      setter.executeOn(item)
       managedAttributes += setter.feature
     }
   }

@@ -12,9 +12,10 @@ import com.tothferenc.templateFX.change.Replace
 
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
+import scala.collection.immutable
 import scala.reflect.ClassTag
 
-final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: List[(Key, Template[Item])]) extends CollectionSpec[Item] {
+final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: immutable.Seq[(Key, Template[Item])]) extends CollectionSpec[Item] {
 
   override def requiredChangesIn(collection: JList[Item]): List[Change] = {
     val existingNodesByKey = collection.groupBy(SpecsWithKeys.getItemKey[Key])
@@ -34,12 +35,12 @@ final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: List[(K
           spec.reconciliationSteps(node).map(List(MoveNode(collection, node, desiredPosition)) ++ _)
             .getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
         case Some(buffer) if buffer.lengthCompare(1) > 0 =>
-          throw new Exception("Multiple elements in sequence with the same key")
+          throw new RuntimeException("Multiple elements in sequence with the same key")
         case _ =>
           List(InsertWithKey(collection, spec, desiredPosition, key))
       }
     }
-    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals))) ::: mutationsMovesInsertions
+    (if (removals.isEmpty) Nil else List(RemoveNodes(collection, removals))) ++ mutationsMovesInsertions
   }
 
   override def build(): JList[Item] = {

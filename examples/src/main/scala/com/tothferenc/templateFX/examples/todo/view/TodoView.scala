@@ -16,6 +16,8 @@ import com.tothferenc.templateFX.base.Template
 import com.tothferenc.templateFX.examples.todo._
 import com.tothferenc.templateFX.examples.todo.model.TodoItem
 
+import scala.collection.immutable
+
 object TodoView {
   val checkboxConstraintsInGrid: ColumnConstraints = new ColumnConstraints(10, 50, 100, Priority.SOMETIMES, HPos.RIGHT, true)
   val textConstrainsInGrid: ColumnConstraints = new ColumnConstraints(100, 500, 600, Priority.ALWAYS, HPos.LEFT, true)
@@ -23,8 +25,9 @@ object TodoView {
 }
 
 class TodoView {
-  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): List[Template[Node]] = {
-    List(
+
+  def windowTemplate(reactor: Reactor[Intent], scene: Scene, items: List[TodoItem], showCompleted: Boolean, editing: Option[Long]): immutable.Seq[Template[Node]] = {
+    seq(
       controlsTemplate(reactor, scene, showCompleted),
       itemsTemplate(reactor, scene, items, showCompleted, editing)
     )
@@ -77,7 +80,7 @@ class TodoView {
             }
             shown.zipWithIndex.flatMap {
               case ((todoItem @ TodoItem(todoItemId, done, txt), originalIndex), indexInView) =>
-                List(
+                Vector(
                   todoItemId + "-checkbox" -> node[CheckBox](
                     CheckboxAttr.selected ~ done,
                     Grid.row ~ indexInView,

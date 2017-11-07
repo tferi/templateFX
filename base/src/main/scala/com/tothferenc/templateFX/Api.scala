@@ -11,14 +11,16 @@ import com.tothferenc.templateFX.collection.OrderedSpecs
 import com.tothferenc.templateFX.collection.OrderedSpecsWithIds
 import com.tothferenc.templateFX.collection.SpecsWithIds
 
+import scala.collection.immutable
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 object Api {
+  def seq[T](items: T *): immutable.Seq[T] = Vector(items: _*)
 
-  implicit def specs2ordered[Container, T](specs: List[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs.toList)
+  implicit def specs2ordered[Container, T](specs: immutable.Seq[Template[T]]): CollectionSpec[T] = OrderedSpecs(specs)
   implicit def specs2orderedWithIds[Key: ClassTag, T](specs: List[(Key, Template[T])]): CollectionSpec[T] = OrderedSpecsWithIds(specs)
-  def unordered[Key: ClassTag, T](specs: List[(Key, Template[T])]) = SpecsWithIds(specs)
+  def unordered[Key: ClassTag, T](specs: immutable.Seq[(Key, Template[T])]) = SpecsWithIds(specs)
 
   implicit class ReconciliationSyntax[T](reconcilableGroup: CollectionSpec[T]) {
     def changes(items: JList[T]): Iterable[Change] = reconcilableGroup.requiredChangesIn(items)
