@@ -9,6 +9,7 @@ import com.tothferenc.templateFX.change.InsertWithKey
 import com.tothferenc.templateFX.change.MoveNode
 import com.tothferenc.templateFX.change.RemoveNodes
 import com.tothferenc.templateFX.change.Replace
+import com.tothferenc.templateFX.errors.DuplicateKeyException
 
 import scala.collection.convert.wrapAsScala._
 import scala.collection.mutable
@@ -35,7 +36,7 @@ final case class OrderedSpecsWithIds[Key: ClassTag, Item](specsWithKeys: immutab
           spec.reconciliationSteps(node).map(List(MoveNode(collection, node, desiredPosition)) ++ _)
             .getOrElse(List(Replace(collection, spec, collection.indexOf(node))))
         case Some(buffer) if buffer.lengthCompare(1) > 0 =>
-          throw new RuntimeException("Multiple elements in sequence with the same key")
+          throw DuplicateKeyException(key.toString)
         case _ =>
           List(InsertWithKey(collection, spec, desiredPosition, key))
       }
